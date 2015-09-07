@@ -23,10 +23,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-package edu.mit.magnumapp;
+package ch.unil.magnumapp;
 
 import java.io.IOException;
 
+import ch.unil.magnumapp.view.OverviewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -34,9 +35,13 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+
+/**
+ * The main class starting the JavaFX app
+ */
 public class MagnumApp extends Application {
 
-	/** The primary stage */
+	/** The main stage */
     private Stage primaryStage_;
     /** The root layout */
     private BorderPane rootLayout_;
@@ -60,11 +65,10 @@ public class MagnumApp extends Application {
 	public void start(Stage primaryStage) {
 		
         primaryStage_ = primaryStage;
-        primaryStage_.setTitle("oiseauApp");
+        primaryStage_.setTitle("Magnum");
 
         initRootLayout();
-
-        showPersonOverview();
+        showOverview();
 	}
 	
 	
@@ -91,18 +95,20 @@ public class MagnumApp extends Application {
     
 	// ----------------------------------------------------------------------------
 
-    /**
-     * Shows the person overview inside the root layout.
-     */
-    public void showPersonOverview() {
+    /** Shows the person overview inside the root layout */
+    public void showOverview() {
         try {
             // Load person overview.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MagnumApp.class.getResource("view/Overview.fxml"));
-            SplitPane personOverview = (SplitPane) loader.load();
+            SplitPane overview = (SplitPane) loader.load();
 
             // Set person overview into the center of root layout.
-            rootLayout_.setCenter(personOverview);
+            rootLayout_.setCenter(overview);
+            
+            // Give the controller access to the main app.
+            OverviewController controller = loader.getController();
+            controller.setMagnumApp(this);
             
         } catch (IOException e) {
             e.printStackTrace();
@@ -110,12 +116,9 @@ public class MagnumApp extends Application {
     }
 
     
-    /**
-     * Returns the main stage.
-     * @return
-     */
-    public Stage getPrimaryStage() {
-        return primaryStage_;
-    }
+	// ============================================================================
+	// SETTERS AND GETTERS
+
+    public Stage getPrimaryStage() { return primaryStage_; }
     
 }
