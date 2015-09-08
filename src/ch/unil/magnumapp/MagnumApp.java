@@ -27,8 +27,10 @@ package ch.unil.magnumapp;
 
 import java.io.IOException;
 
+import ch.unil.magnumapp.model.NetworkModel;
 import ch.unil.magnumapp.view.OverviewController;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
@@ -46,6 +48,9 @@ public class MagnumApp extends Application {
     /** The root layout */
     private BorderPane rootLayout_;
     
+    /** The collection of networks */
+    private NetworkCollection networkCollection_ = null;
+    
     
 	// ============================================================================
 	// STATIC METHODS
@@ -59,6 +64,15 @@ public class MagnumApp extends Application {
 	
 	// ============================================================================
 	// PUBLIC METHODS
+
+	/** Constructor */
+	public MagnumApp() {
+	
+		networkCollection_ = new NetworkCollection();
+	}
+	
+	
+	// ----------------------------------------------------------------------------
 
 	/** Called when the App is launched */
 	@Override
@@ -117,8 +131,18 @@ public class MagnumApp extends Application {
 
     
 	// ============================================================================
+	// DATA ACCESS
+
+    public ObservableList<NetworkModel> getUserNetworks() {
+    	return networkCollection_.getUserNetworks().getNetworks();
+    }
+    
+    
+	// ============================================================================
 	// SETTERS AND GETTERS
 
     public Stage getPrimaryStage() { return primaryStage_; }
+    
+    public NetworkCollection getNetworkCollection() { return networkCollection_; }
     
 }

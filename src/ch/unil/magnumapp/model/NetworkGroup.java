@@ -26,8 +26,8 @@ THE SOFTWARE.
 package ch.unil.magnumapp.model;
 
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
@@ -37,13 +37,13 @@ import javafx.collections.ObservableList;
 public class NetworkGroup {
 
 	/** The directory where the networks are located */
-	private StringProperty networkDir_ = null;
+	private StringProperty networkDir = null;
 
 	/** All networks have been successfully loaded, statistics are set */
-	private BooleanProperty networksLoaded_ = null;
+	private BooleanProperty networksLoaded = null;
 	
 	/** The network models */
-	private ObservableList networks_ = null;
+	private ObservableList<NetworkModel> networks = null;
 	
 	
 	// ============================================================================
@@ -52,15 +52,16 @@ public class NetworkGroup {
 	/** Constructor */
 	public NetworkGroup() {
 
+		networks = FXCollections.observableArrayList();
+		networks.add(new NetworkModel("Oiseau"));
+		networks.add(new NetworkModel("Maasive"));
 	}
+
+
 	
 	
     // ----------------------------------------------------------------------------
 
-	/**  */
-	public void myMethod() {
-		
-	}
 
 
 	// ============================================================================
@@ -70,5 +71,8 @@ public class NetworkGroup {
 	// ============================================================================
 	// SETTERS AND GETTERS
 
-	  
+	public ObservableList<NetworkModel> getNetworks() {
+		return networks;
+	}
+
 }

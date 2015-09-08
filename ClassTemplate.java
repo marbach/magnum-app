@@ -23,52 +23,33 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
-package ch.unil.magnumapp.model;
+package ch.unil.magnumapp;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+
 
 /**
- * Represents a network
+ * 
  */
-public class NetworkModel {
+public class MyClass {
 
-	/** Filename */
-	private StringProperty filename_ = null;
-	/** Name used for display */
-	private StringProperty name_ = null;
-
-	/** Network has been successfully loaded, statistics are set */
-	private BooleanProperty networkLoaded_ = null;
-	/** Number of nodes */
-	private IntegerProperty numNodes_ = null;
-	/** Number of edges */
-	private IntegerProperty numEdges_ = null;
-	/** Weighted network */
-	private BooleanProperty isWeighted_ = null;
-	/** Directed network */
-	private BooleanProperty isDirected_ = null;
-	/** Number of regulators */
-	private IntegerProperty numRegulators_ = null;
-
-	/** The network */
-	//private Network network_ = null;
+	/**  */
 	
 	
 	// ============================================================================
 	// PUBLIC METHODS
 	    
 	/** Constructor */
-	public NetworkModel(String name) {
-		
-		name_ = new SimpleStringProperty(name);
+	public MyClass() {
+
 	}
 	
 	
     // ----------------------------------------------------------------------------
 
+	/**  */
+	public void myMethod() {
+		
+	}
 
 
 	// ============================================================================
@@ -78,6 +59,5 @@ public class NetworkModel {
 	// ============================================================================
 	// SETTERS AND GETTERS
 
-	public StringProperty nameProperty() { return name_; }
-		
+	  
 }
