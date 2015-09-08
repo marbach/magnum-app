@@ -121,14 +121,14 @@ public class MagnumApp extends Application {
         try {
             // Load fxml
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MagnumApp.class.getResource("view/MyNetworks.fxml"));
+            loader.setLocation(MagnumApp.class.getResource("view/NetworksMy.fxml"));
             TitledPane myNetworks = (TitledPane) loader.load();          
             
             // Add to root layout
             rootLayoutController.getLeftSide().getChildren().add(myNetworks);
             
             // Give the controller access to the main app.
-            MyNetworksController controller = loader.getController();
+            NetworksMyController controller = loader.getController();
             controller.setMagnumApp(this);
             
         } catch (IOException e) {

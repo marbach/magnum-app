@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TableView fx:id="myNetworksTable" minWidth="500.0">
+         <columns>
+            <TableColumn fx:id="myNetworksNameColumn" minWidth="100.0" prefWidth="-1.0" text="Name" />
+            <TableColumn fx:id="myNetworksDirectedColumn" minWidth="70.0" prefWidth="-1.0" text="Directed" />
+            <TableColumn fx:id="myNetworksWeightedColumn" minWidth="70.0" prefWidth="70.0" text="Weighted" />
+            <TableColumn fx:id="myNetworksNumRegulatorsColumn" prefWidth="92.0" text="#Regulators" />
+            <TableColumn fx:id="myNetworksNumNodesColumn" prefWidth="58.0" text="#Nodes" />
+            <TableColumn fx:id="myNetworksNumEdgesColumn" prefWidth="75.0" text="#Edges" />
+         </columns>
+      </TableView>
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Button mnemonicParsing="false" text="Select all" />
+            <Button mnemonicParsing="false" text="Remove" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

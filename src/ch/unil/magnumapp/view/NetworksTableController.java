@@ -25,56 +25,32 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp.view;
 
-import java.io.File;
-import java.util.List;
-
-import ch.unil.magnumapp.MagnumApp;
-import ch.unil.magnumapp.model.NetworkModel;
+import ch.unil.magnumapp.model.*;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
+
 
 /**
  * Controller for the Overview 
  */
 public class NetworksTableController extends AppController {
     
-    /** "My networks" table */
+    /** Network table */
     @FXML
-    private TableView<NetworkModel> myNetworksTable;
+    protected TableView<NetworkModel> networksTable;
     @FXML
-    private TableColumn<NetworkModel, String> myNetworksNameColumn;
+    protected TableColumn<NetworkModel, String> nameColumn;
     @FXML
-    private TableColumn<NetworkModel, String> myNetworksDirectedColumn;
+    protected TableColumn<NetworkModel, String> directedColumn;
     @FXML
-    private TableColumn<NetworkModel, String> myNetworksWeightedColumn;
+    protected TableColumn<NetworkModel, String> weightedColumn;
     @FXML
-    private TableColumn<NetworkModel, String> myNetworksNumRegulatorsColumn;
+    protected TableColumn<NetworkModel, String> numRegulatorsColumn;
     @FXML
-    private TableColumn<NetworkModel, String> myNetworksNumNodesColumn;
+    protected TableColumn<NetworkModel, String> numNodesColumn;
     @FXML
-    private TableColumn<NetworkModel, String> myNetworksNumEdgesColumn;
-
-    /** "My networks" load */
-    @FXML
-    private TextField myNetworksFileText;
-    @FXML
-    private Button myNetworksBrowseButton;
-    @FXML
-    private Button myNetworksLoadButton;
-    @FXML
-    private RadioButton myNetworksDirectedRadio;
-    @FXML
-    private RadioButton myNetworksUndirectedRadio;
-    @FXML
-    private RadioButton myNetworksWeightedRadio;
-    @FXML
-    private RadioButton myNetworksUnweightedRadio;
+    protected TableColumn<NetworkModel, String> numEdgesColumn;
 
 	
 	// ============================================================================
@@ -95,26 +71,14 @@ public class NetworksTableController extends AppController {
     @FXML
     private void initialize() {
 
-    	// Initialize "My networks" table columns
-        myNetworksNameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+    	// Initialize columns
+        nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
     }
 
     
 	// ============================================================================
 	// HANDLES
 
-    /** "My networks" browse button */
-    @FXML
-    private void handleMyNetworksBrowseButton() {
-        
-    	final FileChooser fileChooser = new FileChooser();
-    	
-    	List<File> list = fileChooser.showOpenMultipleDialog(primaryStage);
-    	if (list != null) {
-    		for (File file : list) {
-    		}
-    	}
-    }
 
 	// ============================================================================
 	// PRIVATE METHODS

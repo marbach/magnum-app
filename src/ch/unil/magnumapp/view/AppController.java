@@ -28,8 +28,9 @@ package ch.unil.magnumapp.view;
 import ch.unil.magnumapp.*;
 import javafx.stage.Stage;
 
+
 /**
- * Controller for the Overview 
+ * Abstract class for controllers 
  */
 public class AppController {
 
