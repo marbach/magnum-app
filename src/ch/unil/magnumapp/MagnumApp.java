@@ -27,13 +27,14 @@ package ch.unil.magnumapp;
 
 import java.io.IOException;
 
-import ch.unil.magnumapp.model.NetworkModel;
-import ch.unil.magnumapp.view.OverviewController;
+import ch.unil.magnumapp.model.*;
+import ch.unil.magnumapp.view.*;
+
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.SplitPane;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -44,13 +45,15 @@ import javafx.stage.Stage;
 public class MagnumApp extends Application {
 
 	/** The main stage */
-    private Stage primaryStage_;
+    private Stage primaryStage;
     /** The root layout */
-    private BorderPane rootLayout_;
+    private BorderPane rootLayout;
     
     /** The collection of networks */
     private NetworkCollection networkCollection_ = null;
     
+    /** Root layout controller */
+    private RootLayoutController rootLayoutController;
     
 	// ============================================================================
 	// STATIC METHODS
@@ -78,11 +81,14 @@ public class MagnumApp extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		
-        primaryStage_ = primaryStage;
-        primaryStage_.setTitle("Magnum");
+        this.primaryStage = primaryStage;
+        this.primaryStage.setTitle("Magnum");
 
+        // The root layout
         initRootLayout();
-        showOverview();
+        
+        // Panes on the left side
+        showMyNetworks();
 	}
 	
 	
@@ -94,12 +100,13 @@ public class MagnumApp extends Application {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MagnumApp.class.getResource("view/RootLayout.fxml"));
-            rootLayout_ = (BorderPane) loader.load();
+            rootLayout = (BorderPane) loader.load();
+            rootLayoutController = loader.getController();
 
             // Show the scene containing the root layout.
-            Scene scene = new Scene(rootLayout_);
-            primaryStage_.setScene(scene);
-            primaryStage_.show();
+            Scene scene = new Scene(rootLayout);
+            primaryStage.setScene(scene);
+            primaryStage.show();
             
         } catch (IOException e) {
             e.printStackTrace();
@@ -109,19 +116,19 @@ public class MagnumApp extends Application {
     
 	// ----------------------------------------------------------------------------
 
-    /** Shows the person overview inside the root layout */
-    public void showOverview() {
+    /** "My networks" pane */
+    public void showMyNetworks() {
         try {
-            // Load person overview.
+            // Load fxml
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MagnumApp.class.getResource("view/Overview.fxml"));
-            SplitPane overview = (SplitPane) loader.load();
-
-            // Set person overview into the center of root layout.
-            rootLayout_.setCenter(overview);
+            loader.setLocation(MagnumApp.class.getResource("view/MyNetworks.fxml"));
+            TitledPane myNetworks = (TitledPane) loader.load();          
+            
+            // Add to root layout
+            rootLayoutController.getLeftSide().getChildren().add(myNetworks);
             
             // Give the controller access to the main app.
-            OverviewController controller = loader.getController();
+            MyNetworksController controller = loader.getController();
             controller.setMagnumApp(this);
             
         } catch (IOException e) {
@@ -141,7 +148,7 @@ public class MagnumApp extends Application {
 	// ============================================================================
 	// SETTERS AND GETTERS
 
-    public Stage getPrimaryStage() { return primaryStage_; }
+    public Stage getPrimaryStage() { return primaryStage; }
     
     public NetworkCollection getNetworkCollection() { return networkCollection_; }
     

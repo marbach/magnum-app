@@ -42,12 +42,7 @@ import javafx.stage.Stage;
 /**
  * Controller for the Overview 
  */
-public class OverviewController {
-
-    /** Reference to the main application */
-    private MagnumApp magnumApp_;
-    /** The main stage */
-    private Stage primaryStage;
+public class NetworksTableController extends AppController {
     
     /** "My networks" table */
     @FXML
@@ -86,7 +81,7 @@ public class OverviewController {
 	// PUBLIC METHODS
 	    
     /** The constructor (called before the initialize() method) */
-	public OverviewController() {
+	public NetworksTableController() {
 
 	}
 	
@@ -102,19 +97,6 @@ public class OverviewController {
 
     	// Initialize "My networks" table columns
         myNetworksNameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-    }
-
-
-    // ----------------------------------------------------------------------------
-
-    /** Is called by the main application to give a reference back to itself */
-    public void setMagnumApp(MagnumApp magnumApp) {
-        
-    	magnumApp_ = magnumApp;
-    	primaryStage = magnumApp.getPrimaryStage();
-
-        // Add observable list data to the table
-        myNetworksTable.setItems(magnumApp_.getUserNetworks());
     }
 
     
