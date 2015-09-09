@@ -25,29 +25,69 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp.view;
 
+import java.io.IOException;
+
 import ch.unil.magnumapp.*;
-import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 
 
 /**
  * Abstract class for controllers 
  */
-public class AppController {
+public class ViewController {
 
     /** Reference to the main application */
-    protected MagnumApp magnumApp_;
-    /** The main stage */
-    protected Stage primaryStage;
+    protected MagnumApp magnumApp;
+    /** The root node of this view */
+    protected Node root;
     
 	
 	// ============================================================================
 	// PUBLIC METHODS
 	    
-    /** Is called by the main application to give a reference back to itself */
-    public void setMagnumApp(MagnumApp magnumApp) {
-        
-    	magnumApp_ = magnumApp;
-    	primaryStage = magnumApp.getPrimaryStage();
+    /** Constructor */
+    public ViewController() {
+    	
+    	magnumApp = MagnumApp.getInstance();
     }
+
+	// ----------------------------------------------------------------------------
+
+    /** Load the fxml file and initialize the associated controller */
+    public static ViewController loadFxml(String location) {
+        
+        // Load root layout from fxml file.
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(MagnumApp.class.getResource(location));
+
+        // Load FXML
+        Node root = null;
+        try {
+			root = loader.load();
+		} catch (IOException e) {
+			MagnumApp.error(e);
+		}
+        
+        // Initialize controller
+        ViewController controller = loader.getController();
+        controller.setRoot(root);
+        
+        return controller;
+    }
+
+    
+	// ============================================================================
+	// GETTERS AND SETTERS
+
+	public void setRoot(Node root) {
+		this.root = root;
+	}
+
+	public Node getRoot() {
+		return root;
+	}
+
+
     
 }

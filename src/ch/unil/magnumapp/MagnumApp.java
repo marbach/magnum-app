@@ -25,16 +25,11 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp;
 
-import java.io.IOException;
-
 import ch.unil.magnumapp.model.*;
 import ch.unil.magnumapp.view.*;
-
+import edu.mit.magnum.Magnum;
 import javafx.application.Application;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -44,24 +39,47 @@ import javafx.stage.Stage;
  */
 public class MagnumApp extends Application {
 
+	/** Reference to unique instance of MagnumApp (singleton design pattern) */
+	private static MagnumApp instance;
+	/** Reference to magnum */
+	@SuppressWarnings("unused")
+	private static Magnum magnum;
+	
 	/** The main stage */
     private Stage primaryStage;
     /** The root layout */
     private BorderPane rootLayout;
     
     /** The collection of networks */
-    private NetworkCollection networkCollection_ = null;
+    private NetworkCollection networkCollection = null;
     
     /** Root layout controller */
     private RootLayoutController rootLayoutController;
-    
+    /** "My networks" controller */
+    private NetworksMyController userNetworksController;
+
 	// ============================================================================
 	// STATIC METHODS
 
 	/** Main */
 	public static void main(String[] args) {
+		
+		// Initialize magnum
+		magnum = new Magnum(args);
+		MagnumApp.getInstance();
+		
 		// Calls start()
 		launch(args);
+	}
+
+	
+	// ----------------------------------------------------------------------------
+
+	/** Print the stack trace of the exception and exit */
+	static public void error(Exception e) {
+		
+		e.printStackTrace();
+		System.exit(-1);
 	}
 
 	
@@ -70,8 +88,13 @@ public class MagnumApp extends Application {
 
 	/** Constructor */
 	public MagnumApp() {
-	
-		networkCollection_ = new NetworkCollection();
+			
+		if (instance != null)
+			throw new RuntimeException("There should be only one instance of MagnumApp");
+		else
+			instance = this;
+		
+		networkCollection = new NetworkCollection();
 	}
 	
 	
@@ -86,7 +109,7 @@ public class MagnumApp extends Application {
 
         // The root layout
         initRootLayout();
-        
+     
         // Panes on the left side
         showMyNetworks();
 	}
@@ -96,21 +119,14 @@ public class MagnumApp extends Application {
 
     /** Initializes the root layout */
     public void initRootLayout() {
-        try {
-            // Load root layout from fxml file.
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MagnumApp.class.getResource("view/RootLayout.fxml"));
-            rootLayout = (BorderPane) loader.load();
-            rootLayoutController = loader.getController();
-
-            // Show the scene containing the root layout.
-            Scene scene = new Scene(rootLayout);
-            primaryStage.setScene(scene);
-            primaryStage.show();
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    	
+    	rootLayoutController = (RootLayoutController) RootLayoutController.loadFxml("view/RootLayout.fxml");
+    	rootLayout = (BorderPane) rootLayoutController.getRoot();
+           
+    	// Show the scene containing the root layout.
+    	Scene scene = new Scene(rootLayout);
+    	primaryStage.setScene(scene);
+    	primaryStage.show();
     }
 
     
@@ -118,38 +134,30 @@ public class MagnumApp extends Application {
 
     /** "My networks" pane */
     public void showMyNetworks() {
-        try {
-            // Load fxml
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MagnumApp.class.getResource("view/NetworksMy.fxml"));
-            TitledPane myNetworks = (TitledPane) loader.load();          
-            
-            // Add to root layout
-            rootLayoutController.getLeftSide().getChildren().add(myNetworks);
-            
-            // Give the controller access to the main app.
-            NetworksMyController controller = loader.getController();
-            controller.setMagnumApp(this);
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+    	// Initialize network table
+    	NetworksTableController tableController = (NetworksTableController) ViewController.loadFxml("view/NetworksTable.fxml");
+    	NetworkGroup networkGroup = networkCollection.getUserNetworks();
+    	tableController.setNetworks(networkGroup);
+
+    	// Initialize user networks pane
+    	userNetworksController = (NetworksMyController) ViewController.loadFxml("view/NetworksMy.fxml");
+    	// Add the network table
+    	userNetworksController.showNetworksTable(tableController);            
+    	// Add to root layout
+    	rootLayoutController.getLeftSide().getChildren().add(userNetworksController.getRoot());            
     }
 
-    
-	// ============================================================================
-	// DATA ACCESS
-
-    public ObservableList<NetworkModel> getUserNetworks() {
-    	return networkCollection_.getUserNetworks().getNetworks();
-    }
-    
     
 	// ============================================================================
 	// SETTERS AND GETTERS
 
+	public static MagnumApp getInstance() {
+		return instance;
+	}
+
     public Stage getPrimaryStage() { return primaryStage; }
     
-    public NetworkCollection getNetworkCollection() { return networkCollection_; }
+    public NetworkCollection getNetworkCollection() { return networkCollection; }
     
 }

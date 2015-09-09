@@ -25,10 +25,14 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp.model;
 
+import edu.mit.magnum.MagnumUtils;
+import edu.mit.magnum.net.Network;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+
 
 /**
  * Represents a network
@@ -36,38 +40,55 @@ import javafx.beans.property.StringProperty;
 public class NetworkModel {
 
 	/** Filename */
-	private StringProperty filename_ = null;
+	private StringProperty filename = null;
 	/** Name used for display */
-	private StringProperty name_ = null;
+	private StringProperty name = null;
 
 	/** Network has been successfully loaded, statistics are set */
-	private BooleanProperty networkLoaded_ = null;
-	/** Number of nodes */
-	private IntegerProperty numNodes_ = null;
-	/** Number of edges */
-	private IntegerProperty numEdges_ = null;
-	/** Weighted network */
-	private BooleanProperty isWeighted_ = null;
-	/** Directed network */
-	private BooleanProperty isDirected_ = null;
+	//private BooleanProperty networkLoaded = null;
 	/** Number of regulators */
-	private IntegerProperty numRegulators_ = null;
+	private IntegerProperty numRegulators = null;
+	/** Number of nodes */
+	private IntegerProperty numNodes = null;
+	/** Number of edges */
+	private IntegerProperty numEdges = null;
+	/** Weighted network */
+	private BooleanProperty isWeighted = null;
+	/** Directed network */
+	private BooleanProperty isDirected = null;
 
 	/** The network */
-	//private Network network_ = null;
+	//private Network network = null;
 	
 	
 	// ============================================================================
 	// PUBLIC METHODS
 	    
-	/** Constructor */
-	public NetworkModel(String name) {
+	/** Constructor with given network */
+	public NetworkModel(Network network) {
 		
-		name_ = new SimpleStringProperty(name);
+		initialize(network);
 	}
+
 	
 	
     // ----------------------------------------------------------------------------
+
+	/** Set network and initialize fields of the model accordingly */
+	public void initialize(Network network) {
+		
+		String name = MagnumUtils.extractBasicFilename(network.getFilename(), false);
+		this.name = new SimpleStringProperty(name);
+		filename = new SimpleStringProperty(network.getFilename());
+		
+		numRegulators = new SimpleIntegerProperty(network.getNumRegulators());
+		numNodes = new SimpleIntegerProperty(network.getNumNodes());
+		numEdges = new SimpleIntegerProperty(network.getNumEdges());
+		
+		//this.network = network;
+	}
+
+
 
 
 
@@ -78,6 +99,17 @@ public class NetworkModel {
 	// ============================================================================
 	// SETTERS AND GETTERS
 
-	public StringProperty nameProperty() { return name_; }
-		
+	public StringProperty filenameProperty() { return filename; }
+	public StringProperty nameProperty() { return name; }
+	
+	public IntegerProperty numRegulatorsProperty() { return numRegulators; }
+	public IntegerProperty numNodesProperty() { return numNodes; }
+	public IntegerProperty numEdgesProperty() { return numEdges; }
+	public BooleanProperty isWeightedProperty() { return isWeighted; }
+	public BooleanProperty isDirectedProperty() { return isDirected; }
+
+//	public Network getNetwork() {
+//		return network;
+//	}
+
 }

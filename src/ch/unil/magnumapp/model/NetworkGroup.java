@@ -25,6 +25,9 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp.model;
 
+import java.io.File;
+
+import edu.mit.magnum.net.Network;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -53,14 +56,20 @@ public class NetworkGroup {
 	public NetworkGroup() {
 
 		networks = FXCollections.observableArrayList();
-		networks.add(new NetworkModel("Oiseau"));
-		networks.add(new NetworkModel("Maasive"));
 	}
 
-
-	
 	
     // ----------------------------------------------------------------------------
+
+	/** Load the network, add the model (not the network!) to the collection */
+	public void loadNetworkAddModel(File file, boolean directed, boolean removeSelf, boolean weighted) {
+		
+		String path = file.getAbsolutePath();
+		Network network = new Network(path, directed, removeSelf, weighted, 0);
+		NetworkModel networkModel = new NetworkModel(network);
+		networks.add(networkModel);
+	}
+    
 
 
 

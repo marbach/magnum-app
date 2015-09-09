@@ -34,42 +34,41 @@ import javafx.scene.control.TableView;
 /**
  * Controller for the Overview 
  */
-public class NetworksTableController extends AppController {
+public class NetworksTableController extends ViewController {
     
+	/** The networks that are shown in this table */
+	private NetworkGroup networks;
+	
     /** Network table */
     @FXML
-    protected TableView<NetworkModel> networksTable;
+    private TableView<NetworkModel> networksTable;
     @FXML
-    protected TableColumn<NetworkModel, String> nameColumn;
+    private TableColumn<NetworkModel, String> nameColumn;
     @FXML
-    protected TableColumn<NetworkModel, String> directedColumn;
+    private TableColumn<NetworkModel, String> directedColumn;
     @FXML
-    protected TableColumn<NetworkModel, String> weightedColumn;
+    private TableColumn<NetworkModel, String> weightedColumn;
     @FXML
-    protected TableColumn<NetworkModel, String> numRegulatorsColumn;
+    private TableColumn<NetworkModel, String> numRegulatorsColumn;
     @FXML
-    protected TableColumn<NetworkModel, String> numNodesColumn;
+    private TableColumn<NetworkModel, String> numNodesColumn;
     @FXML
-    protected TableColumn<NetworkModel, String> numEdgesColumn;
+    private TableColumn<NetworkModel, String> numEdgesColumn;
 
 	
 	// ============================================================================
 	// PUBLIC METHODS
 	    
-    /** The constructor (called before the initialize() method) */
-	public NetworksTableController() {
-
-	}
-	
-	
-    // ----------------------------------------------------------------------------
-
     /**
      * Initializes the controller class. This method is automatically called
      * after the fxml file has been loaded.
      */
-    @FXML
-    private void initialize() {
+    //@FXML
+    public void setNetworks(NetworkGroup networks) {
+
+    	// Add observable list data to the table
+    	this.networks = networks;
+        networksTable.setItems(networks.getNetworks());
 
     	// Initialize columns
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
@@ -81,11 +80,10 @@ public class NetworksTableController extends AppController {
 
 
 	// ============================================================================
-	// PRIVATE METHODS
-
-	
-	// ============================================================================
 	// SETTERS AND GETTERS
 
+	public NetworkGroup getNetworks() {
+		return networks;
+	}
 	  
 }

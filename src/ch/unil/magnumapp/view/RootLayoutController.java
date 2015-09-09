@@ -26,12 +26,13 @@ THE SOFTWARE.
 package ch.unil.magnumapp.view;
 
 import javafx.fxml.FXML;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
 /**
  * Controller for the Overview 
  */
-public class RootLayoutController extends AppController {
+public class RootLayoutController extends ViewController {
     
     /** The two sides of the root layout */
     @FXML
@@ -43,11 +44,13 @@ public class RootLayoutController extends AppController {
 	// ============================================================================
 	// PUBLIC METHODS
 	    
-
 	
+    
 	// ============================================================================
 	// SETTERS AND GETTERS
 
+    public BorderPane getRoot() { return (BorderPane) root; }
+    
 	public VBox getLeftSide() {
 		return leftSide;
 	}

@@ -28,82 +28,119 @@ package ch.unil.magnumapp.view;
 import java.io.File;
 import java.util.List;
 
-import ch.unil.magnumapp.MagnumApp;
-import ch.unil.magnumapp.model.NetworkModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 /**
- * Controller for the Overview 
+ * Controller for "My networks" pane 
  */
-public class NetworksMyController extends NetworksTableController {
+public class NetworksMyController extends ViewController {
 
-    /** "My networks" load */
+	/** The networks table view controller */
+	private NetworksTableController networksTableController;
+	
+	/** Files selected using Browse button */
+	private List<File> filesToBeAdded;
+	
+    /** Load */
     @FXML
-    private TextField myNetworksFileText;
+    private TextField fileTextField;
     @FXML
-    private Button myNetworksBrowseButton;
+    private Button browseButton;
     @FXML
-    private Button myNetworksLoadButton;
+    private Button addButton;
     @FXML
-    private RadioButton myNetworksDirectedRadio;
+    private RadioButton directedRadio;
     @FXML
-    private RadioButton myNetworksUndirectedRadio;
+    private RadioButton undirectedRadio;
     @FXML
-    private RadioButton myNetworksWeightedRadio;
+    private RadioButton weightedRadio;
     @FXML
-    private RadioButton myNetworksUnweightedRadio;
+    private RadioButton unweightedRadio;
+    @FXML
+    private CheckBox removeSelfCheckBox;
 
 	
 	// ============================================================================
 	// PUBLIC METHODS
-	    
-    /** The constructor (called before the initialize() method) */
-	public NetworksMyController() {
+
+    /** Add the network table to the pane */
+	public void showNetworksTable(NetworksTableController networksTableController) {
+		
+		this.networksTableController = networksTableController;
+        TitledPane root = (TitledPane) this.root;
+        BorderPane borderPane = (BorderPane) root.getContent();
+        borderPane.setCenter(networksTableController.getRoot());
 
 	}
-	
-	
-    // ----------------------------------------------------------------------------
-
-    /**
-     * Initializes the controller class. This method is automatically called
-     * after the fxml file has been loaded.
-     */
-    @FXML
-    private void initialize() {
-
-    }
 
 
 	// ============================================================================
 	// HANDLES
 
-    /** "My networks" browse button */
+    /** Browse button */
     @FXML
-    private void handleMyNetworksBrowseButton() {
+    private void handleBrowseButton() {
         
+    	// Open file chooser
     	final FileChooser fileChooser = new FileChooser();
+    	filesToBeAdded = fileChooser.showOpenMultipleDialog(magnumApp.getPrimaryStage());
+    	int numFiles = filesToBeAdded.size();
     	
-    	List<File> list = fileChooser.showOpenMultipleDialog(primaryStage);
-    	if (list != null) {
-    		for (File file : list) {
-    		}
-    	}
+    	// Set file text field
+    	if (numFiles == 0)
+    		return;
+    	else if (numFiles == 1)
+    		fileTextField.setText(filesToBeAdded.get(0).getName());
+    	else
+    		fileTextField.setText(numFiles + " files selected");
+    	
+    	// Enable add networks button
+    	addButton.setDisable(false);
     }
 
+    
+    // ----------------------------------------------------------------------------
+
+    /** Add network button */
+    @FXML
+    private void handleAddNetworkButton() {
+        
+    	// Disable add networks button
+    	addButton.setDisable(true);
+    	// Reset file text field
+    	fileTextField.setText(null);
+    	
+    	if (filesToBeAdded == null)
+    		return;
+    	
+    	// Get relevant options
+    	boolean directed = directedRadio.isSelected();
+    	boolean weighted = weightedRadio.isSelected();
+    	boolean removeSelf = removeSelfCheckBox.isSelected();
+    	
+    	for (File file : filesToBeAdded) {
+    		networksTableController.getNetworks().loadNetworkAddModel(file, directed, removeSelf, weighted);
+    	}
+    	
+    }
+
+
+
+    
 	// ============================================================================
 	// PRIVATE METHODS
 
 	
 	// ============================================================================
 	// SETTERS AND GETTERS
+
 
 	  
 }

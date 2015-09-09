@@ -9,61 +9,54 @@
 <TitledPane animated="false" text="My networks" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.NetworksMyController">
    <content>
       <BorderPane>
-         <top>
-            <TableView fx:id="myNetworksTable" minWidth="500.0" BorderPane.alignment="CENTER">
-               <columns>
-                  <TableColumn fx:id="myNetworksNameColumn" minWidth="100.0" prefWidth="-1.0" text="Name" />
-                  <TableColumn fx:id="myNetworksDirectedColumn" minWidth="70.0" prefWidth="-1.0" text="Directed" />
-                  <TableColumn fx:id="myNetworksWeightedColumn" minWidth="70.0" prefWidth="70.0" text="Weighted" />
-                  <TableColumn fx:id="myNetworksNumRegulatorsColumn" prefWidth="92.0" text="#Regulators" />
-                  <TableColumn fx:id="myNetworksNumNodesColumn" prefWidth="58.0" text="#Nodes" />
-                  <TableColumn fx:id="myNetworksNumEdgesColumn" prefWidth="75.0" text="#Edges" />
-               </columns>
-            </TableView>
-         </top>
          <bottom>
-            <GridPane minWidth="300.0" prefHeight="70.0" prefWidth="422.0" BorderPane.alignment="CENTER">
+            <GridPane minWidth="300.0" prefHeight="64.0" prefWidth="575.0" BorderPane.alignment="CENTER">
                <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="56.0" prefWidth="56.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="123.0" minWidth="96.0" prefWidth="104.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="196.0" minWidth="119.0" prefWidth="124.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="162.0" minWidth="93.0" prefWidth="159.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="65.0" minWidth="65.0" prefWidth="65.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="102.0" minWidth="102.0" prefWidth="102.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="111.0" minWidth="111.0" prefWidth="111.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="148.0" minWidth="148.0" prefWidth="148.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="171.0" minWidth="171.0" prefWidth="171.0" />
                </columnConstraints>
                <rowConstraints>
                   <RowConstraints maxHeight="97.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="141.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="45.0" prefHeight="45.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="17.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Label text="File:" />
-                  <HBox GridPane.columnIndex="1" GridPane.columnSpan="2">
+                  <Label text="Files:" />
+                  <HBox GridPane.columnIndex="1" GridPane.columnSpan="3">
                      <children>
-                        <TextField fx:id="myNetworksFileText" editable="false" />
-                        <Button fx:id="myNetworksBrowseButton" mnemonicParsing="false" onAction="#handleMyNetworksBrowseButton" text="Browse ..." />
+                        <TextField fx:id="fileTextField" editable="false" prefHeight="26.0" prefWidth="192.0" promptText="Choose network files" />
+                        <Button fx:id="browseButton" mnemonicParsing="false" onAction="#handleBrowseButton" text="Browse ...">
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin></Button>
                      </children>
                   </HBox>
                   <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <children>
-                        <RadioButton fx:id="myNetworksDirectedRadio" mnemonicParsing="false" selected="true" text="Directed">
+                        <RadioButton fx:id="directedRadio" mnemonicParsing="false" selected="true" text="Directed">
                            <toggleGroup>
                               <ToggleGroup fx:id="isDirectedRadioGroup" />
                            </toggleGroup>
                         </RadioButton>
-                        <RadioButton fx:id="myNetworksUndirectedRadio" mnemonicParsing="false" text="Undirected" toggleGroup="$isDirectedRadioGroup" />
+                        <RadioButton fx:id="undirectedRadio" mnemonicParsing="false" text="Undirected" toggleGroup="$isDirectedRadioGroup" />
                      </children>
                   </VBox>
                   <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <children>
-                        <RadioButton fx:id="myNetworksWeightedRadio" mnemonicParsing="false" selected="true" text="Weighted">
+                        <RadioButton fx:id="weightedRadio" mnemonicParsing="false" selected="true" text="Weighted">
                            <toggleGroup>
                               <ToggleGroup fx:id="isWeightedRadioGroup" />
                            </toggleGroup>
                         </RadioButton>
-                        <RadioButton fx:id="myNetworksUnweightedRadio" alignment="TOP_LEFT" mnemonicParsing="false" text="Unweighted" toggleGroup="$isWeightedRadioGroup" />
+                        <RadioButton fx:id="unweightedRadio" alignment="TOP_LEFT" mnemonicParsing="false" text="Unweighted" toggleGroup="$isWeightedRadioGroup" />
                      </children>
                   </VBox>
                   <Label text="Load as:" GridPane.rowIndex="1" />
-                  <Button fx:id="myNetworksLoadButton" mnemonicParsing="false" text="Load" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  <Button fx:id="addButton" disable="true" mnemonicParsing="false" onAction="#handleAddNetworkButton" text="Add networks" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                  <CheckBox fx:id="removeSelfCheckBox" mnemonicParsing="false" selected="true" text="Remove self-loops" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                </children>
                <BorderPane.margin>
                   <Insets />
