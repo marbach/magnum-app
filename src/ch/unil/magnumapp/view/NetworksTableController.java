@@ -27,8 +27,11 @@ package ch.unil.magnumapp.view;
 
 import ch.unil.magnumapp.model.*;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 
 /**
@@ -45,15 +48,19 @@ public class NetworksTableController extends ViewController {
     @FXML
     private TableColumn<NetworkModel, String> nameColumn;
     @FXML
-    private TableColumn<NetworkModel, String> directedColumn;
+    private TableColumn<NetworkModel, Boolean> directedColumn;
     @FXML
-    private TableColumn<NetworkModel, String> weightedColumn;
+    private TableColumn<NetworkModel, Boolean> weightedColumn;
     @FXML
-    private TableColumn<NetworkModel, String> numRegulatorsColumn;
+    private TableColumn<NetworkModel, Integer> numNodesColumn;
     @FXML
-    private TableColumn<NetworkModel, String> numNodesColumn;
+    private TableColumn<NetworkModel, Integer> numEdgesColumn;
+    
+    /** Buttons */
     @FXML
-    private TableColumn<NetworkModel, String> numEdgesColumn;
+    private Button selectAllButton;
+    @FXML
+    private Button removeButton;
 
 	
 	// ============================================================================
@@ -71,13 +78,41 @@ public class NetworksTableController extends ViewController {
         networksTable.setItems(networks.getNetworks());
 
     	// Initialize columns
+        // There's two ways to do it: 
+        // (1) Java lambdas, the first one (should look up the details, supposed to be elegant)
+        // (2) Create property value factory
+        // For strings, both work. For Integers, I only get it to work with (2), for checkboxes only with (1)...
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-    }
+        numNodesColumn.setCellValueFactory(new PropertyValueFactory<NetworkModel, Integer>("numNodes"));
+        numEdgesColumn.setCellValueFactory(new PropertyValueFactory<NetworkModel, Integer>("numEdges"));
+
+        directedColumn.setCellValueFactory(cellData -> cellData.getValue().isDirectedProperty());
+        directedColumn.setCellFactory(tc -> new CheckBoxTableCell<>());
+
+        weightedColumn.setCellValueFactory(cellData -> cellData.getValue().isWeightedProperty());
+        weightedColumn.setCellFactory(tc -> new CheckBoxTableCell<>());
+}
 
     
 	// ============================================================================
 	// HANDLES
 
+    /** Select all button */
+    @FXML
+    private void handleSelectAllButton() {
+    	
+    	// TODO
+    }
+
+
+	// ----------------------------------------------------------------------------
+
+    /** Remove button */
+    @FXML
+    private void handleRemoveButton() {
+    	
+    	// TODO
+    }
 
 	// ============================================================================
 	// SETTERS AND GETTERS

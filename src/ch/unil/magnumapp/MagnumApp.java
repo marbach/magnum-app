@@ -92,7 +92,7 @@ public class MagnumApp extends Application {
 		if (instance != null)
 			throw new RuntimeException("There should be only one instance of MagnumApp");
 		else
-			instance = this;
+			instance = this;	
 		
 		networkCollection = new NetworkCollection();
 	}
@@ -145,7 +145,8 @@ public class MagnumApp extends Application {
     	// Add the network table
     	userNetworksController.showNetworksTable(tableController);            
     	// Add to root layout
-    	rootLayoutController.getLeftSide().getChildren().add(userNetworksController.getRoot());            
+    	rootLayoutController.getLeftSide().getChildren().add(userNetworksController.getRoot());  
+    	    	
     }
 
     

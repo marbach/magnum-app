@@ -29,6 +29,7 @@ import edu.mit.magnum.MagnumUtils;
 import edu.mit.magnum.net.Network;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -80,6 +81,9 @@ public class NetworkModel {
 		String name = MagnumUtils.extractBasicFilename(network.getFilename(), false);
 		this.name = new SimpleStringProperty(name);
 		filename = new SimpleStringProperty(network.getFilename());
+		
+		isWeighted = new SimpleBooleanProperty(network.getIsWeighted());
+		isDirected = new SimpleBooleanProperty(network.getIsDirected());
 		
 		numRegulators = new SimpleIntegerProperty(network.getNumRegulators());
 		numNodes = new SimpleIntegerProperty(network.getNumNodes());

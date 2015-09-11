@@ -28,6 +28,7 @@ package ch.unil.magnumapp.view;
 import java.io.File;
 import java.util.List;
 
+import ch.unil.magnumapp.ThreadLoadNetworks;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -91,9 +92,11 @@ public class NetworksMyController extends ViewController {
     	// Open file chooser
     	final FileChooser fileChooser = new FileChooser();
     	filesToBeAdded = fileChooser.showOpenMultipleDialog(magnumApp.getPrimaryStage());
-    	int numFiles = filesToBeAdded.size();
+    	if (filesToBeAdded == null)
+    		return;
     	
     	// Set file text field
+    	int numFiles = filesToBeAdded.size();
     	if (numFiles == 0)
     		return;
     	else if (numFiles == 1)
@@ -124,10 +127,16 @@ public class NetworksMyController extends ViewController {
     	boolean directed = directedRadio.isSelected();
     	boolean weighted = weightedRadio.isSelected();
     	boolean removeSelf = removeSelfCheckBox.isSelected();
+    			
+    	// The thread responsible for loading the networks
+    	ThreadLoadNetworks threadLoad = new ThreadLoadNetworks(
+    			networksTableController.getNetworks(), 
+    			filesToBeAdded, directed, weighted, removeSelf);
+    	// The thread controller / dialog
+    	ThreadController threadController = new ThreadController(threadLoad);
+    	threadController.start();
     	
-    	for (File file : filesToBeAdded) {
-    		networksTableController.getNetworks().loadNetworkAddModel(file, directed, removeSelf, weighted);
-    	}
+    	//threadLoad.interrupt();
     	
     }
 
