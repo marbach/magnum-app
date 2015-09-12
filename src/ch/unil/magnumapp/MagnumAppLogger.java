@@ -1,6 +1,6 @@
 /*
 Copyright (c) 2013-2015 Daniel Marbach
-
+ 
 We release this software open source under an MIT license (see below). If this
 software was useful for your scientific work, please cite our paper available at:
 http://regulatorycircuits.org
@@ -25,71 +25,71 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp;
 
-import java.io.File;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.zip.GZIPInputStream;
 
-import ch.unil.magnumapp.model.NetworkGroup;
+import ch.unil.magnumapp.view.ThreadController;
+import edu.mit.magnum.FileExport;
 import edu.mit.magnum.Magnum;
+import edu.mit.magnum.MagnumLogger;
+
 
 /**
- * Runnable class for loading networks
+ * Logger supporting separate outputs for different threads
  */
-public class ThreadLoadNetworks extends ThreadMagnum {
+public class MagnumAppLogger extends MagnumLogger {
 
-	/** The network group where the files will be added */
-	NetworkGroup networkGroup;
+	/** The number of threads */
+	//private int numThreads;
+	/** The log file for each thread */
+	//private FileExport[] logFiles;
+	/** Manager of the threads, responsible for printing to consoles */
+	private ThreadController threadController;
+
 	
-	/** Network files */
-    private List<File> files;
-    /** Directed network */
-    private boolean directed;
-    /** Weighted network */
-    private boolean weighted;
-    /** Remove self loops */
-    private boolean removeSelf;
-    
-    
+	// ============================================================================
+	// STATIC FUNCTIONS
+
+
+	
 	// ============================================================================
 	// PUBLIC METHODS
-
+	    
 	/** Constructor */
-	public ThreadLoadNetworks(NetworkGroup networkGroup, List<File> files, boolean directed, boolean weighted, boolean removeSelf) {
+	public MagnumAppLogger(ThreadController threadController) {
 
-		this.networkGroup = networkGroup;
-		this.files = files;
-		this.directed = directed;
-		this.weighted = weighted;
-		this.removeSelf = removeSelf;
+		this.threadController = threadController;
 	}
 
-	
+
 	// ----------------------------------------------------------------------------
 
-	/** Main method called by the thread */
-	public void run() {
+	/** Overrides MagnumLogger.print(): Write string to stdout, consoles and files */
+	public void print(String msg) {
 		
-    	for (File file : files) {
-    		try {
-    			networkGroup.loadNetworkAddModel(file, directed, removeSelf, weighted);
-    			controller.success();
-    			
-    		} catch (Exception e) {
-    			// It was an interrupt
-    			if (Magnum.interrupted()) {
-    				Magnum.log.println("Thread interrupted!");
-    				return;
-    			} else {
-    				controller.error(e);
-    				throw e;
-    			}
-    		}
-    	}
-
+		System.out.print(msg);
+		threadController.print(msg);
 	}
+
+		
+	// ============================================================================
+	// PRIVATE METHODS
+
+
 	
 	// ============================================================================
 	// SETTERS AND GETTERS
 
-
-
+		
 }

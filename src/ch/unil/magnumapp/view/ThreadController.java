@@ -27,8 +27,13 @@ package ch.unil.magnumapp.view;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Optional;
 
+import ch.unil.magnumapp.MagnumAppLogger;
 import ch.unil.magnumapp.ThreadMagnum;
+import edu.mit.magnum.Magnum;
+import edu.mit.magnum.MagnumLogger;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -41,14 +46,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
 /**
- * Runnable class for loading networks
+ * Controller for a single "launch job" dialog managing multiple threads
  */
 public class ThreadController {
 
 	/** Status of thread */
 	public enum Status { ONGOING, SUCCESS, ERROR };
 	
-	/** The thread */
+	/** The thread -- this will become an array! */
 	private ThreadMagnum thread;
     /** Status for progress indicator (-1: undetermined) */
 	private double progress;
@@ -63,7 +68,7 @@ public class ThreadController {
 	private Node cancelButton;
 	/** The progress indicator */
 	private ProgressIndicator progressIndicator;
-	/** The text area */
+	/** The text area -- this will become an arrya! */
 	private TextArea console; 
 	/** The dialog content (status message) */
 	private TextField statusMessage;
@@ -88,12 +93,24 @@ public class ThreadController {
 	/** Open the dialog, start the thread */
 	public void start() {
 		
-		// Open the dialog
+		// Copy stdout to the console
+		Magnum.log = new MagnumAppLogger(this);
+
+		// Create the dialog
 		initDialog();
+		
 		// Start the thread
     	thread.start();
-    	alert.showAndWait();
     	
+    	// Show the dialog
+    	Optional<ButtonType> result = alert.showAndWait();
+    	
+    	// Kill the thread if cancel was pressed, else nothing needs to be done
+    	if (result.get() == ButtonType.CANCEL)
+    		thread.interrupt();
+    		
+		// Remove the custom logger
+		Magnum.log = new MagnumLogger();
 	}
 	
 	
@@ -108,8 +125,52 @@ public class ThreadController {
 		progressIndicator.setVisible(false);
 		statusMessage.textProperty().setValue("Status: DONE!");
     	statusMessage.setStyle("-fx-text-fill: green; -fx-font-weight: bold");
-		console.appendText("\nSuccess!");
+		print("\nSuccess!");
 	}
+
+	
+	// ----------------------------------------------------------------------------
+
+	/** Called by the thread in case of error (not part of the FX thread!) */
+	public void error(Exception e) {
+		
+		printException(e);
+		
+		status = Status.ERROR;
+		okButton.setDisable(false);
+		cancelButton.setDisable(true);
+		progressIndicator.setVisible(false);
+		statusMessage.textProperty().setValue("ERROR: " + e.getMessage());
+    	statusMessage.setStyle("-fx-text-fill: red; -fx-font-weight: bold");
+	}
+
+	
+	// ----------------------------------------------------------------------------
+
+	/** Print to console of this thread */
+	public void print(String msg) {
+		
+		Platform.runLater(new Runnable() {
+		    @Override public void run() {
+		    	console.appendText(msg);
+		    }
+		});
+	}
+
+	
+	/** Prints the exception to the custom outputs (not stdout) */
+	public void printException(Exception e) {
+		
+		// Print exception to string
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		e.printStackTrace(pw);
+		String exceptionText = sw.toString();
+		
+		// Print exception text to console
+		print(exceptionText + "\nABORTED WITH ERROR!");
+	}	
+
 
 	
 	// ============================================================================
@@ -135,16 +196,8 @@ public class ThreadController {
         okButton.setDisable(true);
         cancelButton = alert.getDialogPane().lookupButton(ButtonType.CANCEL);
 
-        Exception ex = new RuntimeException("Could not find file blabla.txt");
-
-    	// Create expandable Exception.
-    	StringWriter sw = new StringWriter();
-    	PrintWriter pw = new PrintWriter(sw);
-    	ex.printStackTrace(pw);
-    	String exceptionText = sw.toString();
-
     	// The console
-    	console = new TextArea(exceptionText);
+    	console = new TextArea();
     	console.setEditable(false);
     	console.setWrapText(true);
 

@@ -28,7 +28,9 @@ package ch.unil.magnumapp.view;
 import java.io.File;
 import java.util.List;
 
+import ch.unil.magnumapp.MagnumAppLogger;
 import ch.unil.magnumapp.ThreadLoadNetworks;
+import edu.mit.magnum.Magnum;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -132,11 +134,10 @@ public class NetworksMyController extends ViewController {
     	ThreadLoadNetworks threadLoad = new ThreadLoadNetworks(
     			networksTableController.getNetworks(), 
     			filesToBeAdded, directed, weighted, removeSelf);
+    	
     	// The thread controller / dialog
     	ThreadController threadController = new ThreadController(threadLoad);
     	threadController.start();
-    	
-    	//threadLoad.interrupt();
     	
     }
 
