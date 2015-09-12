@@ -26,10 +26,13 @@ THE SOFTWARE.
 package ch.unil.magnumapp.view;
 
 import ch.unil.magnumapp.model.*;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 
@@ -77,6 +80,9 @@ public class NetworksTableController extends ViewController {
     	this.networks = networks;
         networksTable.setItems(networks.getNetworks());
 
+        // Enable selection of multiple networks 
+        networksTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
     	// Initialize columns
         // There's two ways to do it: 
         // (1) Java lambdas, the first one (should look up the details, supposed to be elegant)
@@ -101,7 +107,7 @@ public class NetworksTableController extends ViewController {
     @FXML
     private void handleSelectAllButton() {
     	
-    	// TODO
+    	networksTable.getSelectionModel().selectAll();
     }
 
 
@@ -111,7 +117,8 @@ public class NetworksTableController extends ViewController {
     @FXML
     private void handleRemoveButton() {
     	
-    	// TODO
+    	ObservableList<NetworkModel> selected = networksTable.getSelectionModel().getSelectedItems();
+    	networksTable.getItems().removeAll(selected);
     }
 
 	// ============================================================================

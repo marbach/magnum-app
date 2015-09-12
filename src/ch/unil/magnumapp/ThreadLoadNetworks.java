@@ -68,23 +68,21 @@ public class ThreadLoadNetworks extends ThreadMagnum {
 	/** Main method called by the thread */
 	public void run() {
 		
-    	for (File file : files) {
-    		try {
-    			networkGroup.loadNetworkAddModel(file, directed, removeSelf, weighted);
-    			controller.success();
+		try {
+			for (File file : files)
+				networkGroup.loadNetworkAddModel(file, directed, removeSelf, weighted);
+			controller.success();
     			
-    		} catch (Exception e) {
-    			// It was an interrupt
-    			if (Magnum.interrupted()) {
-    				Magnum.log.println("Thread interrupted!");
-    				return;
-    			} else {
-    				controller.error(e);
-    				throw e;
-    			}
-    		}
-    	}
-
+		} catch (Exception e) {
+			// It was an interrupt
+			if (Magnum.interrupted()) {
+				Magnum.log.println("Thread interrupted!");
+				return;
+			} else {
+				controller.error(e);
+				throw e;
+			}
+		}
 	}
 	
 	// ============================================================================
