@@ -57,6 +57,9 @@ public class MagnumApp extends Application {
     private RootLayoutController rootLayoutController;
     /** "My networks" controller */
     private NetworksMyController userNetworksController;
+    /** "Connectivity enrichment" controller */
+    private EnrichmentController enrichmentController;
+    
 
 	// ============================================================================
 	// STATIC METHODS
@@ -112,13 +115,17 @@ public class MagnumApp extends Application {
      
         // Panes on the left side
         showMyNetworks();
+        
+        // Panes on the right side
+        showConnetivityEnrichmentPane();
 	}
 	
 	
-	// ----------------------------------------------------------------------------
+	// ============================================================================
+	// PRIVATE METHODS
 
     /** Initializes the root layout */
-    public void initRootLayout() {
+    private void initRootLayout() {
     	
     	rootLayoutController = (RootLayoutController) RootLayoutController.loadFxml("view/RootLayout.fxml");
     	rootLayout = (BorderPane) rootLayoutController.getRoot();
@@ -133,7 +140,7 @@ public class MagnumApp extends Application {
 	// ----------------------------------------------------------------------------
 
     /** "My networks" pane */
-    public void showMyNetworks() {
+    private void showMyNetworks() {
 
     	// Initialize network table
     	NetworksTableController tableController = (NetworksTableController) ViewController.loadFxml("view/NetworksTable.fxml");
@@ -146,6 +153,24 @@ public class MagnumApp extends Application {
     	userNetworksController.showNetworksTable(tableController);            
     	// Add to root layout
     	rootLayoutController.getLeftSide().getChildren().add(userNetworksController.getRoot());  
+    	    	
+    }
+
+    
+	// ----------------------------------------------------------------------------
+
+    /** "Connectivity enrichment" pane */
+    private void showConnetivityEnrichmentPane() {
+
+    	// Initialize network table
+    	NetworksTableController tableController = (NetworksTableController) ViewController.loadFxml("view/NetworksTable.fxml");
+    	NetworkGroup networkGroup = networkCollection.getUserNetworks();
+    	tableController.setNetworks(networkGroup);
+
+    	// Initialize user networks pane
+    	enrichmentController = (EnrichmentController) ViewController.loadFxml("view/ConnectivityEnrichment.fxml");
+    	// Add to root layout
+    	rootLayoutController.getRightSide().getChildren().add(enrichmentController.getRoot());  
     	    	
     }
 

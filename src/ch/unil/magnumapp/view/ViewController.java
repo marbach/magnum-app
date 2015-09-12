@@ -25,7 +25,9 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp.view;
 
+import java.awt.Desktop;
 import java.io.IOException;
+import java.net.URI;
 
 import ch.unil.magnumapp.*;
 import javafx.fxml.FXMLLoader;
@@ -52,7 +54,8 @@ public class ViewController {
     	magnumApp = MagnumApp.getInstance();
     }
 
-	// ----------------------------------------------------------------------------
+
+    // ----------------------------------------------------------------------------
 
     /** Load the fxml file and initialize the associated controller */
     public static ViewController loadFxml(String location) {
@@ -76,6 +79,24 @@ public class ViewController {
         return controller;
     }
 
+    
+	// ----------------------------------------------------------------------------
+
+    /** Open web page in user's default browser */
+    public static void openWebpage(String url) {
+    	
+    	//url.toURI()
+        Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+            try {
+            	URI uri = new URI(url);
+                desktop.browse(uri);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
     
 	// ============================================================================
 	// GETTERS AND SETTERS

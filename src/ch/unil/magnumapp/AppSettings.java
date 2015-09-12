@@ -25,35 +25,20 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp;
 
-import ch.unil.magnumapp.view.ThreadController;
 
 /**
- * Runnable class for loading networks
+ * Class for settings
  */
-public class ThreadMagnum extends Thread {
-
-	/** The view controller of the dialog/alert of this thread */
-	protected ThreadController controller;
-	/** The id of this thread */
-	protected long id;
-    
-    
-	// ============================================================================
-	// PUBLIC METHODS
-
-	/** Constructor */
-	public ThreadMagnum() {
-		
-		id = Thread.currentThread().getId();
-	}
+final public class AppSettings {
 
 
 	// ============================================================================
-	// SETTERS AND GETTERS
+	// STATIC METHODS
 
-	public void setController(ThreadController controller) {
-		this.controller = controller;
-	}
+	/** Download gene scores */
+	final static public String geneScoresLink = "http://regulatorycircuits.org/data/GWAS%20gene%20scores%20v1.zip";
+	/** Download PASCAL */
+	final static public String pascalLink = "http://www2.unil.ch/cbg/index.php?title=Pascal";
 
-
+    
 }

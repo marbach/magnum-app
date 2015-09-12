@@ -28,12 +28,17 @@ package ch.unil.magnumapp.view;
 import java.io.File;
 import java.util.List;
 
+import ch.unil.magnumapp.AppSettings;
 import ch.unil.magnumapp.MagnumAppLogger;
 import ch.unil.magnumapp.ThreadLoadNetworks;
+import ch.unil.magnumapp.model.NetworkModel;
 import edu.mit.magnum.Magnum;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
@@ -43,107 +48,100 @@ import javafx.stage.FileChooser;
 /**
  * Controller for "My networks" pane 
  */
-public class NetworksMyController extends ViewController {
+public class EnrichmentController extends ViewController {
 
-	/** The networks table view controller */
-	private NetworksTableController networksTableController;
-	
+	/** The selected networks */
+	private ObservableList<NetworkModel> networks;
 	/** Files selected using Browse button */
-	private List<File> filesToBeAdded;
+	private File geneScoreFile;
 	
     /** Load */
     @FXML
-    private TextField fileTextField;
+    private TextField networksTextField;
     @FXML
-    private Button browseButton;
+    private TextField geneScoreTextField;
     @FXML
-    private Button addButton;
+    private Button geneScoreBrowseButton;
     @FXML
-    private RadioButton directedRadio;
+    private Hyperlink geneScoreDownloadLink;
     @FXML
-    private RadioButton undirectedRadio;
+    private Hyperlink pascalDownloadLink;
     @FXML
-    private RadioButton weightedRadio;
+    private TextField outputDirTextField;
     @FXML
-    private RadioButton unweightedRadio;
+    private Button outputDirBrowseButton;
     @FXML
-    private CheckBox removeSelfCheckBox;
-
+    private TextField kernelDirTextField;
+    @FXML
+    private Button kernelDirBrowseButton;
+    @FXML
+    private CheckBox userPrecomputedKernelsCheckBox;
+    @FXML
+    private CheckBox deleteKernelsCheckBox;
+    @FXML
+    private TextField numPermutationsTextField;
+    @FXML
+    private CheckBox excludeHlaGenesCheckBox;
+    
 	
 	// ============================================================================
 	// PUBLIC METHODS
-
-    /** Add the network table to the pane */
-	public void showNetworksTable(NetworksTableController networksTableController) {
-		
-		this.networksTableController = networksTableController;
-        TitledPane root = (TitledPane) this.root;
-        BorderPane borderPane = (BorderPane) root.getContent();
-        borderPane.setCenter(networksTableController.getRoot());
-
-	}
 
 
 	// ============================================================================
 	// HANDLES
 
-    /** Browse button */
+    /** Gene score browse button */
     @FXML
-    private void handleBrowseButton() {
+    private void handleGeneScoreBrowseButton() {
         
     	// Open file chooser
     	final FileChooser fileChooser = new FileChooser();
-    	filesToBeAdded = fileChooser.showOpenMultipleDialog(magnumApp.getPrimaryStage());
-    	if (filesToBeAdded == null) {
-    		fileTextField.setText(null);
+    	geneScoreFile = fileChooser.showOpenDialog(magnumApp.getPrimaryStage());
+    	if (geneScoreFile == null) {
+    		geneScoreTextField.setText(null);
     		return;
     	}
     	
     	// Set file text field
-    	int numFiles = filesToBeAdded.size();
-    	if (numFiles == 0)
-    		return;
-    	else if (numFiles == 1)
-    		fileTextField.setText(filesToBeAdded.get(0).getName());
-    	else
-    		fileTextField.setText(numFiles + " files selected");
-    	
-    	// Enable add networks button
-    	addButton.setDisable(false);
+    	geneScoreTextField.setText(geneScoreFile.getName());
+    }
+
+
+    // ----------------------------------------------------------------------------
+
+    /** Gene score download link */
+    @FXML
+    private void handleGeneScoreDownloadLink() {  	
+    	openWebpage(AppSettings.geneScoresLink);
     }
 
     
     // ----------------------------------------------------------------------------
 
-    /** Add network button */
+    /** PASCAL download link */
     @FXML
-    private void handleAddNetworkButton() {
-        
-    	// Disable add networks button
-    	addButton.setDisable(true);
-    	// Reset file text field
-    	fileTextField.setText(null);
-    	
-    	if (filesToBeAdded == null)
-    		return;
-    	
-    	// Get relevant options
-    	boolean directed = directedRadio.isSelected();
-    	boolean weighted = weightedRadio.isSelected();
-    	boolean removeSelf = removeSelfCheckBox.isSelected();
-    			
-    	// The thread responsible for loading the networks
-    	ThreadLoadNetworks threadLoad = new ThreadLoadNetworks(
-    			networksTableController.getNetworks(), 
-    			filesToBeAdded, directed, weighted, removeSelf);
-    	
-    	// The thread controller / dialog
-    	ThreadController threadController = new ThreadController(threadLoad);
-    	threadController.start();
-    	
+    private void handlePascalDownloadLink() {
+    	openWebpage(AppSettings.pascalLink);
     }
 
 
+    // ----------------------------------------------------------------------------
+
+    /** Output directory browse button */
+    @FXML
+    private void handleOutputDirBrowseButton() {
+    	
+    }
+
+    
+    // ----------------------------------------------------------------------------
+
+    /** Kernel directory browse button */
+    @FXML
+    private void handleKernelDirBrowseButton() {
+    	
+    }
 
     
 	// ============================================================================
