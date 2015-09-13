@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<TreeTableView fx:id="networksTable" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.NetworksTreeTableController">
+   <columns>
+      <TreeTableColumn fx:id="nameColumn" maxWidth="400.0" minWidth="200.0" prefWidth="-1.0" text="Name" />
+      <TreeTableColumn fx:id="directedColumn" maxWidth="-1.0" minWidth="30.0" prefWidth="30.0" text="Dir" />
+      <TreeTableColumn fx:id="weightedColumn" maxWidth="-1.0" minWidth="30.0" prefWidth="30.0" text="Wgh" />
+      <TreeTableColumn fx:id="referenceColumn" maxWidth="400.0" minWidth="150.0" prefWidth="-1.0" text="References" />
+   </columns>
+   <columnResizePolicy>
+      <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+   </columnResizePolicy>
+</TreeTableView>

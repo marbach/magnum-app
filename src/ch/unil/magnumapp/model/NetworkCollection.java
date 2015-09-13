@@ -40,7 +40,7 @@ public class NetworkCollection {
 	/** Constructor */
 	public NetworkCollection() {
 		
-		userNetworks = new NetworkGroup();
+		userNetworks = new NetworkGroup("My networks");
 	}
 
 

@@ -28,25 +28,22 @@ package ch.unil.magnumapp.view;
 import java.io.File;
 import java.util.List;
 
-import ch.unil.magnumapp.MagnumAppLogger;
 import ch.unil.magnumapp.ThreadLoadNetworks;
-import edu.mit.magnum.Magnum;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
 /**
- * Controller for "My networks" pane 
+ * Controller for "Other networks" pane 
  */
-public class NetworksMyController extends ViewController {
+public class OtherNetworksController extends ViewController {
 
 	/** The networks table view controller */
-	private NetworksTableController networksTableController;
+	private NetworksTreeTableController networksTableController;
 	
 	/** Files selected using Browse button */
 	private List<File> filesToBeAdded;
@@ -68,19 +65,20 @@ public class NetworksMyController extends ViewController {
     private RadioButton unweightedRadio;
     @FXML
     private CheckBox removeSelfCheckBox;
+    @FXML
+    private VBox contentVBox;
 
 	
 	// ============================================================================
 	// PUBLIC METHODS
 
     /** Add the network table to the pane */
-	public void showNetworksTable(NetworksTableController networksTableController) {
+	public void showNetworksTable(NetworksTreeTableController tableController) {
 		
-		this.networksTableController = networksTableController;
-        TitledPane root = (TitledPane) this.root;
-        BorderPane borderPane = (BorderPane) root.getContent();
-        borderPane.setCenter(networksTableController.getRoot());
-
+		this.networksTableController = tableController;
+		// Add the table as first item in the vBox
+        contentVBox.getChildren().setAll(
+        		tableController.getRoot(), contentVBox.getChildren().get(0), contentVBox.getChildren().get(1));
 	}
 
 

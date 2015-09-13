@@ -26,100 +26,75 @@ THE SOFTWARE.
 package ch.unil.magnumapp.view;
 
 import ch.unil.magnumapp.model.*;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TableView.TableViewSelectionModel;
-import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableView;
 
 
 /**
  * Controller for the Overview 
  */
-public class NetworksTableController extends ViewController {
+public class NetworksTreeTableController extends ViewController {
     
 	/** The networks that are shown in this table */
 	private NetworkGroup networks;
+	/** The root item */
+	private TreeItem<NetworkModel> root;
 	
     /** Network table */
     @FXML
-    private TableView<NetworkModel> networksTable;
+    private TreeTableView<NetworkModel> networksTable;
     @FXML
-    private TableColumn<NetworkModel, String> nameColumn;
+    private TreeTableColumn<NetworkModel, Boolean> directedColumn;
     @FXML
-    private TableColumn<NetworkModel, Boolean> directedColumn;
+    private TreeTableColumn<NetworkModel, Boolean> weightedColumn;
     @FXML
-    private TableColumn<NetworkModel, Boolean> weightedColumn;
+    private TreeTableColumn<NetworkModel, String> nameColumn;
     @FXML
-    private TableColumn<NetworkModel, Integer> numNodesColumn;
-    @FXML
-    private TableColumn<NetworkModel, Integer> numEdgesColumn;
+    private TreeTableColumn<NetworkModel, String> referenceColumn;
     
-    /** Buttons */
-    @FXML
-    private Button selectAllButton;
-    @FXML
-    private Button removeButton;
-
 	
 	// ============================================================================
 	// PUBLIC METHODS
 	    
-    /**
-     * Initializes the controller class. This method is automatically called
-     * after the fxml file has been loaded.
-     */
-    //@FXML
+    /** Initialize, called after the fxml file has been loaded */
     public void setNetworks(NetworkGroup networks) {
 
     	// Add observable list data to the table
     	this.networks = networks;
-        networksTable.setItems(networks.getNetworks());
-
+    	
+    	// Create and set the root
+    	root = networks.getTreeViewRoot();
+    	root.setExpanded(true);
+    	networksTable.setRoot(root);
+    	root.getChildren().setAll(networks.getNetworks());
+    	
         // Enable selection of multiple networks 
         networksTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
     	// Initialize columns
-        // There's two ways to do it: 
+        
+        // For TableView there's two ways to do it: 
         // (1) Java lambdas, the first one (should look up the details, supposed to be elegant)
         // (2) Create property value factory
         // For strings, both work. For Integers, I only get it to work with (2), for checkboxes only with (1)...
-        nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-        numNodesColumn.setCellValueFactory(new PropertyValueFactory<NetworkModel, Integer>("numNodes"));
-        numEdgesColumn.setCellValueFactory(new PropertyValueFactory<NetworkModel, Integer>("numEdges"));
-
-        directedColumn.setCellValueFactory(cellData -> cellData.getValue().isDirectedProperty());
-        directedColumn.setCellFactory(tc -> new CheckBoxTableCell<>());
-
-        weightedColumn.setCellValueFactory(cellData -> cellData.getValue().isWeightedProperty());
-        weightedColumn.setCellFactory(tc -> new CheckBoxTableCell<>());
+        
+        nameColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().nameProperty());
+//        numNodesColumn.setCellValueFactory(new PropertyValueFactory<NetworkModel, Integer>("numNodes"));
+//        numEdgesColumn.setCellValueFactory(new PropertyValueFactory<NetworkModel, Integer>("numEdges"));
+//
+//        directedColumn.setCellValueFactory(cellData -> cellData.getValue().isDirectedProperty());
+//        directedColumn.setCellFactory(tc -> new CheckBoxTableCell<>());
+//
+//        weightedColumn.setCellValueFactory(cellData -> cellData.getValue().isWeightedProperty());
+//        weightedColumn.setCellFactory(tc -> new CheckBoxTableCell<>());
 }
 
     
 	// ============================================================================
 	// HANDLES
-
-    /** Select all button */
-    @FXML
-    private void handleSelectAllButton() {
-    	
-    	networksTable.getSelectionModel().selectAll();
-    }
-
-
-	// ----------------------------------------------------------------------------
-
-    /** Remove button */
-    @FXML
-    private void handleRemoveButton() {
-    	
-    	ObservableList<NetworkModel> selected = networksTable.getSelectionModel().getSelectedItems();
-    	networksTable.getItems().removeAll(selected);
-    }
 
 	// ============================================================================
 	// SETTERS AND GETTERS

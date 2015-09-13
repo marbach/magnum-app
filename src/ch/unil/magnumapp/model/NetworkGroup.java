@@ -32,6 +32,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.TreeItem;
 
 /**
  * Represents a group of networks displayed together (e.g., the 4 PPI nets, 
@@ -45,17 +46,20 @@ public class NetworkGroup {
 	/** All networks have been successfully loaded, statistics are set */
 	private BooleanProperty networksLoaded = null;
 	
+	/** The root for the tree view */
+	private TreeItem<NetworkModel> treeViewRoot;
 	/** The network models */
-	private ObservableList<NetworkModel> networks = null;
+	private ObservableList<TreeItem<NetworkModel>> networks = null;
 	
 	
 	// ============================================================================
 	// PUBLIC METHODS
 	    
 	/** Constructor */
-	public NetworkGroup() {
+	public NetworkGroup(String name) {
 
 		networks = FXCollections.observableArrayList();
+		treeViewRoot = new TreeItem<>(new NetworkModel(name));
 	}
 
 	
@@ -66,8 +70,9 @@ public class NetworkGroup {
 		
 		String path = file.getAbsolutePath();
 		Network network = new Network(path, directed, removeSelf, weighted, 0);
-		NetworkModel networkModel = new NetworkModel(network);
-		networks.add(networkModel);
+		TreeItem<NetworkModel> next = new TreeItem<>(new NetworkModel(network));
+		networks.add(next);
+		treeViewRoot.getChildren().add(next);
 	}
     
 
@@ -80,8 +85,18 @@ public class NetworkGroup {
 	// ============================================================================
 	// SETTERS AND GETTERS
 
-	public ObservableList<NetworkModel> getNetworks() {
+	public ObservableList<TreeItem<NetworkModel>> getNetworks() {
 		return networks;
+	}
+
+
+	public TreeItem<NetworkModel> getTreeViewRoot() {
+		return treeViewRoot;
+	}
+
+
+	public void setTreeViewRoot(TreeItem<NetworkModel> treeViewRoot) {
+		this.treeViewRoot = treeViewRoot;
 	}
 
 }

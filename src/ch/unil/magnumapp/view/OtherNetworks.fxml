@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<TitledPane animated="false" minWidth="558.0" text="Other networks" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.OtherNetworksController">
+   <content>
+      <AnchorPane>
+         <children>
+            <VBox fx:id="contentVBox" spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label text="Add your own networks">
+                     <padding>
+                        <Insets top="5.0" />
+                     </padding>
+                  </Label>
+                  <GridPane hgap="10.0" minWidth="535.0" vgap="5.0">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="NEVER" />
+                        <ColumnConstraints hgrow="NEVER" />
+                        <ColumnConstraints hgrow="NEVER" />
+                        <ColumnConstraints hgrow="NEVER" />
+                        <ColumnConstraints hgrow="NEVER" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints maxHeight="97.0" vgrow="NEVER" />
+                        <RowConstraints vgrow="NEVER" />
+                        <RowConstraints maxHeight="17.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Label text="Files:" />
+                        <HBox GridPane.columnIndex="1" GridPane.columnSpan="3">
+                           <children>
+                              <TextField fx:id="fileTextField" editable="false" prefWidth="250.0" promptText="Choose network files" />
+                              <Button fx:id="browseButton" mnemonicParsing="false" onAction="#handleBrowseButton" text="Browse ..." />
+                           </children>
+                        </HBox>
+                        <VBox GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <children>
+                              <RadioButton fx:id="directedRadio" mnemonicParsing="false" selected="true" text="Directed">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="isDirectedRadioGroup" />
+                                 </toggleGroup>
+                              </RadioButton>
+                              <RadioButton fx:id="undirectedRadio" mnemonicParsing="false" text="Undirected" toggleGroup="$isDirectedRadioGroup" />
+                           </children>
+                        </VBox>
+                        <VBox GridPane.columnIndex="2" GridPane.rowIndex="1">
+                           <children>
+                              <RadioButton fx:id="weightedRadio" mnemonicParsing="false" selected="true" text="Weighted">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="isWeightedRadioGroup" />
+                                 </toggleGroup>
+                              </RadioButton>
+                              <RadioButton fx:id="unweightedRadio" alignment="TOP_LEFT" mnemonicParsing="false" text="Unweighted" toggleGroup="$isWeightedRadioGroup" />
+                           </children>
+                        </VBox>
+                        <Label text="Load as:" GridPane.rowIndex="1" />
+                        <Button fx:id="addButton" disable="true" mnemonicParsing="false" onAction="#handleAddNetworkButton" text="Add networks" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                        <CheckBox fx:id="removeSelfCheckBox" mnemonicParsing="false" selected="true" text="Remove self-loops" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                     </children>
+                  </GridPane>
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+   </content>
+</TitledPane>

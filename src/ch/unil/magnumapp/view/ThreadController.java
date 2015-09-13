@@ -135,7 +135,6 @@ public class ThreadController {
 	public void error(Exception e) {
 		
 		printException(e);
-		
 		status = Status.ERROR;
 		okButton.setDisable(false);
 		cancelButton.setDisable(true);

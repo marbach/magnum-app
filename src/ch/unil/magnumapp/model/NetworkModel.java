@@ -72,8 +72,16 @@ public class NetworkModel {
 	}
 
 	
+	public NetworkModel(String name) {
+		
+		this.name = new SimpleStringProperty(name);
+	}
+
+
 	
     // ----------------------------------------------------------------------------
+
+
 
 	/** Set network and initialize fields of the model accordingly */
 	public void initialize(Network network) {

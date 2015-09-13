@@ -56,7 +56,7 @@ public class MagnumApp extends Application {
     /** Root layout controller */
     private RootLayoutController rootLayoutController;
     /** "My networks" controller */
-    private NetworksMyController userNetworksController;
+    private OtherNetworksController userNetworksController;
     /** "Connectivity enrichment" controller */
     private EnrichmentController enrichmentController;
     
@@ -143,12 +143,12 @@ public class MagnumApp extends Application {
     private void showMyNetworks() {
 
     	// Initialize network table
-    	NetworksTableController tableController = (NetworksTableController) ViewController.loadFxml("view/NetworksTable.fxml");
+    	NetworksTreeTableController tableController = (NetworksTreeTableController) ViewController.loadFxml("view/NetworksTreeTable.fxml");
     	NetworkGroup networkGroup = networkCollection.getUserNetworks();
     	tableController.setNetworks(networkGroup);
 
     	// Initialize user networks pane
-    	userNetworksController = (NetworksMyController) ViewController.loadFxml("view/NetworksMy.fxml");
+    	userNetworksController = (OtherNetworksController) ViewController.loadFxml("view/OtherNetworks.fxml");
     	// Add the network table
     	userNetworksController.showNetworksTable(tableController);            
     	// Add to root layout
@@ -161,11 +161,6 @@ public class MagnumApp extends Application {
 
     /** "Connectivity enrichment" pane */
     private void showConnetivityEnrichmentPane() {
-
-    	// Initialize network table
-    	NetworksTableController tableController = (NetworksTableController) ViewController.loadFxml("view/NetworksTable.fxml");
-    	NetworkGroup networkGroup = networkCollection.getUserNetworks();
-    	tableController.setNetworks(networkGroup);
 
     	// Initialize user networks pane
     	enrichmentController = (EnrichmentController) ViewController.loadFxml("view/ConnectivityEnrichment.fxml");
