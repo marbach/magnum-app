@@ -40,13 +40,11 @@ import javafx.beans.property.StringProperty;
  */
 public class NetworkModel {
 
-	/** Filename */
-	private StringProperty filename = null;
 	/** Name used for display */
 	private StringProperty name = null;
+	/** Filename */
+	private StringProperty filename = null;
 
-	/** Network has been successfully loaded, statistics are set */
-	//private BooleanProperty networkLoaded = null;
 	/** Number of regulators */
 	private IntegerProperty numRegulators = null;
 	/** Number of nodes */
@@ -58,30 +56,31 @@ public class NetworkModel {
 	/** Directed network */
 	private BooleanProperty isDirected = null;
 
-	/** The network */
-	//private Network network = null;
-	
 	
 	// ============================================================================
 	// PUBLIC METHODS
 	    
 	/** Constructor with given network */
 	public NetworkModel(Network network) {
-		
 		initialize(network);
 	}
 
-	
+	/** Constructor initializing only the name (useful for root nodes in tree view) */
 	public NetworkModel(String name) {
-		
 		this.name = new SimpleStringProperty(name);
 	}
 
+	/** Constructor initializing most fields */
+	public NetworkModel(String name, String filename, boolean isWeighted, boolean isDirected) {
+		
+		this.name = new SimpleStringProperty(name);
+		this.filename = new SimpleStringProperty(filename);
+		this.isWeighted = new SimpleBooleanProperty(isWeighted);
+		this.isDirected = new SimpleBooleanProperty(isDirected);
+	}
 
 	
     // ----------------------------------------------------------------------------
-
-
 
 	/** Set network and initialize fields of the model accordingly */
 	public void initialize(Network network) {
@@ -96,12 +95,7 @@ public class NetworkModel {
 		numRegulators = new SimpleIntegerProperty(network.getNumRegulators());
 		numNodes = new SimpleIntegerProperty(network.getNumNodes());
 		numEdges = new SimpleIntegerProperty(network.getNumEdges());
-		
-		//this.network = network;
 	}
-
-
-
 
 
 	// ============================================================================
@@ -119,9 +113,5 @@ public class NetworkModel {
 	public IntegerProperty numEdgesProperty() { return numEdges; }
 	public BooleanProperty isWeightedProperty() { return isWeighted; }
 	public BooleanProperty isDirectedProperty() { return isDirected; }
-
-//	public Network getNetwork() {
-//		return network;
-//	}
 
 }

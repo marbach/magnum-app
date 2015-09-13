@@ -55,8 +55,8 @@ public class MagnumApp extends Application {
     
     /** Root layout controller */
     private RootLayoutController rootLayoutController;
-    /** "My networks" controller */
-    private OtherNetworksController userNetworksController;
+    /** "Other networks" controller */
+    private OtherNetworksController otherNetworksController;
     /** "Connectivity enrichment" controller */
     private EnrichmentController enrichmentController;
     
@@ -108,13 +108,13 @@ public class MagnumApp extends Application {
 	public void start(Stage primaryStage) {
 		
         this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("Magnum");
+        this.primaryStage.setTitle(AppSettings.magnumAppVersion);
 
         // The root layout
         initRootLayout();
      
         // Panes on the left side
-        showMyNetworks();
+        showOtherNetworks();
         
         // Panes on the right side
         showConnetivityEnrichmentPane();
@@ -140,19 +140,19 @@ public class MagnumApp extends Application {
 	// ----------------------------------------------------------------------------
 
     /** "My networks" pane */
-    private void showMyNetworks() {
+    private void showOtherNetworks() {
 
     	// Initialize network table
-    	NetworksTreeTableController tableController = (NetworksTreeTableController) ViewController.loadFxml("view/NetworksTreeTable.fxml");
-    	NetworkGroup networkGroup = networkCollection.getUserNetworks();
-    	tableController.setNetworks(networkGroup);
+    	//NetworksTreeTableController tableController = (NetworksTreeTableController) ViewController.loadFxml("view/NetworksTreeTable.fxml");
+    	//tableController.setNetworkCollection(networkCollection);
 
     	// Initialize user networks pane
-    	userNetworksController = (OtherNetworksController) ViewController.loadFxml("view/OtherNetworks.fxml");
+    	otherNetworksController = (OtherNetworksController) ViewController.loadFxml("view/OtherNetworks.fxml");
+    	otherNetworksController.setNetworkCollection(networkCollection);
     	// Add the network table
-    	userNetworksController.showNetworksTable(tableController);            
+    	//otherNetworksController.showNetworksTable(tableController);            
     	// Add to root layout
-    	rootLayoutController.getLeftSide().getChildren().add(userNetworksController.getRoot());  
+    	rootLayoutController.getLeftSide().getChildren().add(otherNetworksController.getRoot());  
     	    	
     }
 

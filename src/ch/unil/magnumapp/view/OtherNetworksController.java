@@ -29,11 +29,18 @@ import java.io.File;
 import java.util.List;
 
 import ch.unil.magnumapp.ThreadLoadNetworks;
+import ch.unil.magnumapp.model.NetworkCollection;
+import ch.unil.magnumapp.model.NetworkModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableView;
+import javafx.scene.control.cell.CheckBoxTreeTableCell;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
@@ -42,12 +49,27 @@ import javafx.stage.FileChooser;
  */
 public class OtherNetworksController extends ViewController {
 
-	/** The networks table view controller */
-	private NetworksTreeTableController networksTableController;
-	
+	/** The network collection */
+	private NetworkCollection networkCollection;
+	/** The root item */
+	private TreeItem<NetworkModel> tree;
+
 	/** Files selected using Browse button */
 	private List<File> filesToBeAdded;
 	
+	
+    /** Network table */
+    @FXML
+    private TreeTableView<NetworkModel> networksTable;
+    @FXML
+    private TreeTableColumn<NetworkModel, Boolean> directedColumn;
+    @FXML
+    private TreeTableColumn<NetworkModel, Boolean> weightedColumn;
+    @FXML
+    private TreeTableColumn<NetworkModel, String> nameColumn;
+    @FXML
+    private TreeTableColumn<NetworkModel, String> notesColumn;
+
     /** Load */
     @FXML
     private TextField fileTextField;
@@ -72,14 +94,41 @@ public class OtherNetworksController extends ViewController {
 	// ============================================================================
 	// PUBLIC METHODS
 
-    /** Add the network table to the pane */
-	public void showNetworksTable(NetworksTreeTableController tableController) {
-		
-		this.networksTableController = tableController;
-		// Add the table as first item in the vBox
-        contentVBox.getChildren().setAll(
-        		tableController.getRoot(), contentVBox.getChildren().get(0), contentVBox.getChildren().get(1));
-	}
+    /** Initialize, called after the fxml file has been loaded */
+    public void setNetworkCollection(NetworkCollection networkCollection) {
+
+    	this.networkCollection = networkCollection;
+    	
+    	// Create and set the root
+    	tree = networkCollection.getNetworkTree();
+    	tree.setExpanded(true);
+    	// Expand the PPI networks as an example
+    	tree.getChildren().get(0).setExpanded(true);
+    	tree.getChildren().get(1).setExpanded(true);
+    	
+    	networksTable.setRoot(tree);
+        networksTable.setShowRoot(false);
+        
+        // Enable selection of multiple networks 
+        networksTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+    	// Initialize columns
+        
+        // For TableView there's two ways to do it: 
+        // (1) Java lambdas, the first one (should look up the details, supposed to be elegant)
+        // (2) Create property value factory
+        // For strings, both work. For Integers, I only get it to work with (2), for checkboxes only with (1)...
+        
+        nameColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().nameProperty());
+//        numNodesColumn.setCellValueFactory(new PropertyValueFactory<NetworkModel, Integer>("numNodes"));
+//        numEdgesColumn.setCellValueFactory(new PropertyValueFactory<NetworkModel, Integer>("numEdges"));
+//
+        directedColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().isDirectedProperty());
+        directedColumn.setCellFactory(tc -> new CheckBoxTreeTableCell<>());
+
+        weightedColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().isWeightedProperty());
+        weightedColumn.setCellFactory(tc -> new CheckBoxTreeTableCell<>());
+}
 
 
 	// ============================================================================
@@ -132,7 +181,7 @@ public class OtherNetworksController extends ViewController {
     			
     	// The thread responsible for loading the networks
     	ThreadLoadNetworks threadLoad = new ThreadLoadNetworks(
-    			networksTableController.getNetworks(), 
+    			networkCollection.getMyNetworks(), 
     			filesToBeAdded, directed, weighted, removeSelf);
     	
     	// The thread controller / dialog

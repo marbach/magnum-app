@@ -28,10 +28,7 @@ package ch.unil.magnumapp.model;
 import java.io.File;
 
 import edu.mit.magnum.net.Network;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 
 /**
@@ -43,13 +40,8 @@ public class NetworkGroup {
 	/** The directory where the networks are located */
 	private StringProperty networkDir = null;
 
-	/** All networks have been successfully loaded, statistics are set */
-	private BooleanProperty networksLoaded = null;
-	
 	/** The root for the tree view */
 	private TreeItem<NetworkModel> treeViewRoot;
-	/** The network models */
-	private ObservableList<TreeItem<NetworkModel>> networks = null;
 	
 	
 	// ============================================================================
@@ -57,11 +49,16 @@ public class NetworkGroup {
 	    
 	/** Constructor */
 	public NetworkGroup(String name) {
-
-		networks = FXCollections.observableArrayList();
 		treeViewRoot = new TreeItem<>(new NetworkModel(name));
 	}
 
+	
+    // ----------------------------------------------------------------------------
+
+	public void add(NetworkModel next) {
+		treeViewRoot.getChildren().add(new TreeItem<>(next));
+	}
+	
 	
     // ----------------------------------------------------------------------------
 
@@ -71,7 +68,7 @@ public class NetworkGroup {
 		String path = file.getAbsolutePath();
 		Network network = new Network(path, directed, removeSelf, weighted, 0);
 		TreeItem<NetworkModel> next = new TreeItem<>(new NetworkModel(network));
-		networks.add(next);
+		//networks.add(next);
 		treeViewRoot.getChildren().add(next);
 	}
     
@@ -85,9 +82,9 @@ public class NetworkGroup {
 	// ============================================================================
 	// SETTERS AND GETTERS
 
-	public ObservableList<TreeItem<NetworkModel>> getNetworks() {
-		return networks;
-	}
+//	public ObservableList<TreeItem<NetworkModel>> getNetworks() {
+//		return networks;
+//	}
 
 
 	public TreeItem<NetworkModel> getTreeViewRoot() {

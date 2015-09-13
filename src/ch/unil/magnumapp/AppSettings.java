@@ -33,7 +33,10 @@ final public class AppSettings {
 
 
 	// ============================================================================
-	// STATIC METHODS
+	// STATIC
+
+	/** MagnumApp version */
+	final static public String magnumAppVersion = "Magnum v1.0";
 
 	/** Download gene scores */
 	final static public String geneScoresLink = "http://regulatorycircuits.org/data/GWAS%20gene%20scores%20v1.zip";

@@ -25,14 +25,22 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp.model;
 
+import java.util.ArrayList;
+
+import javafx.scene.control.TreeItem;
+
 /**
  * The collection of available networks
  */
 public class NetworkCollection {
 
-	/** User defined networks */
-    private NetworkGroup userNetworks;
-    
+	/** The network groups */
+    private ArrayList<NetworkGroup> networkGroups;
+    /** My networks */
+    private NetworkGroup myNetworks;
+    /** PPI networks */
+    private NetworkGroup ppiNetworks;
+
     
 	// ============================================================================
 	// PUBLIC METHODS
@@ -40,18 +48,60 @@ public class NetworkCollection {
 	/** Constructor */
 	public NetworkCollection() {
 		
-		userNetworks = new NetworkGroup("My networks");
+		myNetworks = new NetworkGroup("My networks");
+		initPpiNetworks();
+
+		// Add groups to list
+		networkGroups = new ArrayList<>();
+		networkGroups.add(myNetworks);
+		networkGroups.add(ppiNetworks);
 	}
 
+	
+    // ----------------------------------------------------------------------------
 
+	/** Get a tree representation of the network collection for the view */
+	public TreeItem<NetworkModel> getNetworkTree() {
+		
+		TreeItem<NetworkModel> root = new TreeItem<>(new NetworkModel("/"));
+		root.getChildren().add(myNetworks.getTreeViewRoot());
+		root.getChildren().add(ppiNetworks.getTreeViewRoot());
+		
+		return root;
+	}
+
+	
+	// ============================================================================
+	// PRIVATE METHODS
+	
+	/** Initialize PPI networks */
+	private void initPpiNetworks() {
+		
+		ppiNetworks = new NetworkGroup("Protein-protein interaction");
+		NetworkModel inWeb3 = new NetworkModel("InWeb", "InWeb3.txt.gz", true, false);
+		NetworkModel biogrid = new NetworkModel("BioGRID", "biogrid-3.2.116.txt.gz", false, false);
+		NetworkModel entrez = new NetworkModel("Entrez GeneRIF", "entrez_geneRIF-2014-09-25.txt.gz", false, false);
+		NetworkModel hi = new NetworkModel("Human Interactome", "HI_2012_PRE.txt.gz", false, false);
+		
+		ppiNetworks.add(inWeb3);
+		ppiNetworks.add(biogrid);
+		ppiNetworks.add(entrez);
+		ppiNetworks.add(hi);
+	}
 	
 	
 	// ============================================================================
 	// SETTERS AND GETTERS
 
-	public NetworkGroup getUserNetworks() {
-		return userNetworks;
+	public ArrayList<NetworkGroup> getNetworkGroups() {
+		return networkGroups;
 	}
+
+
+	public NetworkGroup getMyNetworks() {
+		return myNetworks;
+	}
+
 
 
 }
