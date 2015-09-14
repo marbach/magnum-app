@@ -31,6 +31,7 @@
                         <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TreeTableView>
+                  <Label fx:id="numNetworksSelectedLabel" text="No networks selected" />
                   <Label text="Add your own networks">
                      <padding>
                         <Insets top="5.0" />

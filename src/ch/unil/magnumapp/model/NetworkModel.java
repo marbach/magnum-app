@@ -25,6 +25,9 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp.model;
 
+import java.io.File;
+import java.nio.file.Path;
+
 import edu.mit.magnum.MagnumUtils;
 import edu.mit.magnum.net.Network;
 import javafx.beans.property.BooleanProperty;
@@ -41,20 +44,27 @@ import javafx.beans.property.StringProperty;
 public class NetworkModel {
 
 	/** Name used for display */
-	private StringProperty name = null;
+	private StringProperty name;
 	/** Filename */
-	private StringProperty filename = null;
+	private StringProperty filename;
+	/** The file */
+	private File file;
+	/** Flag showing if file exists */
+	private BooleanProperty fileExists;
+
+	/** Directed network */
+	private BooleanProperty isDirected;
+	/** Weighted network */
+	private BooleanProperty isWeighted;
+	/** Remove self */
+	private BooleanProperty removeSelf;
 
 	/** Number of regulators */
-	private IntegerProperty numRegulators = null;
+	private IntegerProperty numRegulators;
 	/** Number of nodes */
-	private IntegerProperty numNodes = null;
+	private IntegerProperty numNodes;
 	/** Number of edges */
-	private IntegerProperty numEdges = null;
-	/** Weighted network */
-	private BooleanProperty isWeighted = null;
-	/** Directed network */
-	private BooleanProperty isDirected = null;
+	private IntegerProperty numEdges;
 
 	
 	// ============================================================================
@@ -65,18 +75,34 @@ public class NetworkModel {
 		initialize(network);
 	}
 
+	
 	/** Constructor initializing only the name (useful for root nodes in tree view) */
 	public NetworkModel(String name) {
 		this.name = new SimpleStringProperty(name);
 	}
 
+	
 	/** Constructor initializing most fields */
-	public NetworkModel(String name, String filename, boolean isWeighted, boolean isDirected) {
+	public NetworkModel(String name, String filename, boolean isDirected, boolean isWeighted, boolean removeSelf) {
 		
 		this.name = new SimpleStringProperty(name);
 		this.filename = new SimpleStringProperty(filename);
-		this.isWeighted = new SimpleBooleanProperty(isWeighted);
 		this.isDirected = new SimpleBooleanProperty(isDirected);
+		this.isWeighted = new SimpleBooleanProperty(isWeighted);
+		this.removeSelf = new SimpleBooleanProperty(removeSelf);
+	}
+
+	
+	/** Constructor from file */
+	public NetworkModel(File file, boolean isDirected, boolean isWeighted, boolean removeSelf) {
+		
+		this.name = new SimpleStringProperty(MagnumUtils.extractBasicFilename(file.getName(), false));
+		this.filename = new SimpleStringProperty(file.getName());
+		this.file = file;
+		this.fileExists = new SimpleBooleanProperty(file.exists());
+		this.isDirected = new SimpleBooleanProperty(isDirected);
+		this.isWeighted = new SimpleBooleanProperty(isWeighted);
+		this.removeSelf = new SimpleBooleanProperty(removeSelf);
 	}
 
 	
@@ -98,17 +124,33 @@ public class NetworkModel {
 	}
 
 
+    // ----------------------------------------------------------------------------
+
+	/** Initializes the file given the directory and filename */
+	public void initFile(Path directory) {
+
+		file = directory.resolve(filename.get()).toFile();
+		fileExists = new SimpleBooleanProperty(file.exists());
+	}
+	
+		
 	// ============================================================================
 	// PRIVATE METHODS
 
 	
 	// ============================================================================
 	// SETTERS AND GETTERS
-
+	
+	public void setFile(File file) {
+		this.file = file;
+		fileExists = new SimpleBooleanProperty(file.exists());
+	}
+	
 	public String getName() { return name.getValue(); }
 	
 	public StringProperty filenameProperty() { return filename; }
 	public StringProperty nameProperty() { return name; }	
+	public BooleanProperty fileExistsProperty() { return fileExists; }
 	public IntegerProperty numRegulatorsProperty() { return numRegulators; }
 	public IntegerProperty numNodesProperty() { return numNodes; }
 	public IntegerProperty numEdgesProperty() { return numEdges; }

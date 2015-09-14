@@ -25,6 +25,8 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp.model;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 import javafx.scene.control.TreeItem;
@@ -34,6 +36,8 @@ import javafx.scene.control.TreeItem;
  */
 public class NetworkCollection {
 
+	/** The network directory */
+	private Path directory;
 	/** The network groups */
     private ArrayList<NetworkGroup> networkGroups;
     /** My networks */
@@ -50,11 +54,6 @@ public class NetworkCollection {
 		
 		myNetworks = new NetworkGroup("My networks");
 		initPpiNetworks();
-
-		// Add groups to list
-		networkGroups = new ArrayList<>();
-		networkGroups.add(myNetworks);
-		networkGroups.add(ppiNetworks);
 	}
 
 	
@@ -76,17 +75,27 @@ public class NetworkCollection {
 	}
 
 	
+	/** Initialize the directory, subdirectories and network files */
+	public void initDirectory(Path directory) {
+		
+		this.directory = directory;
+		String path = directory.toString();
+		ppiNetworks.initDirectory(directory);
+	}
+
+	
+	
 	// ============================================================================
 	// PRIVATE METHODS
 	
 	/** Initialize PPI networks */
 	private void initPpiNetworks() {
-		
+
 		ppiNetworks = new NetworkGroup("Protein-protein interaction");
-		NetworkModel inWeb3 = new NetworkModel("InWeb", "InWeb3.txt.gz", true, false);
-		NetworkModel biogrid = new NetworkModel("BioGRID", "biogrid-3.2.116.txt.gz", false, false);
-		NetworkModel entrez = new NetworkModel("Entrez GeneRIF", "entrez_geneRIF-2014-09-25.txt.gz", false, false);
-		NetworkModel hi = new NetworkModel("Human Interactome", "HI_2012_PRE.txt.gz", false, false);
+		NetworkModel inWeb3 = new NetworkModel("InWeb", "InWeb3.txt.gz", false, true, true);
+		NetworkModel biogrid = new NetworkModel("BioGRID", "biogrid-3.2.116.txt.gz", false, false, true);
+		NetworkModel entrez = new NetworkModel("Entrez GeneRIF", "entrez_geneRIF-2014-09-25.txt.gz", false, false, true);
+		NetworkModel hi = new NetworkModel("Human Interactome", "HI_2012_PRE.txt.gz", false, false, true);
 		
 		ppiNetworks.add(inWeb3);
 		ppiNetworks.add(biogrid);
@@ -102,11 +111,9 @@ public class NetworkCollection {
 		return networkGroups;
 	}
 
-
 	public NetworkGroup getMyNetworks() {
 		return myNetworks;
 	}
-
 
 
 }

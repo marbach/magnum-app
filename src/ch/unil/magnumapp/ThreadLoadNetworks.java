@@ -70,7 +70,7 @@ public class ThreadLoadNetworks extends ThreadMagnum {
 		
 		try {
 			for (File file : files)
-				networkGroup.loadNetworkAddModel(file, directed, removeSelf, weighted);
+				networkGroup.loadNetworkAddModel(file, directed, weighted, removeSelf);
 			controller.success();
     			
 		} catch (Exception e) {

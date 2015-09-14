@@ -26,8 +26,11 @@ THE SOFTWARE.
 package ch.unil.magnumapp.model;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import edu.mit.magnum.net.Network;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.TreeItem;
 
@@ -37,8 +40,10 @@ import javafx.scene.control.TreeItem;
  */
 public class NetworkGroup {
 
+	/** The name of this network groups (also the name of its directory) */
+	private String name;
 	/** The directory where the networks are located */
-	private StringProperty networkDir = null;
+	//private Path directory;
 
 	/** The root for the tree view */
 	private TreeItem<NetworkModel> treeViewRoot;
@@ -49,6 +54,7 @@ public class NetworkGroup {
 	    
 	/** Constructor */
 	public NetworkGroup(String name) {
+		this.name = name;
 		treeViewRoot = new TreeItem<>(new NetworkModel(name));
 	}
 
@@ -62,16 +68,37 @@ public class NetworkGroup {
 	
     // ----------------------------------------------------------------------------
 
+	/** Add network model (without loading the network) */
+	public void addNetwork(File file, boolean directed, boolean weighted, boolean removeSelf) {
+		
+		NetworkModel network = new NetworkModel(file, directed, weighted, removeSelf);
+		treeViewRoot.getChildren().add(new TreeItem<>(network));
+	}
+
+	
+    // ----------------------------------------------------------------------------
+
 	/** Load the network, add the model (not the network!) to the collection */
-	public void loadNetworkAddModel(File file, boolean directed, boolean removeSelf, boolean weighted) {
+	public void loadNetworkAddModel(File file, boolean directed, boolean weighted, boolean removeSelf) {
 		
 		String path = file.getAbsolutePath();
 		Network network = new Network(path, directed, removeSelf, weighted, 0);
 		TreeItem<NetworkModel> next = new TreeItem<>(new NetworkModel(network));
-		//networks.add(next);
 		treeViewRoot.getChildren().add(next);
 	}
     
+
+    // ----------------------------------------------------------------------------
+
+	/** Sets network dir for the group and all its networks */
+	public void initDirectory(Path parentDir) {
+		
+		Path directory = parentDir.resolve(name); 
+		treeViewRoot.getValue().setFile(directory.toFile());
+		
+		for (TreeItem<NetworkModel> item : treeViewRoot.getChildren())
+			item.getValue().initFile(directory);
+	}
 
 
 
