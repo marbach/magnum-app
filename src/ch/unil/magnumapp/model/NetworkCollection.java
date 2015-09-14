@@ -62,10 +62,15 @@ public class NetworkCollection {
 
 	/** Get a tree representation of the network collection for the view */
 	public TreeItem<NetworkModel> getNetworkTree() {
+
+		// Network Collection (Note: if you change the name of this node, also update handleSelectionChange()
+		TreeItem<NetworkModel> collection = new TreeItem<>(new NetworkModel("Network collection"));
+		collection.getChildren().add(ppiNetworks.getTreeViewRoot());
 		
-		TreeItem<NetworkModel> root = new TreeItem<>(new NetworkModel("/"));
+		// Add both to a root node
+		TreeItem<NetworkModel> root = new TreeItem<>(new NetworkModel("Root"));
 		root.getChildren().add(myNetworks.getTreeViewRoot());
-		root.getChildren().add(ppiNetworks.getTreeViewRoot());
+		root.getChildren().add(collection);
 		
 		return root;
 	}

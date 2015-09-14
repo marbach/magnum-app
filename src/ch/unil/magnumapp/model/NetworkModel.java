@@ -105,9 +105,10 @@ public class NetworkModel {
 	// ============================================================================
 	// SETTERS AND GETTERS
 
-	public StringProperty filenameProperty() { return filename; }
-	public StringProperty nameProperty() { return name; }
+	public String getName() { return name.getValue(); }
 	
+	public StringProperty filenameProperty() { return filename; }
+	public StringProperty nameProperty() { return name; }	
 	public IntegerProperty numRegulatorsProperty() { return numRegulators; }
 	public IntegerProperty numNodesProperty() { return numNodes; }
 	public IntegerProperty numEdgesProperty() { return numEdges; }

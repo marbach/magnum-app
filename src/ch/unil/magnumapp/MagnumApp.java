@@ -142,15 +142,9 @@ public class MagnumApp extends Application {
     /** "My networks" pane */
     private void showOtherNetworks() {
 
-    	// Initialize network table
-    	//NetworksTreeTableController tableController = (NetworksTreeTableController) ViewController.loadFxml("view/NetworksTreeTable.fxml");
-    	//tableController.setNetworkCollection(networkCollection);
-
     	// Initialize user networks pane
     	otherNetworksController = (OtherNetworksController) ViewController.loadFxml("view/OtherNetworks.fxml");
     	otherNetworksController.setNetworkCollection(networkCollection);
-    	// Add the network table
-    	//otherNetworksController.showNetworksTable(tableController);            
     	// Add to root layout
     	rootLayoutController.getLeftSide().getChildren().add(otherNetworksController.getRoot());  
     	    	

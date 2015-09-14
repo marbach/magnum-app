@@ -15,9 +15,9 @@
                   <HBox spacing="5.0">
                      <children>
                         <Label text="Network collection:" />
-                        <TextField prefWidth="220.0" promptText="Locate directory" />
-                        <Button mnemonicParsing="false" text="Browse ..." />
-                        <Hyperlink text="Download" />
+                        <TextField fx:id="networkDirTextField" disable="true" editable="false" prefWidth="220.0" promptText="Locate directory" />
+                        <Button fx:id="networkDirBrowseButton" mnemonicParsing="false" onAction="#handleNetworkDirBrowseButton" text="Browse ..." />
+                        <Hyperlink fx:id="networkDirDownloadLink" onAction="#handleNetworkDirDownloadLink" text="Download" />
                      </children>
                   </HBox>
                   <TreeTableView fx:id="networksTable">
@@ -54,7 +54,7 @@
                         <HBox GridPane.columnIndex="1" GridPane.columnSpan="3">
                            <children>
                               <TextField fx:id="fileTextField" editable="false" prefWidth="250.0" promptText="Choose network files" />
-                              <Button fx:id="browseButton" mnemonicParsing="false" onAction="#handleBrowseButton" text="Browse ..." />
+                              <Button fx:id="fileBrowseButton" mnemonicParsing="false" onAction="#handleFileBrowseButton" text="Browse ..." />
                            </children>
                         </HBox>
                         <VBox GridPane.columnIndex="1" GridPane.rowIndex="1">

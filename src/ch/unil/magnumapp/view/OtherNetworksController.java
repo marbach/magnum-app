@@ -26,22 +26,29 @@ THE SOFTWARE.
 package ch.unil.magnumapp.view;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.List;
 
 import ch.unil.magnumapp.ThreadLoadNetworks;
 import ch.unil.magnumapp.model.NetworkCollection;
 import ch.unil.magnumapp.model.NetworkModel;
+import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.control.TreeTableView.TreeTableViewSelectionModel;
 import javafx.scene.control.cell.CheckBoxTreeTableCell;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
 /**
@@ -56,7 +63,16 @@ public class OtherNetworksController extends ViewController {
 
 	/** Files selected using Browse button */
 	private List<File> filesToBeAdded;
+	/** Disables the selection handle (used when programmatically changing the selection */
+	private boolean enableHandleSelection = true;
 	
+	/** Network collection directory */
+	@FXML
+	private TextField networkDirTextField;
+	@FXML
+	private Button networkDirBrowseButton;
+	@FXML
+	private Hyperlink networkDirDownloadLink;
 	
     /** Network table */
     @FXML
@@ -74,7 +90,7 @@ public class OtherNetworksController extends ViewController {
     @FXML
     private TextField fileTextField;
     @FXML
-    private Button browseButton;
+    private Button fileBrowseButton;
     @FXML
     private Button addButton;
     @FXML
@@ -99,18 +115,24 @@ public class OtherNetworksController extends ViewController {
 
     	this.networkCollection = networkCollection;
     	
-    	// Create and set the root
+    	// Initialize the network tree
     	tree = networkCollection.getNetworkTree();
     	tree.setExpanded(true);
-    	// Expand the PPI networks as an example
-    	tree.getChildren().get(0).setExpanded(true);
-    	tree.getChildren().get(1).setExpanded(true);
-    	
+    	// Expand the two main branches
+    	tree.getChildren().get(0).setExpanded(true); // My networks
+    	tree.getChildren().get(1).setExpanded(true); // Network collection
+    	// Add to table
     	networksTable.setRoot(tree);
         networksTable.setShowRoot(false);
         
         // Enable selection of multiple networks 
         networksTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        
+        networksTable.getSelectionModel().getSelectedItems().addListener(
+        		(ListChangeListener.Change<? extends TreeItem<NetworkModel>> c) -> {
+        			handleSelectionChange();
+        		});
+        
 
     	// Initialize columns
         
@@ -134,12 +156,44 @@ public class OtherNetworksController extends ViewController {
 	// ============================================================================
 	// HANDLES
 
+    /** Network directory browse button */
+    @FXML
+    private void handleNetworkDirBrowseButton() {
+
+    	// Open file chooser
+    	DirectoryChooser dirChooser = new DirectoryChooser();
+    	dirChooser.setTitle("Locate network collection directory");
+    	File networkDir = dirChooser.showDialog(magnumApp.getPrimaryStage());
+    	if (networkDir == null) {
+    		networkDirTextField.setText(null);
+    		return;
+    	}
+    	
+    	// Set network dir text field
+    	networkDirTextField.setText(networkDir.getName());
+    	
+
+    }
+    	
+
+    // ----------------------------------------------------------------------------
+
+    /** Network directory download link */
+    @FXML
+    private void handleNetworkDirDownloadLink() {
+
+    }
+
+    	
+    // ----------------------------------------------------------------------------
+
     /** Browse button */
     @FXML
-    private void handleBrowseButton() {
+    private void handleFileBrowseButton() {
         
     	// Open file chooser
     	final FileChooser fileChooser = new FileChooser();
+    	fileChooser.setTitle("Select network files");
     	filesToBeAdded = fileChooser.showOpenMultipleDialog(magnumApp.getPrimaryStage());
     	if (filesToBeAdded == null) {
     		fileTextField.setText(null);
@@ -191,7 +245,59 @@ public class OtherNetworksController extends ViewController {
     }
 
 
+    // ----------------------------------------------------------------------------
 
+    /** Called when networks were selected */
+    @FXML
+    private void handleSelectionChange() {
+    	
+    	// Return if the handle is disabled
+    	if (!enableHandleSelection)
+    		return;
+    	
+    	TreeTableViewSelectionModel<NetworkModel> selectionModel = networksTable.getSelectionModel();
+    	ObservableList<Integer> selection = selectionModel.getSelectedIndices();
+    	if (selection == null || selection.size() == 0)
+    		return;
+    	HashSet<TreeItem<NetworkModel>> addItems = new HashSet<>();
+
+    	for (Integer i : selection) {
+    		assert i != null;
+    		TreeItem<NetworkModel> item = selectionModel.getModelItem(i);
+    		// Sometimes that happens, don't ask me why
+    		if (item == null)
+    			continue;
+    		
+    		String name = item.getValue().getName();
+    		if (name.equals("My networks") || name.equals("Network collection"))
+    			continue;
+
+    		// Add leafs
+    		if (item.isLeaf()) {
+    			addItems.add(item);
+    			
+   			// Add all children
+    		} else {
+    			Platform.runLater(() -> item.setExpanded(true));
+    			for (TreeItem<NetworkModel> child : item.getChildren()) {
+    				if (!child.isLeaf())
+    					throw new RuntimeException("Did not except nested categories in network tree: " + child.getValue().getName());
+    				addItems.add(child);
+    			}
+    		}
+    	}
+    	
+    	// Disable the handle for updates made below to avoid recursion
+    	Platform.runLater(() -> {
+    		enableHandleSelection = false;
+    		selectionModel.clearSelection();
+    		for (TreeItem<NetworkModel> item : addItems)
+    			selectionModel.select(item);
+    		enableHandleSelection = true;
+    	});
+    }
+
+        
     
 	// ============================================================================
 	// PRIVATE METHODS
