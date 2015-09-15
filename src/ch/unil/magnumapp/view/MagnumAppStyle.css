@@ -1,0 +1,6 @@
+.root { -fx-focus-color: transparent; }
+.button { -fx-focus-color: transparent; }
+
+.background {
+    -fx-background-color: #1d1d1d;
+}

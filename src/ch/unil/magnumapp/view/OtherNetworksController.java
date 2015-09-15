@@ -26,11 +26,9 @@ THE SOFTWARE.
 package ch.unil.magnumapp.view;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
 
-import ch.unil.magnumapp.ThreadLoadNetworks;
 import ch.unil.magnumapp.model.NetworkCollection;
 import ch.unil.magnumapp.model.NetworkModel;
 import javafx.application.Platform;
@@ -48,7 +46,6 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.TreeTableView.TreeTableViewSelectionModel;
@@ -185,6 +182,9 @@ public class OtherNetworksController extends ViewController {
         		}
         	};
         });
+        
+        notesColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().notesProperty());
+
     }
 
 
@@ -205,12 +205,9 @@ public class OtherNetworksController extends ViewController {
     	}
     	
     	// Set network dir text field
-    	networkDirTextField.setText(networkDir.getName());
-    	if (Platform.isFxApplicationThread())
-    		System.out.println("Oiseau maasive!");
-    	else
-    		System.out.println("Frizzy oiseau");
+    	networkDirTextField.setText(networkDir.getPath());
 
+    	// Initialize files
     	networkCollection.initDirectory(networkDir.toPath());
     }
     	
@@ -319,11 +316,43 @@ public class OtherNetworksController extends ViewController {
 			// If no directory has been set
 			BooleanProperty fileExists = item.getValue().fileExistsProperty();
 			if (fileExists == null) {
+				if (item.isLeaf()) {
+					Alert alert = new Alert(AlertType.WARNING);
+					//alert.setWidth(1000); does not seem to work
+					alert.setTitle("Warning");
+					alert.setHeaderText("Directory not set!");
+					alert.setContentText("Use the 'Browse' button to locate the 'Network collection' directory.\n\n" + 
+							"If you haven't done so already, download it:\n" +
+							"- click the 'Download' link or\n" +
+							"- visit regulatorycircuits.org");
+					alert.showAndWait();
+					break;
+				} else {
+	    			// Expand
+	    			Platform.runLater(() -> item.setExpanded(true));
+	    			break;
+				}
+				
+			// Directory was set but the file / directory was not found
+			} else if (!fileExists.get()) {
 				Alert alert = new Alert(AlertType.WARNING);
+				//alert.setWidth(1000); does not seem to work
 				alert.setTitle("Warning");
-				alert.setHeaderText("Directory not set!");
-				alert.setContentText("Use 'Browse' button to locate the 'Network collection' directory. " + 
-						"If you haven't done so already, download it: click the link or visit regulatorycircuits.org.");
+				
+				// Get info on the file / dir
+				File file = item.getValue().getFile();
+				String fileOrDir = "File";
+				if (file.isDirectory())
+					fileOrDir = "Directory";
+				
+				// Set text
+				alert.setHeaderText(fileOrDir + " not found!");
+				alert.setContentText(fileOrDir + " not found in the selected 'Network collection' directory:\n" + 
+						file.getAbsolutePath() + "\n\n" +
+						"Verify that the 'Network collection' directory was selected. " +
+						"If the problem persists, download it again by clicking the link.");
+				
+				// Show the dialog
 				alert.showAndWait();
 				break;
 			}
@@ -334,11 +363,14 @@ public class OtherNetworksController extends ViewController {
     			
    			// Add all children
     		} else {
+    			// Expand
     			Platform.runLater(() -> item.setExpanded(true));
+    			// Add kids
     			for (TreeItem<NetworkModel> child : item.getChildren()) {
     				if (!child.isLeaf())
     					throw new RuntimeException("Did not except nested categories in network tree: " + child.getValue().getName());
-    				addItems.add(child);
+    				if (child.getValue().fileExistsProperty().get())
+    					addItems.add(child);
     			}
     		}
     	}

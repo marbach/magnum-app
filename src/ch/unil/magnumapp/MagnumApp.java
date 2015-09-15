@@ -118,6 +118,11 @@ public class MagnumApp extends Application {
         
         // Panes on the right side
         showConnetivityEnrichmentPane();
+        
+        // Add css -- doesn't work yet, I also set them in scene builder, remove...
+    	String css = MagnumApp.class.getResource("view/MagnumAppStyle.css").toExternalForm();
+    	primaryStage.getScene().getStylesheets().clear();
+    	primaryStage.getScene().getStylesheets().add(css);
 	}
 	
 	
@@ -129,11 +134,13 @@ public class MagnumApp extends Application {
     	
     	rootLayoutController = (RootLayoutController) RootLayoutController.loadFxml("view/RootLayout.fxml");
     	rootLayout = (BorderPane) rootLayoutController.getRoot();
-           
+        //rootLayout.setStyle("-fx-focus-color: transparent;");
+        
     	// Show the scene containing the root layout.
     	Scene scene = new Scene(rootLayout);
     	primaryStage.setScene(scene);
     	primaryStage.show();
+    	
     }
 
     

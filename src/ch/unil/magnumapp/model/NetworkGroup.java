@@ -27,11 +27,8 @@ package ch.unil.magnumapp.model;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import edu.mit.magnum.net.Network;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.control.TreeItem;
 
 /**
@@ -42,8 +39,6 @@ public class NetworkGroup {
 
 	/** The name of this network groups (also the name of its directory) */
 	private String name;
-	/** The directory where the networks are located */
-	//private Path directory;
 
 	/** The root for the tree view */
 	private TreeItem<NetworkModel> treeViewRoot;
@@ -109,15 +104,9 @@ public class NetworkGroup {
 	// ============================================================================
 	// SETTERS AND GETTERS
 
-//	public ObservableList<TreeItem<NetworkModel>> getNetworks() {
-//		return networks;
-//	}
-
-
 	public TreeItem<NetworkModel> getTreeViewRoot() {
 		return treeViewRoot;
 	}
-
 
 	public void setTreeViewRoot(TreeItem<NetworkModel> treeViewRoot) {
 		this.treeViewRoot = treeViewRoot;

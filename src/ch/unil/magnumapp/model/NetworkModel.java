@@ -45,6 +45,7 @@ public class NetworkModel {
 
 	/** Name used for display */
 	private StringProperty name;
+	
 	/** Filename */
 	private StringProperty filename;
 	/** The file */
@@ -52,6 +53,9 @@ public class NetworkModel {
 	/** Flag showing if file exists */
 	private BooleanProperty fileExists;
 
+	/** Notes */
+	private StringProperty notes;
+	
 	/** Directed network */
 	private BooleanProperty isDirected;
 	/** Weighted network */
@@ -79,6 +83,7 @@ public class NetworkModel {
 	/** Constructor initializing only the name (useful for root nodes in tree view) */
 	public NetworkModel(String name) {
 		this.name = new SimpleStringProperty(name);
+		this.notes = new SimpleStringProperty();
 	}
 
 	
@@ -90,6 +95,7 @@ public class NetworkModel {
 		this.isDirected = new SimpleBooleanProperty(isDirected);
 		this.isWeighted = new SimpleBooleanProperty(isWeighted);
 		this.removeSelf = new SimpleBooleanProperty(removeSelf);
+		this.notes = new SimpleStringProperty();
 	}
 
 	
@@ -129,11 +135,27 @@ public class NetworkModel {
 	/** Initializes the file given the directory and filename */
 	public void initFile(Path directory) {
 
-		file = directory.resolve(filename.get()).toFile();
-		fileExists = new SimpleBooleanProperty(file.exists());
+		setFile(directory.resolve(filename.get()).toFile());
 	}
 	
 		
+    // ----------------------------------------------------------------------------
+
+	/** Set file, initialize fileExists and notes with error message */
+	public void setFile(File file) {
+		this.file = file;
+		
+		// Use notes property to display warning if file does not exist
+		fileExists = new SimpleBooleanProperty(file.exists());
+		if (!fileExists.get()) {
+			if (isDirected == null) // hack to know if this is a group node
+				notes.set("Directory not found");
+			else
+				notes.set("File not found");
+		}
+	}
+	
+
 	// ============================================================================
 	// PRIVATE METHODS
 
@@ -141,16 +163,13 @@ public class NetworkModel {
 	// ============================================================================
 	// SETTERS AND GETTERS
 	
-	public void setFile(File file) {
-		this.file = file;
-		fileExists = new SimpleBooleanProperty(file.exists());
-	}
-	
 	public String getName() { return name.getValue(); }
+	public File getFile() { return file; }
 	
 	public StringProperty filenameProperty() { return filename; }
 	public StringProperty nameProperty() { return name; }	
 	public BooleanProperty fileExistsProperty() { return fileExists; }
+	public StringProperty notesProperty() { return notes; }
 	public IntegerProperty numRegulatorsProperty() { return numRegulators; }
 	public IntegerProperty numNodesProperty() { return numNodes; }
 	public IntegerProperty numEdgesProperty() { return numEdges; }

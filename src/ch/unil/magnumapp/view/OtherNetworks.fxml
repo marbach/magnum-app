@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<TitledPane animated="false" minWidth="558.0" text="Other networks" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.OtherNetworksController">
+<TitledPane animated="false" minWidth="558.0" stylesheets="@MagnumAppStyle.css" text="Other networks" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.OtherNetworksController">
    <content>
       <AnchorPane>
          <children>
@@ -15,17 +15,17 @@
                   <HBox spacing="5.0">
                      <children>
                         <Label text="Network collection:" />
-                        <TextField fx:id="networkDirTextField" disable="true" editable="false" prefWidth="220.0" promptText="Locate directory" />
+                        <TextField fx:id="networkDirTextField" editable="false" prefWidth="220.0" promptText="Locate directory" />
                         <Button fx:id="networkDirBrowseButton" mnemonicParsing="false" onAction="#handleNetworkDirBrowseButton" text="Browse ..." />
                         <Hyperlink fx:id="networkDirDownloadLink" onAction="#handleNetworkDirDownloadLink" text="Download" />
                      </children>
                   </HBox>
                   <TreeTableView fx:id="networksTable">
                      <columns>
-                        <TreeTableColumn fx:id="nameColumn" maxWidth="400.0" minWidth="200.0" prefWidth="-1.0" text="Name" />
-                        <TreeTableColumn fx:id="directedColumn" maxWidth="-1.0" minWidth="30.0" prefWidth="30.0" text="Dir" />
-                        <TreeTableColumn fx:id="weightedColumn" maxWidth="-1.0" minWidth="30.0" prefWidth="30.0" text="Wgh" />
-                        <TreeTableColumn fx:id="notesColumn" maxWidth="-1.0" minWidth="150.0" prefWidth="-1.0" text="Notes" />
+                        <TreeTableColumn fx:id="nameColumn" maxWidth="1.7976931348623157E308" minWidth="200.0" prefWidth="-1.0" sortable="false" text="Name" />
+                        <TreeTableColumn fx:id="directedColumn" maxWidth="-1.0" minWidth="30.0" prefWidth="30.0" sortable="false" text="Dir" />
+                        <TreeTableColumn fx:id="weightedColumn" maxWidth="-1.0" minWidth="30.0" prefWidth="30.0" sortable="false" text="Wgh" />
+                        <TreeTableColumn fx:id="notesColumn" maxWidth="300.0" minWidth="140.0" prefWidth="-1.0" sortable="false" text="Errors" />
                      </columns>
                      <columnResizePolicy>
                         <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

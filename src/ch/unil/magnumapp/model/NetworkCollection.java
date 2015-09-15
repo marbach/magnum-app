@@ -25,7 +25,6 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp.model;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
@@ -36,8 +35,6 @@ import javafx.scene.control.TreeItem;
  */
 public class NetworkCollection {
 
-	/** The network directory */
-	private Path directory;
 	/** The network groups */
     private ArrayList<NetworkGroup> networkGroups;
     /** My networks */
@@ -78,8 +75,6 @@ public class NetworkCollection {
 	/** Initialize the directory, subdirectories and network files */
 	public void initDirectory(Path directory) {
 		
-		this.directory = directory;
-		String path = directory.toString();
 		ppiNetworks.initDirectory(directory);
 	}
 
