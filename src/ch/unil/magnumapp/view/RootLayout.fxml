@@ -5,13 +5,13 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<BorderPane prefHeight="800.0" prefWidth="800.0" stylesheets="@MagnumAppStyle.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.RootLayoutController">
+<BorderPane prefHeight="800.0" prefWidth="1150.0" stylesheets="@MagnumAppStyle.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.RootLayoutController">
    <center>
-      <SplitPane dividerPositions="0.5" BorderPane.alignment="CENTER">
-         <items>
-            <VBox fx:id="leftSide" />
-            <VBox fx:id="rightSide" />
-         </items>
-      </SplitPane>
+      <HBox BorderPane.alignment="TOP_LEFT">
+         <children>
+            <VBox fx:id="leftSide" HBox.hgrow="ALWAYS" />
+            <VBox fx:id="rightSide" HBox.hgrow="NEVER" />
+         </children>
+      </HBox>
    </center>
 </BorderPane>
