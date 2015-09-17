@@ -11,19 +11,21 @@
       <VBox minWidth="545.0" spacing="3.0">
          <children>
             <Label text="Input" />
-            <GridPane hgap="10.0" vgap="5.0" VBox.vgrow="NEVER">
+            <GridPane hgap="10.0" VBox.vgrow="NEVER">
               <columnConstraints>
-                <ColumnConstraints hgrow="NEVER" />
+                <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" />
                 <ColumnConstraints hgrow="NEVER" />
               </columnConstraints>
               <rowConstraints>
                   <RowConstraints vgrow="SOMETIMES" />
-                <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+                <RowConstraints vgrow="NEVER" />
+                  <RowConstraints vgrow="SOMETIMES" />
                   <RowConstraints vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label text="GWAS gene scores:" GridPane.rowIndex="1" />
-                  <HBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Label text="GWAS gene scores:" GridPane.rowIndex="3" />
+                  <HBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <children>
                         <TextField fx:id="geneScoreTextField" editable="false" prefHeight="26.0" prefWidth="200.0" promptText="Choose file" />
                         <Button fx:id="geneScoreBrowseButton" mnemonicParsing="false" onAction="#handleGeneScoreBrowseButton" text="Browse ..." />
@@ -37,19 +39,24 @@
                         <Label text="Select from panels on the left " />
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="4">
                      <children>
                         <Label text="Compute from SNP p-values:" />
                         <Hyperlink fx:id="pascalDownloadLink" onAction="#handlePascalDownloadLink" text="Get PASCAL" />
                      </children>
                   </HBox>
+                  <CheckBox fx:id="userPrecomputedKernelsCheckBox" mnemonicParsing="false" selected="true" text="Use precomputed network kernels if available" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="8.0" top="5.0" />
+                     </GridPane.margin>
+                  </CheckBox>
                </children>
             </GridPane>
             <Separator prefWidth="200.0" />
             <Label text="Output" />
-            <GridPane hgap="10.0" vgap="5.0" VBox.vgrow="NEVER">
+            <GridPane hgap="10.0" VBox.vgrow="NEVER">
                <columnConstraints>
-                  <ColumnConstraints hgrow="NEVER" />
+                  <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="120.0" />
                   <ColumnConstraints hgrow="NEVER" />
                </columnConstraints>
                <rowConstraints>
@@ -58,13 +65,6 @@
                   <RowConstraints vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Label text="Kernel directory:" GridPane.rowIndex="1" />
-                  <HBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                     <children>
-                        <TextField fx:id="kernelDirTextField" editable="false" prefHeight="26.0" prefWidth="200.0" promptText="Choose directory" />
-                        <Button fx:id="kernelDirBrowseButton" mnemonicParsing="false" onAction="#handleKernelDirBrowseButton" text="Browse ..." />
-                     </children>
-                  </HBox>
                   <Label text="Output directory:" />
                   <HBox spacing="5.0" GridPane.columnIndex="1">
                      <children>
@@ -74,8 +74,10 @@
                   </HBox>
                   <VBox spacing="3.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <children>
-                        <CheckBox fx:id="deleteKernelsCheckBox" mnemonicParsing="false" selected="true" text="Delete network kernels after completion" />
-                        <CheckBox fx:id="userPrecomputedKernelsCheckBox" mnemonicParsing="false" selected="true" text="Use precomputed network kernels if available" />
+                        <CheckBox fx:id="deleteKernelsCheckBox" mnemonicParsing="false" selected="true" text="Delete network kernels after completion">
+                           <VBox.margin>
+                              <Insets bottom="7.0" top="5.0" />
+                           </VBox.margin></CheckBox>
                      </children>
                   </VBox>
                </children>
@@ -103,7 +105,7 @@
                   <Label text="Exclude HLA genes" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label text="Number of cores" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <Button fx:id="runButton" defaultButton="true" mnemonicParsing="false" onAction="#handleRunButton" prefWidth="70.0" text="Run" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                  <Button fx:id="showCommandButton" mnemonicParsing="false" onAction="#handleShowCommandButton" text="Show command" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                  <Button fx:id="showCommandButton" mnemonicParsing="false" onAction="#handleShowCommandButton" text="Export settings" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                   <Spinner editable="true" prefWidth="65.0" GridPane.rowIndex="3" />
                   <CheckBox fx:id="excludeXYChromosomesCheckBox" mnemonicParsing="false" selected="true" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                   <Label text="Exclude X, Y chromosomes" GridPane.columnIndex="1" GridPane.rowIndex="2" />

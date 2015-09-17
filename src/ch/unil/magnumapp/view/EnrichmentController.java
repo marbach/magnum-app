@@ -83,10 +83,6 @@ public class EnrichmentController extends ViewController {
     @FXML
     private Button outputDirBrowseButton;
     @FXML
-    private TextField kernelDirTextField;
-    @FXML
-    private Button kernelDirBrowseButton;
-    @FXML
     private CheckBox userPrecomputedKernelsCheckBox;
     @FXML
     private CheckBox deleteKernelsCheckBox;
@@ -177,38 +173,14 @@ public class EnrichmentController extends ViewController {
     	// Set text field
     	if (outputDir == null) {
     		outputDirTextField.setText(null);
+    		kernelDir = null;
     	
     	} else {
     		outputDirTextField.setText(outputDir.getPath());
-    		// Set kernel dir if it was not set already
-    		if (kernelDir == null) {
-    			kernelDir = getDefaultKernelDir();
-    			kernelDirTextField.setText(kernelDir.getPath());
-    		}
+    		kernelDir = outputDir.toPath().resolve("tmp_network_kernels").toFile();
     	}
     }
 
-    
-    // ----------------------------------------------------------------------------
-
-    /** Kernel directory browse button */
-    @FXML
-    private void handleKernelDirBrowseButton() {
-    	
-    	// Open directory chooser
-    	DirectoryChooser dirChooser = new DirectoryChooser();
-    	dirChooser.setTitle("Choose network kernel directory");
-    	kernelDir = dirChooser.showDialog(magnumApp.getPrimaryStage());
-    	if (kernelDir == null)
-    		kernelDir = getDefaultKernelDir();
-    	
-    	// Set text field
-    	if (kernelDir == null)
-    		kernelDirTextField.setText(null);
-    	else
-    		kernelDirTextField.setText(kernelDir.getPath());    	
-    }
-    
     
     // ----------------------------------------------------------------------------
 
@@ -361,17 +333,6 @@ public class EnrichmentController extends ViewController {
     	return commands;
     }
 
-    
-    // ----------------------------------------------------------------------------
-
-    /** Get the default kernel directory: outputDir/tmp_network_kernels */
-    private File getDefaultKernelDir() {
-    	if (outputDir == null)
-    		return null;
-    	else
-    		return outputDir.toPath().resolve("tmp_network_kernels").toFile();
-    }
-    	
     
 	// ============================================================================
 	// SETTERS AND GETTERS
