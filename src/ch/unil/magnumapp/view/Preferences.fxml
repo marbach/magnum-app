@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<TitledPane animated="false" minWidth="558.0" text="Preferences" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.PreferencesController">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0">
+         <children>
+            <GridPane alignment="CENTER_LEFT" hgap="10.0" layoutX="25.4" layoutY="25.4" prefHeight="18.0" prefWidth="500.0" vgap="10.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" />
+                  <ColumnConstraints hgrow="NEVER" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints vgrow="NEVER" />
+                  <RowConstraints vgrow="NEVER" />
+              </rowConstraints>
+               <children>
+                  <CheckBox fx:id="rememberSettingsCheckBox" mnemonicParsing="false" selected="true" text="Remember settings across sessions" />
+                  <HBox spacing="10.0" GridPane.rowIndex="1">
+                     <children>
+                        <Button fx:id="resetToDefaultsButton" mnemonicParsing="false" onAction="#handleResetToDefaultsButton" text="Reset to defaults" />
+                        <Button fx:id="loadFromFileButton" mnemonicParsing="false" onAction="#handleLoadFromFileButton" text="Load from file" />
+                     </children>
+                  </HBox>
+               </children>
+            </GridPane>
+         </children></AnchorPane>
+  </content>
+   <padding>
+      <Insets left="7.0" right="7.0" top="7.0" />
+   </padding>
+</TitledPane>

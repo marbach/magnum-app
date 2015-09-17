@@ -12,7 +12,7 @@
          <children>
             <VBox fx:id="contentVBox" spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <HBox spacing="5.0">
+                  <HBox alignment="CENTER_LEFT" spacing="5.0">
                      <children>
                         <Label text="Network collection:" />
                         <TextField fx:id="networkDirTextField" editable="false" prefWidth="220.0" promptText="Locate directory" />
@@ -32,6 +32,7 @@
                      </columnResizePolicy>
                   </TreeTableView>
                   <Label fx:id="numNetworksSelectedLabel" text="No networks selected" />
+                  <Separator prefWidth="200.0" />
                   <Label text="Add your own networks">
                      <padding>
                         <Insets top="5.0" />
@@ -79,7 +80,10 @@
                            </children>
                         </VBox>
                         <Label text="Load as:" GridPane.rowIndex="1" />
-                        <Button fx:id="addButton" disable="true" mnemonicParsing="false" onAction="#handleAddNetworkButton" text="Add networks" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                        <Button fx:id="addButton" defaultButton="true" disable="true" mnemonicParsing="false" onAction="#handleAddNetworkButton" prefWidth="70.0" text="Add" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets left="20.0" />
+                           </GridPane.margin></Button>
                         <CheckBox fx:id="removeSelfCheckBox" mnemonicParsing="false" selected="true" text="Remove self-loops" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
@@ -88,4 +92,7 @@
          </children>
       </AnchorPane>
    </content>
+   <padding>
+      <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+   </padding>
 </TitledPane>

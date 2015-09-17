@@ -25,11 +25,16 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp;
 
+import java.io.File;
+import java.nio.file.Paths;
+
 import ch.unil.magnumapp.model.*;
 import ch.unil.magnumapp.view.*;
+import edu.mit.magnum.FileExport;
 import edu.mit.magnum.Magnum;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -55,6 +60,8 @@ public class MagnumApp extends Application {
     
     /** Root layout controller */
     private RootLayoutController rootLayoutController;
+    /** "Settings" controller */
+    private PreferencesController preferencesController;
     /** "Other networks" controller */
     private OtherNetworksController otherNetworksController;
     /** "Connectivity enrichment" controller */
@@ -70,9 +77,13 @@ public class MagnumApp extends Application {
 		// Initialize magnum
 		magnum = new Magnum(args);
 		MagnumApp.getInstance();
+		Magnum.log.println(AppSettings.magnumAppVersion);
 		
 		// Calls start()
 		launch(args);
+		
+		// Save settings
+		AppSettings.saveSettings();
 	}
 
 	
@@ -97,6 +108,7 @@ public class MagnumApp extends Application {
 		else
 			instance = this;	
 		
+		AppSettings.loadSettings();
 		networkCollection = new NetworkCollection();
 	}
 	
@@ -112,17 +124,14 @@ public class MagnumApp extends Application {
 
         // The root layout
         initRootLayout();
-     
+
         // Panes on the left side
+        showPreferences();
         showOtherNetworks();
         
         // Panes on the right side
         showConnetivityEnrichmentPane();
         
-        // Add css -- doesn't work yet, I also set them in scene builder, remove...
-    	String css = MagnumApp.class.getResource("view/MagnumAppStyle.css").toExternalForm();
-    	primaryStage.getScene().getStylesheets().clear();
-    	primaryStage.getScene().getStylesheets().add(css);
 	}
 	
 	
@@ -138,12 +147,26 @@ public class MagnumApp extends Application {
         
     	// Show the scene containing the root layout.
     	Scene scene = new Scene(rootLayout);
+
+    	// Add css -- doesn't work yet, I also set them in scene builder, remove...
+    	String css = MagnumApp.class.getResource("view/MagnumAppStyle.css").toExternalForm();
+    	scene.getStylesheets().clear();
+    	scene.getStylesheets().add(css);
+
     	primaryStage.setScene(scene);
     	primaryStage.show();
-    	
     }
 
     
+	// ----------------------------------------------------------------------------
+
+    /** "Preferences" pane */
+    private void showPreferences() {
+
+    	preferencesController = (PreferencesController) ViewController.loadFxml("view/Preferences.fxml");
+    	rootLayoutController.getLeftSide().getChildren().add((TitledPane) preferencesController.getRoot());  
+    }
+
 	// ----------------------------------------------------------------------------
 
     /** "My networks" pane */
@@ -154,7 +177,6 @@ public class MagnumApp extends Application {
     	otherNetworksController.setNetworkCollection(networkCollection);
     	// Add to root layout
     	rootLayoutController.getLeftSide().getChildren().add(otherNetworksController.getRoot());  
-    	    	
     }
 
     
@@ -167,7 +189,6 @@ public class MagnumApp extends Application {
     	enrichmentController = (EnrichmentController) ViewController.loadFxml("view/ConnectivityEnrichment.fxml");
     	// Add to root layout
     	rootLayoutController.getRightSide().getChildren().add(enrichmentController.getRoot());  
-    	    	
     }
 
     
@@ -181,5 +202,9 @@ public class MagnumApp extends Application {
     public Stage getPrimaryStage() { return primaryStage; }
     
     public NetworkCollection getNetworkCollection() { return networkCollection; }
+
+    public PreferencesController getPreferencesController() { return preferencesController; }
+	public EnrichmentController getEnrichmentController() {	return enrichmentController; }
+	public OtherNetworksController getOtherNetworksController() { return otherNetworksController; }
     
 }

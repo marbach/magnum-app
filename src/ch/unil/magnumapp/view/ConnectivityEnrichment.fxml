@@ -74,8 +74,8 @@
                   </HBox>
                   <VBox spacing="3.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <children>
-                        <CheckBox fx:id="userPrecomputedKernelsCheckBox" mnemonicParsing="false" selected="true" text="Use precomputed network kernels if available" />
                         <CheckBox fx:id="deleteKernelsCheckBox" mnemonicParsing="false" selected="true" text="Delete network kernels after completion" />
+                        <CheckBox fx:id="userPrecomputedKernelsCheckBox" mnemonicParsing="false" selected="true" text="Use precomputed network kernels if available" />
                      </children>
                   </VBox>
                </children>
@@ -86,16 +86,27 @@
               <columnConstraints>
                 <ColumnConstraints hgrow="NEVER" />
                 <ColumnConstraints hgrow="NEVER" />
+                  <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                  <ColumnConstraints hgrow="NEVER" />
+                  <ColumnConstraints hgrow="NEVER" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints vgrow="SOMETIMES" />
                 <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <TextField fx:id="numPermutationsTextField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="62.0" text="10000" />
+                  <TextField fx:id="numPermutationsTextField" alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="65.0" text="10000" />
                   <Label text="Number of permutations" GridPane.columnIndex="1" />
                   <CheckBox fx:id="excludeHlaGenesCheckBox" mnemonicParsing="false" selected="true" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                   <Label text="Exclude HLA genes" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label text="Number of cores" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Button fx:id="runButton" defaultButton="true" mnemonicParsing="false" onAction="#handleRunButton" prefWidth="70.0" text="Run" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                  <Button fx:id="showCommandButton" mnemonicParsing="false" onAction="#handleShowCommandButton" text="Show command" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                  <Spinner editable="true" prefWidth="65.0" GridPane.rowIndex="3" />
+                  <CheckBox fx:id="excludeXYChromosomesCheckBox" mnemonicParsing="false" selected="true" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                  <Label text="Exclude X, Y chromosomes" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>
                <VBox.margin>
                   <Insets top="5.0" />
@@ -104,4 +115,7 @@
          </children>
       </VBox>
    </content>
+   <padding>
+      <Insets bottom="7.0" right="7.0" top="7.0" />
+   </padding>
 </TitledPane>

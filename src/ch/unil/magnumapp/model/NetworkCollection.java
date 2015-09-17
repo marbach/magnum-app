@@ -35,6 +35,8 @@ import javafx.scene.control.TreeItem;
  */
 public class NetworkCollection {
 
+	/** The network collection directory */
+	private Path networkDir;
 	/** The network groups */
     private ArrayList<NetworkGroup> networkGroups;
     /** My networks */
@@ -75,6 +77,7 @@ public class NetworkCollection {
 	/** Initialize the directory, subdirectories and network files */
 	public void initDirectory(Path directory) {
 		
+		networkDir = directory;
 		ppiNetworks.initDirectory(directory);
 	}
 
@@ -108,6 +111,11 @@ public class NetworkCollection {
 
 	public NetworkGroup getMyNetworks() {
 		return myNetworks;
+	}
+
+
+	public Path getNetworkDir() {
+		return networkDir;
 	}
 
 

@@ -34,43 +34,29 @@ import edu.mit.magnum.Magnum;
 /**
  * Runnable class for loading networks
  */
-public class ThreadLoadNetworks extends ThreadMagnum {
+public class ThreadConnectivityEnrichment extends ThreadMagnum {
 
-	/** The network group where the files will be added */
-	NetworkGroup networkGroup;
-	
-	/** Network files */
-    private List<File> files;
-    /** Directed network */
-    private boolean directed;
-    /** Weighted network */
-    private boolean weighted;
-    /** Remove self loops */
-    private boolean removeSelf;
+	/** The arguments used to launch magnum */
+    private String[] args;
     
     
 	// ============================================================================
 	// PUBLIC METHODS
 
 	/** Constructor */
-	public ThreadLoadNetworks(NetworkGroup networkGroup, List<File> files, boolean directed, boolean weighted, boolean removeSelf) {
-
-		this.networkGroup = networkGroup;
-		this.files = files;
-		this.directed = directed;
-		this.weighted = weighted;
-		this.removeSelf = removeSelf;
+	public ThreadConnectivityEnrichment(String[] args) {
+		this.args = args;
 	}
 
 	
 	// ----------------------------------------------------------------------------
 
-	/** Called by MagnumThread.run() */
+	/** Main method called by the thread */
 	@Override
 	protected void runJob() {
-
-		for (File file : files)
-			networkGroup.loadNetworkAddModel(file, directed, weighted, removeSelf);
+		
+		Magnum magnum = new Magnum(args);
+		magnum.run();
 	}
 	
 	

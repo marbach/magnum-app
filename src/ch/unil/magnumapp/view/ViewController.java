@@ -75,6 +75,7 @@ public class ViewController {
         // Initialize controller
         ViewController controller = loader.getController();
         controller.setRoot(root);
+        controller.init();
         
         return controller;
     }
@@ -96,6 +97,16 @@ public class ViewController {
             }
         }
     }
+    
+    
+	// ============================================================================
+	// PROTECTED
+
+    /** 
+     * Abstract method can be implemented by subclasses to initialize stuff.
+     * Do not call it initialize(), otherwise it gets called by the FXML loader.
+     */
+    protected void init() {  }
     
     
 	// ============================================================================

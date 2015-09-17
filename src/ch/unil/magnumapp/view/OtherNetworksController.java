@@ -27,8 +27,11 @@ package ch.unil.magnumapp.view;
 
 import java.io.File;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 
+import ch.unil.magnumapp.AppSettings;
 import ch.unil.magnumapp.model.NetworkCollection;
 import ch.unil.magnumapp.model.NetworkModel;
 import javafx.application.Platform;
@@ -68,6 +71,9 @@ public class OtherNetworksController extends ViewController {
 	private List<File> filesToBeAdded;
 	/** Disables the selection handle (used when programmatically changing the selection */
 	private boolean enableHandleSelection = true;
+	
+	/** The selected networks */
+	private LinkedHashSet<TreeItem<NetworkModel>> selectedNetworks = new LinkedHashSet<>();
 	
 	/** Network collection directory */
 	@FXML
@@ -110,7 +116,7 @@ public class OtherNetworksController extends ViewController {
     private CheckBox removeSelfCheckBox;
     @FXML
     private VBox contentVBox;
-
+    
 	
 	// ============================================================================
 	// PUBLIC METHODS
@@ -184,7 +190,13 @@ public class OtherNetworksController extends ViewController {
         });
         
         notesColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().notesProperty());
-
+    	
+        // Initialize network collection directory based on saved setting
+        File networkDir = new File(AppSettings.networkCollectionDir);
+        if (networkDir.exists()) {
+        	networkDirTextField.setText(AppSettings.networkCollectionDir);
+        	networkCollection.initDirectory(networkDir.toPath());
+        }
     }
 
 
@@ -206,7 +218,6 @@ public class OtherNetworksController extends ViewController {
     	
     	// Set network dir text field
     	networkDirTextField.setText(networkDir.getPath());
-
     	// Initialize files
     	networkCollection.initDirectory(networkDir.toPath());
     }
@@ -298,9 +309,9 @@ public class OtherNetworksController extends ViewController {
     	
     	TreeTableViewSelectionModel<NetworkModel> selectionModel = networksTable.getSelectionModel();
     	ObservableList<Integer> selection = selectionModel.getSelectedIndices();
+    	selectedNetworks.clear();
     	if (selection == null)
     		return;
-    	HashSet<TreeItem<NetworkModel>> addItems = new HashSet<>();
 
     	for (Integer i : selection) {
     		assert i != null;
@@ -359,7 +370,7 @@ public class OtherNetworksController extends ViewController {
 
     		// Add leafs
     		if (item.isLeaf()) {
-    			addItems.add(item);
+    			selectedNetworks.add(item);
     			
    			// Add all children
     		} else {
@@ -370,29 +381,36 @@ public class OtherNetworksController extends ViewController {
     				if (!child.isLeaf())
     					throw new RuntimeException("Did not except nested categories in network tree: " + child.getValue().getName());
     				if (child.getValue().fileExistsProperty().get())
-    					addItems.add(child);
+    					selectedNetworks.add(child);
     			}
     		}
     	}
     	
-    	// Disable the handle for updates made below to avoid recursion
+    	// Perform selection, set texts, update EnrichmentController
     	Platform.runLater(() -> {
+        	// Disable the handle for updates made below to avoid recursion
     		enableHandleSelection = false;
     		selectionModel.clearSelection();
-    		for (TreeItem<NetworkModel> item : addItems)
+    		for (TreeItem<NetworkModel> item : selectedNetworks)
     			selectionModel.select(item);
     		enableHandleSelection = true;
     		
-    		String numSelectedStr;
-    		if (addItems.size() == 0)
-    			numSelectedStr = "No networks selected";
-    		else if (addItems.size() == 1)
-    			numSelectedStr = "1 network selected";
+    		if (selectedNetworks.size() == 0)
+    			numNetworksSelectedLabel.setText("No networks selected");
+    		else if (selectedNetworks.size() == 1)
+    			numNetworksSelectedLabel.setText("1 network selected");
     		else
-    			numSelectedStr = addItems.size() + " networks selected";
-    		numNetworksSelectedLabel.setText(numSelectedStr);
+    			numNetworksSelectedLabel.setText(selectedNetworks.size() + " networks selected");
     	});
+    	
+		// Let the enrichment controller know
+		magnumApp.getEnrichmentController().networkSelectionUpdated();
     }
+
+
+	public LinkedHashSet<TreeItem<NetworkModel>> getSelectedNetworks() {
+		return selectedNetworks;
+	}
 
         
     

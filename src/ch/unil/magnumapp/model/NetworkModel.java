@@ -152,6 +152,8 @@ public class NetworkModel {
 				notes.set("Directory not found");
 			else
 				notes.set("File not found");
+		} else {
+			notes.set(null);
 		}
 	}
 	
@@ -175,5 +177,20 @@ public class NetworkModel {
 	public IntegerProperty numEdgesProperty() { return numEdges; }
 	public BooleanProperty isWeightedProperty() { return isWeighted; }
 	public BooleanProperty isDirectedProperty() { return isDirected; }
+
+
+	public boolean getIsDirected() {
+		return isDirected.get();
+	}
+
+
+	public boolean getIsWeighted() {
+		return isWeighted.get();
+	}
+
+
+	public boolean getRemoveSelf() {
+		return removeSelf.get();
+	}
 
 }

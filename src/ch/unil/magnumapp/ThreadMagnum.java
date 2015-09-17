@@ -26,11 +26,12 @@ THE SOFTWARE.
 package ch.unil.magnumapp;
 
 import ch.unil.magnumapp.view.ThreadController;
+import edu.mit.magnum.Magnum;
 
 /**
  * Runnable class for loading networks
  */
-public class ThreadMagnum extends Thread {
+abstract public class ThreadMagnum extends Thread {
 
 	/** The view controller of the dialog/alert of this thread */
 	protected ThreadController controller;
@@ -44,10 +45,40 @@ public class ThreadMagnum extends Thread {
 	/** Constructor */
 	public ThreadMagnum() {
 		
-		id = Thread.currentThread().getId();
 	}
 
 
+	// ----------------------------------------------------------------------------
+
+	/** The main method called by the thread */
+	@Override
+	public void run() {
+		
+		try {
+			id = Thread.currentThread().getId();
+			runJob();
+			controller.success();
+    			
+		} catch (Exception e) {
+			// It was an interrupt
+			if (Magnum.interrupted()) {
+				Magnum.log.println("Thread interrupted!");
+				return;
+			} else {
+				controller.error(e);
+				throw e;
+			}
+		}
+	}
+	
+	
+	// ============================================================================
+	// PROTECTED METHODS
+
+	/** The method called by run() */
+	protected abstract void runJob();
+	
+	
 	// ============================================================================
 	// SETTERS AND GETTERS
 
