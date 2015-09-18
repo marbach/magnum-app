@@ -106,7 +106,6 @@ public class MagnumApp extends Application {
 		else
 			instance = this;	
 		
-		AppSettings.setDefaults();
 		AppSettings.loadSettings();
 		networkCollection = new NetworkCollection();
 	}
