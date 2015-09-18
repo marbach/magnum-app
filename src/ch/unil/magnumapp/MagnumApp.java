@@ -25,17 +25,15 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp;
 
-import java.io.File;
-import java.nio.file.Paths;
-
 import ch.unil.magnumapp.model.*;
 import ch.unil.magnumapp.view.*;
-import edu.mit.magnum.FileExport;
 import edu.mit.magnum.Magnum;
 import javafx.application.Application;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
@@ -61,7 +59,7 @@ public class MagnumApp extends Application {
     /** Root layout controller */
     private RootLayoutController rootLayoutController;
     /** "Settings" controller */
-    private PreferencesController preferencesController;
+    private PreferencesDialogController preferencesController;
     /** "Other networks" controller */
     private OtherNetworksController otherNetworksController;
     /** "Connectivity enrichment" controller */
@@ -108,6 +106,7 @@ public class MagnumApp extends Application {
 		else
 			instance = this;	
 		
+		AppSettings.setDefaults();
 		AppSettings.loadSettings();
 		networkCollection = new NetworkCollection();
 	}
@@ -118,7 +117,7 @@ public class MagnumApp extends Application {
 	/** Called when the App is launched */
 	@Override
 	public void start(Stage primaryStage) {
-		
+
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle(AppSettings.magnumAppVersion);
 
@@ -126,15 +125,29 @@ public class MagnumApp extends Application {
         initRootLayout();
 
         // Panes on the left side
-        showPreferences();
         showOtherNetworks();
         
         // Panes on the right side
         showConnetivityEnrichmentPane();
         
+        // Dialogs
+    	preferencesController = (PreferencesDialogController) ViewController.loadFxml("view/PreferencesDialog.fxml");
+
+    	applyAppSettings();
 	}
 	
+
+	// ----------------------------------------------------------------------------
 	
+    /** Initialize the controls with the settings from AppSettings */
+    public void applyAppSettings() {
+    	
+    	otherNetworksController.applyAppSettings();
+    	enrichmentController.applyAppSettings();
+    }
+
+    
+
 	// ============================================================================
 	// PRIVATE METHODS
 
@@ -143,30 +156,14 @@ public class MagnumApp extends Application {
     	
     	rootLayoutController = (RootLayoutController) RootLayoutController.loadFxml("view/RootLayout.fxml");
     	rootLayout = (BorderPane) rootLayoutController.getRoot();
-        //rootLayout.setStyle("-fx-focus-color: transparent;");
         
     	// Show the scene containing the root layout.
     	Scene scene = new Scene(rootLayout);
-
-    	// Add css -- doesn't work yet, I also set them in scene builder, remove...
-    	String css = MagnumApp.class.getResource("view/MagnumAppStyle.css").toExternalForm();
-    	scene.getStylesheets().clear();
-    	scene.getStylesheets().add(css);
-
     	primaryStage.setScene(scene);
     	primaryStage.show();
     }
 
     
-	// ----------------------------------------------------------------------------
-
-    /** "Preferences" pane */
-    private void showPreferences() {
-
-    	preferencesController = (PreferencesController) ViewController.loadFxml("view/Preferences.fxml");
-    	rootLayoutController.getLeftSide().getChildren().add((TitledPane) preferencesController.getRoot());  
-    }
-
 	// ----------------------------------------------------------------------------
 
     /** "My networks" pane */
@@ -176,7 +173,9 @@ public class MagnumApp extends Application {
     	otherNetworksController = (OtherNetworksController) ViewController.loadFxml("view/OtherNetworks.fxml");
     	otherNetworksController.setNetworkCollection(networkCollection);
     	// Add to root layout
-    	rootLayoutController.getLeftSide().getChildren().add(otherNetworksController.getRoot());  
+    	Node child = otherNetworksController.getRoot();
+    	VBox.setVgrow(child, Priority.ALWAYS);
+    	rootLayoutController.getLeftSide().getChildren().add(child);  
     }
 
     
@@ -203,7 +202,7 @@ public class MagnumApp extends Application {
     
     public NetworkCollection getNetworkCollection() { return networkCollection; }
 
-    public PreferencesController getPreferencesController() { return preferencesController; }
+    public PreferencesDialogController getPreferencesController() { return preferencesController; }
 	public EnrichmentController getEnrichmentController() {	return enrichmentController; }
 	public OtherNetworksController getOtherNetworksController() { return otherNetworksController; }
     

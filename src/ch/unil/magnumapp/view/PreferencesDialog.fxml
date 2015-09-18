@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<DialogPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.PreferencesDialogController">
+   <content>
+      <GridPane>
+        <columnConstraints>
+          <ColumnConstraints hgrow="NEVER" />
+          <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <CheckBox fx:id="rememberSettingsCheckBox" mnemonicParsing="false" selected="true" text="Remember selected directories, files, and settings across sessions" />
+            <HBox spacing="10.0" GridPane.rowIndex="1">
+               <children>
+                  <Button fx:id="resetToDefaultsButton" mnemonicParsing="false" onAction="#handleResetToDefaultsButton" text="Reset to defaults" />
+                  <Button fx:id="loadFromFileButton" mnemonicParsing="false" onAction="#handleLoadFromFileButton" text="Load from file" />
+               </children>
+            </HBox>
+         </children>
+      </GridPane>
+   </content>
+</DialogPane>

@@ -26,6 +26,7 @@ THE SOFTWARE.
 package ch.unil.magnumapp.view;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
@@ -34,6 +35,14 @@ import javafx.scene.layout.VBox;
  */
 public class RootLayoutController extends ViewController {
     
+    /** The "menu" buttons */
+    @FXML
+    private Button helpButton;
+    @FXML
+    private Button preferencesButton;
+    @FXML
+    private Button aboutButton;
+
     /** The two sides of the root layout */
     @FXML
     private VBox leftSide;
@@ -42,8 +51,32 @@ public class RootLayoutController extends ViewController {
 
 	
 	// ============================================================================
-	// PUBLIC METHODS
+	// HANDLES
+    
+    /** Help button handle */
+    @FXML
+    private void handleHelpButton() {
+    	
+    }
 	    
+    
+	// ----------------------------------------------------------------------------
+
+    /** Preferences button handle */
+    @FXML
+    private void handlePreferencesButton() {
+    	magnumApp.getPreferencesController().show();
+    }
+
+
+	// ----------------------------------------------------------------------------
+
+    /** About button handle */
+    @FXML
+    private void handleAboutButton() {
+    	
+    }
+
 	
     
 	// ============================================================================

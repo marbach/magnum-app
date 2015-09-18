@@ -29,7 +29,6 @@ import java.io.File;
 import java.util.List;
 
 import ch.unil.magnumapp.model.NetworkGroup;
-import edu.mit.magnum.Magnum;
 
 /**
  * Runnable class for loading networks

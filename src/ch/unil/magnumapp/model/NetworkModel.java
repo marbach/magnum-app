@@ -51,7 +51,7 @@ public class NetworkModel {
 	/** The file */
 	private File file;
 	/** Flag showing if file exists */
-	private BooleanProperty fileExists;
+	private boolean fileExists;
 
 	/** Notes */
 	private StringProperty notes;
@@ -105,7 +105,7 @@ public class NetworkModel {
 		this.name = new SimpleStringProperty(MagnumUtils.extractBasicFilename(file.getName(), false));
 		this.filename = new SimpleStringProperty(file.getName());
 		this.file = file;
-		this.fileExists = new SimpleBooleanProperty(file.exists());
+		this.fileExists = file.exists();
 		this.isDirected = new SimpleBooleanProperty(isDirected);
 		this.isWeighted = new SimpleBooleanProperty(isWeighted);
 		this.removeSelf = new SimpleBooleanProperty(removeSelf);
@@ -133,9 +133,12 @@ public class NetworkModel {
     // ----------------------------------------------------------------------------
 
 	/** Initializes the file given the directory and filename */
-	public void initFile(Path directory) {
+	public void initFile(File directory) {
 
-		setFile(directory.resolve(filename.get()).toFile());
+		File file = null;
+		if (directory != null)
+			file = directory.toPath().resolve(filename.get()).toFile();
+		setFile(file);
 	}
 	
 		
@@ -143,11 +146,12 @@ public class NetworkModel {
 
 	/** Set file, initialize fileExists and notes with error message */
 	public void setFile(File file) {
-		this.file = file;
 		
+		this.file = file;
+		fileExists = (file != null && file.exists());
+				
 		// Use notes property to display warning if file does not exist
-		fileExists = new SimpleBooleanProperty(file.exists());
-		if (!fileExists.get()) {
+		if (file != null && !file.exists()) {
 			if (isDirected == null) // hack to know if this is a group node
 				notes.set("Directory not found");
 			else
@@ -167,10 +171,10 @@ public class NetworkModel {
 	
 	public String getName() { return name.getValue(); }
 	public File getFile() { return file; }
+	public boolean getFileExists() { return fileExists; }
 	
 	public StringProperty filenameProperty() { return filename; }
 	public StringProperty nameProperty() { return name; }	
-	public BooleanProperty fileExistsProperty() { return fileExists; }
 	public StringProperty notesProperty() { return notes; }
 	public IntegerProperty numRegulatorsProperty() { return numRegulators; }
 	public IntegerProperty numNodesProperty() { return numNodes; }

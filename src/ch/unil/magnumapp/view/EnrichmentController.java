@@ -27,7 +27,6 @@ package ch.unil.magnumapp.view;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedHashSet;
 
 import ch.unil.magnumapp.AppSettings;
@@ -73,6 +72,8 @@ public class EnrichmentController extends ViewController {
     @FXML
     private Button geneScoreBrowseButton;
     @FXML
+    private CheckBox userPrecomputedKernelsCheckBox;
+    @FXML
     private Hyperlink geneScoreDownloadLink;
     @FXML
     private Hyperlink pascalDownloadLink;
@@ -82,8 +83,6 @@ public class EnrichmentController extends ViewController {
     private TextField outputDirTextField;
     @FXML
     private Button outputDirBrowseButton;
-    @FXML
-    private CheckBox userPrecomputedKernelsCheckBox;
     @FXML
     private CheckBox deleteKernelsCheckBox;
     
@@ -117,7 +116,52 @@ public class EnrichmentController extends ViewController {
 			networksTextField.setText(numNetworks + " networks selected");
     }
     
+	
+    // ----------------------------------------------------------------------------
+	
+    /** Initialize the controls with the settings from AppSettings */
+    public void applyAppSettings() {
+    	
+    	setGeneScoreFile(AppSettings.geneScoreFile);
+    	userPrecomputedKernelsCheckBox.setSelected(AppSettings.usePrecomputedKernels);
+    	
+    	setOutputDir(AppSettings.outputDir);
+    	deleteKernelsCheckBox.setSelected(AppSettings.deleteKernels);
+    	numPermutationsTextField.setText(Integer.toString(AppSettings.numPermutations));
+    	excludeHlaGenesCheckBox.setSelected(AppSettings.excludeHlaGenes);
+    	excludeXYChromosomesCheckBox.setSelected(AppSettings.excludeAllosomes);
+    }
 
+    
+    // ----------------------------------------------------------------------------
+	
+    /** Initialize the controls with the settings from AppSettings */
+    public void setGeneScoreFile(File geneScoreFile) {
+    	
+    	this.geneScoreFile = geneScoreFile;
+    	if (geneScoreFile == null)
+    		geneScoreTextField.setText(null);
+    	else
+        	geneScoreTextField.setText(geneScoreFile.getName());
+    }
+
+    
+    // ----------------------------------------------------------------------------
+	
+    /** Initialize the controls with the settings from AppSettings */
+    public void setOutputDir(File outputDir) {
+    	
+    	this.outputDir = outputDir;
+    	if (outputDir == null) {
+    		outputDirTextField.setText(null);
+    		kernelDir = null;
+    	} else {
+    		outputDirTextField.setText(outputDir.getPath());
+    		kernelDir = outputDir.toPath().resolve("tmp_network_kernels").toFile();
+    	}
+    }
+
+    
 	// ============================================================================
 	// HANDLES
 
@@ -131,13 +175,9 @@ public class EnrichmentController extends ViewController {
     	if (geneScoreFile != null && geneScoreFile.exists())
     		fileChooser.setInitialDirectory(geneScoreFile.getParentFile());
     	fileChooser.setTitle("Select a gene score file");
-    	// Open dialog
-    	geneScoreFile = fileChooser.showOpenDialog(magnumApp.getPrimaryStage());
 
-    	if (geneScoreFile == null)
-    		geneScoreTextField.setText(null);
-    	else
-        	geneScoreTextField.setText(geneScoreFile.getName());
+    	// Open dialog and set file
+    	setGeneScoreFile(fileChooser.showOpenDialog(magnumApp.getPrimaryStage()));
     }
 
 
@@ -168,17 +208,8 @@ public class EnrichmentController extends ViewController {
     	// Open directory chooser
     	DirectoryChooser dirChooser = new DirectoryChooser();
     	dirChooser.setTitle("Choose output directory");
-    	outputDir = dirChooser.showDialog(magnumApp.getPrimaryStage());
     	
-    	// Set text field
-    	if (outputDir == null) {
-    		outputDirTextField.setText(null);
-    		kernelDir = null;
-    	
-    	} else {
-    		outputDirTextField.setText(outputDir.getPath());
-    		kernelDir = outputDir.toPath().resolve("tmp_network_kernels").toFile();
-    	}
+    	setOutputDir(dirChooser.showDialog(magnumApp.getPrimaryStage()));
     }
 
     

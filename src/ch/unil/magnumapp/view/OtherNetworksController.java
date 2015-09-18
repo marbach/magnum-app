@@ -26,14 +26,13 @@ THE SOFTWARE.
 package ch.unil.magnumapp.view;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 
 import ch.unil.magnumapp.AppSettings;
 import ch.unil.magnumapp.model.NetworkCollection;
 import ch.unil.magnumapp.model.NetworkModel;
+import edu.mit.magnum.MagnumUtils;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.collections.ListChangeListener;
@@ -189,17 +188,27 @@ public class OtherNetworksController extends ViewController {
         	};
         });
         
-        notesColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().notesProperty());
-    	
-        // Initialize network collection directory based on saved setting
-        File networkDir = new File(AppSettings.networkCollectionDir);
-        if (networkDir.exists()) {
-        	networkDirTextField.setText(AppSettings.networkCollectionDir);
-        	networkCollection.initDirectory(networkDir.toPath());
-        }
+        notesColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().notesProperty());    	
     }
 
 
+    // ----------------------------------------------------------------------------
+
+    /** Initialize with settings from AppSettings */
+    public void applyAppSettings() {
+
+        // Initialize network collection directory based on saved setting
+        File networkDir = AppSettings.networkCollectionDir;
+        networkDirTextField.setText(MagnumUtils.fileToString(networkDir));
+        networkCollection.initDirectory(networkDir);
+        
+        // Clear selected networks
+    	Platform.runLater(() -> {
+    		networksTable.getSelectionModel().clearSelection();
+    	});
+    }
+
+    
 	// ============================================================================
 	// HANDLES
 
@@ -217,9 +226,9 @@ public class OtherNetworksController extends ViewController {
     	}
     	
     	// Set network dir text field
-    	networkDirTextField.setText(networkDir.getPath());
+    	networkDirTextField.setText(networkDir.toString());
     	// Initialize files
-    	networkCollection.initDirectory(networkDir.toPath());
+    	networkCollection.initDirectory(networkDir);
     }
     	
 
@@ -324,50 +333,51 @@ public class OtherNetworksController extends ViewController {
     		if (name.equals("My networks") || name.equals("Network collection"))
     			continue;
 
-			// If no directory has been set
-			BooleanProperty fileExists = item.getValue().fileExistsProperty();
-			if (fileExists == null) {
-				if (item.isLeaf()) {
-					Alert alert = new Alert(AlertType.WARNING);
-					//alert.setWidth(1000); does not seem to work
-					alert.setTitle("Warning");
-					alert.setHeaderText("Directory not set!");
-					alert.setContentText("Use the 'Browse' button to locate the 'Network collection' directory.\n\n" + 
-							"If you haven't done so already, download it:\n" +
-							"- click the 'Download' link or\n" +
-							"- visit regulatorycircuits.org");
-					alert.showAndWait();
-					break;
-				} else {
-	    			// Expand
-	    			Platform.runLater(() -> item.setExpanded(true));
-	    			break;
-				}
-				
-			// Directory was set but the file / directory was not found
-			} else if (!fileExists.get()) {
-				Alert alert = new Alert(AlertType.WARNING);
-				//alert.setWidth(1000); does not seem to work
-				alert.setTitle("Warning");
-				
-				// Get info on the file / dir
-				File file = item.getValue().getFile();
-				String fileOrDir = "File";
-				if (file.isDirectory())
-					fileOrDir = "Directory";
-				
-				// Set text
-				alert.setHeaderText(fileOrDir + " not found!");
-				alert.setContentText(fileOrDir + " not found in the selected 'Network collection' directory:\n" + 
-						file.getAbsolutePath() + "\n\n" +
-						"Verify that the 'Network collection' directory was selected. " +
-						"If the problem persists, download it again by clicking the link.");
-				
-				// Show the dialog
-				alert.showAndWait();
-				break;
-			}
+    		if (!item.getValue().getFileExists()) {
+    			// If no directory has been set
+    			if (item.getValue().notesProperty().get() == null) {
+    				if (item.isLeaf()) {
+    					Alert alert = new Alert(AlertType.WARNING);
+    					//alert.setWidth(1000); does not seem to work
+    					alert.setTitle("Warning");
+    					alert.setHeaderText("Network collection directory not set!");
+    					alert.setContentText("Use the 'Browse' button to locate the 'Network collection' directory.\n\n" + 
+    							"If you haven't done so already, download it:\n" +
+    							"- click the 'Download' link or\n" +
+    							"- visit regulatorycircuits.org");
+    					alert.showAndWait();
+    					break;
+    				} else {
+    					// Expand
+    					Platform.runLater(() -> item.setExpanded(true));
+    					break;
+    				}
 
+    				// Directory was set but the file / directory was not found
+    			} else {
+    				Alert alert = new Alert(AlertType.WARNING);
+    				//alert.setWidth(1000); does not seem to work
+    				alert.setTitle("Warning");
+
+    				// Get info on the file / dir
+    				File file = item.getValue().getFile();
+    				String fileOrDir = "File";
+    				if (file.isDirectory())
+    					fileOrDir = "Directory";
+
+    				// Set text
+    				alert.setHeaderText(fileOrDir + " not found!");
+    				alert.setContentText(fileOrDir + " not found in the selected 'Network collection' directory:\n" + 
+    						file.getAbsolutePath() + "\n\n" +
+    						"Verify that the 'Network collection' directory was selected. " +
+    						"If the problem persists, download it again by clicking the link.");
+
+    				// Show the dialog
+    				alert.showAndWait();
+    				break;
+    			}
+    		}
+    		
     		// Add leafs
     		if (item.isLeaf()) {
     			selectedNetworks.add(item);
@@ -380,7 +390,7 @@ public class OtherNetworksController extends ViewController {
     			for (TreeItem<NetworkModel> child : item.getChildren()) {
     				if (!child.isLeaf())
     					throw new RuntimeException("Did not except nested categories in network tree: " + child.getValue().getName());
-    				if (child.getValue().fileExistsProperty().get())
+    				if (child.getValue().getFileExists())
     					selectedNetworks.add(child);
     			}
     		}

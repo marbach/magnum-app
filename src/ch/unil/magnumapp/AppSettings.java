@@ -35,6 +35,7 @@ import java.util.Properties;
 
 import edu.mit.magnum.FileExport;
 import edu.mit.magnum.Magnum;
+import edu.mit.magnum.MagnumUtils;
 import edu.mit.magnum.Settings;
 
 /**
@@ -58,16 +59,53 @@ final public class AppSettings extends Settings {
 
 	/** The configuration file with the settings (leave empty for default settings) */
 	final static public File settingsFile = Paths.get(System.getProperty("user.home"), ".magnum.txt").toFile();	
+
+	// SETTINGS VARIABLES
+	// Strategy: We don't keep them synced with the controllers => update before accessing any values
+	// => other classes should take values from the controllers, not from here
+	// (or we could bind them and always take from here, maybe better?)
 	
 	/** Remember settings */
-	static public Boolean rememberSettings = true;
+	static public Boolean rememberSettings;
 	
 	/** Network collection directory */
-	static public String networkCollectionDir;
-
+	static public File networkCollectionDir;
 	
+	/** Use precomputed network kernels if available */
+	static public boolean usePrecomputedKernels;
+	/** GWAS gene score file */
+	static public File geneScoreFile;
+	/** Output directory */
+	static public File outputDir;
+	/** Delete network kernels after completion */
+	static public boolean deleteKernels;
+	/** Number of permutations */
+	static public int numPermutations;
+	/** Exclude HLA genes */
+	static public boolean excludeHlaGenes;
+	/** Exclude X, Y chromosomes */
+	static public boolean excludeAllosomes;
+
+
 	// ============================================================================
 	// PUBLIC
+
+    /** Reset all settings to their default values */
+    static public void setDefaults() {
+    	
+    	rememberSettings = true;
+    	networkCollectionDir = null;
+    	usePrecomputedKernels = true;
+    	geneScoreFile = null;
+    	outputDir = null;
+    	deleteKernels = true;
+    	numPermutations = 10000;
+    	excludeHlaGenes = true;
+    	excludeAllosomes = true;
+    }
+    
+    
+	// ----------------------------------------------------------------------------
 
     /** Load settings from .magnum.txt file in user directory */
     static public void loadSettings() {
@@ -103,34 +141,47 @@ final public class AppSettings extends Settings {
     /** Save settings to .magnum.txt file in user directory */
     static public void saveSettings() {
     	
-    	// Save settings file
     	Magnum.log.println("\nSaving configuration file...");
+    	
     	// Update settings
     	getCurrentSettings();
-    	FileExport out = new FileExport(settingsFile.getAbsolutePath());
     	
+    	// Save settings file    	
+    	FileExport out = new FileExport(settingsFile.getAbsolutePath());    	
     	out.println(getHeader());  	
     	out.println();
     	out.println("##########################################################################");
     	out.println("# APP SETTINGS");
     	out.println();
     	out.println("# Remember settings from last session");
-    	out.println("rememberSettings = " + rememberSettings.toString());
+    	out.println("rememberSettings = " + rememberSettings);
     	out.println();
+    	if (!rememberSettings) {
+    		out.println("# Remaining settings were not saved because rememberSettings=false ...");
+    		out.close();
+    		return;
+    	}
     	out.println("# Network collection directory");
-    	out.println("networkCollectionDir = " + networkCollectionDir);
+    	out.println("networkCollectionDir = " + MagnumUtils.fileToString(networkCollectionDir));
     	out.println();
     	out.println("##########################################################################");
     	out.println("# CONNECTIVITY ENRICHMENT");
     	out.println();
+    	out.println("# Use precomputed network kernels if available");
+    	out.println("usePrecomputedKernels = " + usePrecomputedKernels);
     	out.println("# GWAS gene score file");
-    	//out.println("geneScoreFile = " + geneScoreFile);
-    	//out.println("# GWAS gene score file");
-    	//out.println("geneScoreFile = " + geneScoreFile);
-
+    	out.println("geneScoreFile = " + MagnumUtils.fileToString(geneScoreFile));
+    	out.println("# Output directory");
+    	out.println("outputDir = " + MagnumUtils.fileToString(outputDir));
+    	out.println("# Delete network kernels after completion");
+    	out.println("deleteKernels = " + deleteKernels);
+    	out.println("# Number of permutations");
+    	out.println("numPermutations = " + numPermutations);
+    	out.println("# Exclude HLA genes");
+    	out.println("excludeHlaGenes = " + excludeHlaGenes);
+    	out.println("# Exclude X, Y chromosomes");
+    	out.println("excludeAllosomes = " + excludeAllosomes);
     	out.println();
-
-
     	out.close();
     }
 
@@ -148,8 +199,8 @@ final public class AppSettings extends Settings {
 
     	rememberSettings = app.getPreferencesController().getRememberSettings();
     	
-    	Path dir = app.getNetworkCollection().getNetworkDir();
-    	networkCollectionDir = (dir == null ? "" : dir.toString());
+    	networkCollectionDir = app.getNetworkCollection().getNetworkDir();
+    	//usePrecomputedKernels = app.getEnrichmentController().get
     }
     
     
@@ -158,8 +209,19 @@ final public class AppSettings extends Settings {
     /** Extract params from properties */
     static private void setParameterValues() {
 
+    	// Return if we are not supposed to remember (that's the only thing we do remember :)
     	rememberSettings = getSettingBoolean("rememberSettings");
-    	networkCollectionDir = getSetting("networkCollectionDir");
+    	if (!rememberSettings)
+    		return;
+    	
+    	networkCollectionDir = getFileSetting("networkCollectionDir");
+    	usePrecomputedKernels = getSettingBoolean("usePrecomputedKernels");
+    	geneScoreFile = getFileSetting("geneScoreFile");
+    	outputDir = getFileSetting("outputDir");
+    	deleteKernels = getSettingBoolean("deleteKernels");
+    	numPermutations = getSettingInt("numPermutations");
+    	excludeHlaGenes = getSettingBoolean("excludeHlaGenes");
+    	excludeAllosomes = getSettingBoolean("excludeAllosomes");
     }
     
     
@@ -172,11 +234,10 @@ final public class AppSettings extends Settings {
     	header = "##########################################################################\n"
     			+ "# Magnum v1.0 settings file\n"
     			+ "# \n"
-    			+ "# Note: this is a settings file for the Magnum App, a different settings \n"
-    			+ "# file is available for the command-line version.\n"
+    			+ "# Note: this is a settings file for the MAGNUM APP, a different settings \n"
+    			+ "# file has to be used for the MAGNUM COMMAND-LINE TOOL.\n"
     			+ "##########################################################################\n";
     	return header;
     }
 
-    
 }

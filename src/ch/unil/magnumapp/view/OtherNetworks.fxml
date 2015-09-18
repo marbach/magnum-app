@@ -6,93 +6,87 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<TitledPane animated="false" minWidth="558.0" stylesheets="@MagnumAppStyle.css" text="Other networks" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.OtherNetworksController">
+<TitledPane animated="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="558.0" stylesheets="@MagnumAppStyle.css" text="Other networks" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.OtherNetworksController">
    <content>
-      <AnchorPane>
+      <VBox fx:id="contentVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0">
          <children>
-            <VBox fx:id="contentVBox" spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <HBox alignment="CENTER_LEFT" spacing="5.0">
                <children>
-                  <HBox alignment="CENTER_LEFT" spacing="5.0">
+                  <Label text="Network collection:" />
+                  <TextField fx:id="networkDirTextField" editable="false" prefWidth="220.0" promptText="Locate directory" />
+                  <Button fx:id="networkDirBrowseButton" mnemonicParsing="false" onAction="#handleNetworkDirBrowseButton" text="Browse ..." />
+                  <Hyperlink fx:id="networkDirDownloadLink" onAction="#handleNetworkDirDownloadLink" text="Download" />
+               </children>
+            </HBox>
+            <TreeTableView fx:id="networksTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+               <columns>
+                  <TreeTableColumn fx:id="nameColumn" maxWidth="1.7976931348623157E308" minWidth="200.0" prefWidth="-1.0" sortable="false" text="Name" />
+                  <TreeTableColumn fx:id="directedColumn" maxWidth="-1.0" minWidth="30.0" prefWidth="30.0" sortable="false" text="Dir" />
+                  <TreeTableColumn fx:id="weightedColumn" maxWidth="-1.0" minWidth="30.0" prefWidth="30.0" sortable="false" text="Wgh" />
+                  <TreeTableColumn fx:id="notesColumn" maxWidth="300.0" minWidth="140.0" prefWidth="-1.0" sortable="false" text="Errors" />
+               </columns>
+               <columnResizePolicy>
+                  <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TreeTableView>
+            <Label fx:id="numNetworksSelectedLabel" text="No networks selected" />
+            <Separator prefWidth="200.0" />
+            <Label text="Add your own networks">
+               <padding>
+                  <Insets top="5.0" />
+               </padding>
+            </Label>
+            <GridPane hgap="10.0" minWidth="535.0" vgap="5.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="NEVER" />
+                  <ColumnConstraints hgrow="NEVER" />
+                  <ColumnConstraints hgrow="NEVER" />
+                  <ColumnConstraints hgrow="NEVER" />
+                  <ColumnConstraints hgrow="NEVER" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="97.0" vgrow="NEVER" />
+                  <RowConstraints vgrow="NEVER" />
+                  <RowConstraints maxHeight="17.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label text="Files:" />
+                  <HBox GridPane.columnIndex="1" GridPane.columnSpan="3">
                      <children>
-                        <Label text="Network collection:" />
-                        <TextField fx:id="networkDirTextField" editable="false" prefWidth="220.0" promptText="Locate directory" />
-                        <Button fx:id="networkDirBrowseButton" mnemonicParsing="false" onAction="#handleNetworkDirBrowseButton" text="Browse ..." />
-                        <Hyperlink fx:id="networkDirDownloadLink" onAction="#handleNetworkDirDownloadLink" text="Download" />
+                        <TextField fx:id="fileTextField" editable="false" prefWidth="250.0" promptText="Choose network files" />
+                        <Button fx:id="fileBrowseButton" mnemonicParsing="false" onAction="#handleFileBrowseButton" text="Browse ..." />
                      </children>
                   </HBox>
-                  <TreeTableView fx:id="networksTable">
-                     <columns>
-                        <TreeTableColumn fx:id="nameColumn" maxWidth="1.7976931348623157E308" minWidth="200.0" prefWidth="-1.0" sortable="false" text="Name" />
-                        <TreeTableColumn fx:id="directedColumn" maxWidth="-1.0" minWidth="30.0" prefWidth="30.0" sortable="false" text="Dir" />
-                        <TreeTableColumn fx:id="weightedColumn" maxWidth="-1.0" minWidth="30.0" prefWidth="30.0" sortable="false" text="Wgh" />
-                        <TreeTableColumn fx:id="notesColumn" maxWidth="300.0" minWidth="140.0" prefWidth="-1.0" sortable="false" text="Errors" />
-                     </columns>
-                     <columnResizePolicy>
-                        <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy>
-                  </TreeTableView>
-                  <Label fx:id="numNetworksSelectedLabel" text="No networks selected" />
-                  <Separator prefWidth="200.0" />
-                  <Label text="Add your own networks">
-                     <padding>
-                        <Insets top="5.0" />
-                     </padding>
-                  </Label>
-                  <GridPane hgap="10.0" minWidth="535.0" vgap="5.0">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="NEVER" />
-                        <ColumnConstraints hgrow="NEVER" />
-                        <ColumnConstraints hgrow="NEVER" />
-                        <ColumnConstraints hgrow="NEVER" />
-                        <ColumnConstraints hgrow="NEVER" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints maxHeight="97.0" vgrow="NEVER" />
-                        <RowConstraints vgrow="NEVER" />
-                        <RowConstraints maxHeight="17.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
+                  <VBox GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <children>
-                        <Label text="Files:" />
-                        <HBox GridPane.columnIndex="1" GridPane.columnSpan="3">
-                           <children>
-                              <TextField fx:id="fileTextField" editable="false" prefWidth="250.0" promptText="Choose network files" />
-                              <Button fx:id="fileBrowseButton" mnemonicParsing="false" onAction="#handleFileBrowseButton" text="Browse ..." />
-                           </children>
-                        </HBox>
-                        <VBox GridPane.columnIndex="1" GridPane.rowIndex="1">
-                           <children>
-                              <RadioButton fx:id="directedRadio" mnemonicParsing="false" selected="true" text="Directed">
-                                 <toggleGroup>
-                                    <ToggleGroup fx:id="isDirectedRadioGroup" />
-                                 </toggleGroup>
-                              </RadioButton>
-                              <RadioButton fx:id="undirectedRadio" mnemonicParsing="false" text="Undirected" toggleGroup="$isDirectedRadioGroup" />
-                           </children>
-                        </VBox>
-                        <VBox GridPane.columnIndex="2" GridPane.rowIndex="1">
-                           <children>
-                              <RadioButton fx:id="weightedRadio" mnemonicParsing="false" selected="true" text="Weighted">
-                                 <toggleGroup>
-                                    <ToggleGroup fx:id="isWeightedRadioGroup" />
-                                 </toggleGroup>
-                              </RadioButton>
-                              <RadioButton fx:id="unweightedRadio" alignment="TOP_LEFT" mnemonicParsing="false" text="Unweighted" toggleGroup="$isWeightedRadioGroup" />
-                           </children>
-                        </VBox>
-                        <Label text="Load as:" GridPane.rowIndex="1" />
-                        <Button fx:id="addButton" defaultButton="true" disable="true" mnemonicParsing="false" onAction="#handleAddNetworkButton" prefWidth="70.0" text="Add" GridPane.columnIndex="4" GridPane.rowIndex="1">
-                           <GridPane.margin>
-                              <Insets left="20.0" />
-                           </GridPane.margin></Button>
-                        <CheckBox fx:id="removeSelfCheckBox" mnemonicParsing="false" selected="true" text="Remove self-loops" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <RadioButton fx:id="directedRadio" mnemonicParsing="false" selected="true" text="Directed">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="isDirectedRadioGroup" />
+                           </toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="undirectedRadio" mnemonicParsing="false" text="Undirected" toggleGroup="$isDirectedRadioGroup" />
                      </children>
-                  </GridPane>
+                  </VBox>
+                  <VBox GridPane.columnIndex="2" GridPane.rowIndex="1">
+                     <children>
+                        <RadioButton fx:id="weightedRadio" mnemonicParsing="false" selected="true" text="Weighted">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="isWeightedRadioGroup" />
+                           </toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="unweightedRadio" alignment="TOP_LEFT" mnemonicParsing="false" text="Unweighted" toggleGroup="$isWeightedRadioGroup" />
+                     </children>
+                  </VBox>
+                  <Label text="Load as:" GridPane.rowIndex="1" />
+                  <Button fx:id="addButton" defaultButton="true" disable="true" mnemonicParsing="false" onAction="#handleAddNetworkButton" prefWidth="70.0" text="Add" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets left="20.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <CheckBox fx:id="removeSelfCheckBox" mnemonicParsing="false" selected="true" text="Remove self-loops" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                </children>
-            </VBox>
+            </GridPane>
          </children>
-      </AnchorPane>
+      </VBox>
    </content>
-   <padding>
-      <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
-   </padding>
 </TitledPane>

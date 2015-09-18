@@ -86,13 +86,15 @@ public class NetworkGroup {
     // ----------------------------------------------------------------------------
 
 	/** Sets network dir for the group and all its networks */
-	public void initDirectory(Path parentDir) {
+	public void initDirectory(File parentDir) {
 		
-		Path directory = parentDir.resolve(name); 
-		treeViewRoot.getValue().setFile(directory.toFile());
+		File dir = null;
+		if (parentDir != null)
+			dir = parentDir.toPath().resolve(name).toFile();
+		treeViewRoot.getValue().setFile(dir);
 		
 		for (TreeItem<NetworkModel> item : treeViewRoot.getChildren())
-			item.getValue().initFile(directory);
+			item.getValue().initFile(dir);
 	}
 
 

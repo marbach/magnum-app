@@ -26,17 +26,25 @@ THE SOFTWARE.
 package ch.unil.magnumapp.view;
 
 import ch.unil.magnumapp.AppSettings;
+import ch.unil.magnumapp.MagnumApp;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 
 
 /**
  * Abstract class for controllers 
  */
-public class PreferencesController extends ViewController {
+public class PreferencesDialogController extends ViewController {
 
+	/** The dialog pane (that's the root) */
+	private DialogPane dialogPane;
+	/** The dialog */
+	private Dialog<ButtonType> dialog;
+			
     /** Remember settings checkbox */
 	@FXML
     private CheckBox rememberSettingsCheckBox;
@@ -59,9 +67,30 @@ public class PreferencesController extends ViewController {
 	public void init() {
 		
 		rememberSettingsCheckBox.setSelected(AppSettings.rememberSettings);
-    	((TitledPane) root).setExpanded(false);
+		
+    	// The dialog pane defined in the fxml file
+    	dialogPane = (DialogPane) root;
+    	// (The OK button is not available in scene builder...)
+    	dialogPane.getButtonTypes().add(ButtonType.OK);
+    	
+    	// Construct dialog with this pane
+    	// (Only the DialogPane, not the Dialog can be constructed in scene builder) 
+    	dialog = new Dialog<>();
+    	dialog.setTitle("Settings");
+    	dialog.setDialogPane(dialogPane);
 	}
 	    
+	
+	// ----------------------------------------------------------------------------
+
+    /** Show the preferences dialog */
+    public void show() {
+    	
+    	// Note, we update the settings independently of how the window was closed
+    	dialog.showAndWait();
+    	// Controls remember their status after closing the dialog...
+    }
+
     
 	// ============================================================================
 	// HANDLES
@@ -70,7 +99,8 @@ public class PreferencesController extends ViewController {
     @FXML
     private void handleResetToDefaultsButton() {
     	
-    	
+    	AppSettings.setDefaults();
+    	magnumApp.applyAppSettings();
     }
 
     
@@ -90,5 +120,10 @@ public class PreferencesController extends ViewController {
     public boolean getRememberSettings() { 
     	return rememberSettingsCheckBox.isSelected();
     }
+
+
+	public Dialog<ButtonType> getDialog() {
+		return dialog;
+	}
     
 }
