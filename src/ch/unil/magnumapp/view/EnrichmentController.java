@@ -26,6 +26,7 @@ THE SOFTWARE.
 package ch.unil.magnumapp.view;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
@@ -33,6 +34,13 @@ import ch.unil.magnumapp.AppSettings;
 import ch.unil.magnumapp.MagnumApp;
 import ch.unil.magnumapp.ThreadConnectivityEnrichment;
 import ch.unil.magnumapp.model.NetworkModel;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -47,9 +55,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.util.converter.NumberStringConverter;
 
 /**
- * Controller for "My networks" pane 
+ * Controller for "Connectivity Enrichment" pane 
  */
 public class EnrichmentController extends ViewController {
 
@@ -57,22 +66,26 @@ public class EnrichmentController extends ViewController {
 	final private LinkedHashSet<TreeItem<NetworkModel>> selectedNetworks = 
 			MagnumApp.getInstance().getOtherNetworksController().getSelectedNetworks();
 	
-	/** Gene score file selected using Browse button */
-	private File geneScoreFile;
-	/** Output directory selected using Browse button */
-	private File outputDir;
-	/** Kernel directory selected using Browse button */
-	private File kernelDir;
+	/** Bound to geneScoreTextField */
+	private ObjectProperty<File> geneScoreFileProperty = new SimpleObjectProperty<File>();
+	/** Bound to outputDirTextField */
+	private ObjectProperty<File> outputDirProperty = new SimpleObjectProperty<File>();
+	/** Bound to numPermutationsTextField */
+	private IntegerProperty numPermutationsProperty = new SimpleIntegerProperty();
 	
+
+	// ============================================================================
+	// FXML
+
     /** Input */
     @FXML
     private TextField networksTextField;
     @FXML
-    private TextField geneScoreTextField;
+    private TextField geneScoreTextField; // bound
     @FXML
     private Button geneScoreBrowseButton;
     @FXML
-    private CheckBox userPrecomputedKernelsCheckBox;
+    private CheckBox usePrecomputedKernelsCheckBox; // bound
     @FXML
     private Hyperlink geneScoreDownloadLink;
     @FXML
@@ -80,11 +93,11 @@ public class EnrichmentController extends ViewController {
     
     /** Output */
     @FXML
-    private TextField outputDirTextField;
+    private TextField outputDirTextField; // bound
     @FXML
     private Button outputDirBrowseButton;
     @FXML
-    private CheckBox deleteKernelsCheckBox;
+    private CheckBox deleteKernelsCheckBox; // bound
     
     /** Parameters */
     @FXML
@@ -103,6 +116,63 @@ public class EnrichmentController extends ViewController {
     
 	// ============================================================================
 	// PUBLIC METHODS
+    
+    /** Initialize, called after the fxml file has been loaded */
+    @Override
+    protected void init() {
+
+    	numPermutationsTextField.textProperty().addListener(new ChangeListener<String>() {
+    	    @Override 
+    	    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+    	        if (!newValue.matches("\\d*")) {
+    	        	numPermutationsTextField.setText(oldValue);
+    	        	numPermutationsTextField.positionCaret(numPermutationsTextField.getLength());
+    	        }
+    	    }
+    	});
+    	
+        Bindings.bindBidirectional(geneScoreTextField.textProperty(), geneScoreFileProperty, new FileStringConverter());
+        Bindings.bindBidirectional(outputDirTextField.textProperty(), outputDirProperty, new FileStringConverter());
+        Bindings.bindBidirectional(numPermutationsTextField.textProperty(), numPermutationsProperty, new NumberStringConverter("###"));
+        //numPermutationsTextField.textProperty().bindBidirectional(numPermutationsProperty, new NumberStringConverter());        
+    }
+    
+    
+    /** Initialize with settings from AppSettings */
+    @Override
+    public void loadPreferences() {
+   	
+        geneScoreFileProperty.set(getFilePreference("geneScoreFile"));
+        outputDirProperty.set(getFilePreference("outputDir"));
+        
+        usePrecomputedKernelsCheckBox.setSelected(prefs.getBoolean("usePrecomputedKernels", true));
+        deleteKernelsCheckBox.setSelected(prefs.getBoolean("deleteKernels", true));
+        excludeHlaGenesCheckBox.setSelected(prefs.getBoolean("excludeHlaGenes", true));
+        excludeXYChromosomesCheckBox.setSelected(prefs.getBoolean("excludeXYChromosomes", true));
+
+        numPermutationsProperty.set(prefs.getInt("numPermutations", 10000));   
+    }
+
+    
+    // ----------------------------------------------------------------------------
+
+    /** Initialize with settings from AppSettings */
+    @Override
+    public void savePreferences() {
+
+    	saveFilePreference("geneScoreFile", geneScoreFileProperty.get());
+    	saveFilePreference("outputDir", outputDirProperty.get());
+
+    	prefs.putBoolean("usePrecomputedKernels", usePrecomputedKernelsCheckBox.isSelected());
+    	prefs.putBoolean("deleteKernels", deleteKernelsCheckBox.isSelected());
+    	prefs.putBoolean("excludeHlaGenes", excludeHlaGenesCheckBox.isSelected());
+    	prefs.putBoolean("excludeXYChromosomes", excludeXYChromosomesCheckBox.isSelected());
+
+    	prefs.putInt("numPermutations", numPermutationsProperty.get());
+    }
+
+
+    // ----------------------------------------------------------------------------
 
     /** Called when networks have been selected */
     public void networkSelectionUpdated() {
@@ -118,47 +188,16 @@ public class EnrichmentController extends ViewController {
     
 	
     // ----------------------------------------------------------------------------
-	
-    /** Initialize the controls with the settings from AppSettings */
-    public void applyAppSettings() {
-    	
-    	setGeneScoreFile(AppSettings.geneScoreFile);
-    	userPrecomputedKernelsCheckBox.setSelected(AppSettings.usePrecomputedKernels);
-    	
-    	setOutputDir(AppSettings.outputDir);
-    	deleteKernelsCheckBox.setSelected(AppSettings.deleteKernels);
-    	numPermutationsTextField.setText(Integer.toString(AppSettings.numPermutations));
-    	excludeHlaGenesCheckBox.setSelected(AppSettings.excludeHlaGenes);
-    	excludeXYChromosomesCheckBox.setSelected(AppSettings.excludeAllosomes);
-    }
 
-    
-    // ----------------------------------------------------------------------------
-	
-    /** Initialize the controls with the settings from AppSettings */
-    public void setGeneScoreFile(File geneScoreFile) {
+		
+    /** Get kernel dir based on current output dir */
+    public File getKernelDir() {
     	
-    	this.geneScoreFile = geneScoreFile;
-    	if (geneScoreFile == null)
-    		geneScoreTextField.setText(null);
-    	else
-        	geneScoreTextField.setText(geneScoreFile.getName());
-    }
-
-    
-    // ----------------------------------------------------------------------------
-	
-    /** Initialize the controls with the settings from AppSettings */
-    public void setOutputDir(File outputDir) {
-    	
-    	this.outputDir = outputDir;
-    	if (outputDir == null) {
-    		outputDirTextField.setText(null);
-    		kernelDir = null;
-    	} else {
-    		outputDirTextField.setText(outputDir.getPath());
-    		kernelDir = outputDir.toPath().resolve("tmp_network_kernels").toFile();
-    	}
+    	if (outputDirProperty.get() == null)
+    		return null;
+    	Path outputDirPath = outputDirProperty.get().toPath();
+    	Path kernelDirPath = outputDirPath.resolve("tmp_network_kernels"); 
+    	return kernelDirPath.toFile();
     }
 
     
@@ -170,14 +209,16 @@ public class EnrichmentController extends ViewController {
     private void handleGeneScoreBrowseButton() {
         
     	// File chooser
-    	final FileChooser fileChooser = new FileChooser();
-    	// Set initial directory to that of current file
-    	if (geneScoreFile != null && geneScoreFile.exists())
-    		fileChooser.setInitialDirectory(geneScoreFile.getParentFile());
+    	FileChooser fileChooser = new FileChooser();
     	fileChooser.setTitle("Select a gene score file");
+    	
+    	// Set initial directory to that of current file
+    	if (geneScoreFileProperty.get() != null && geneScoreFileProperty.get().exists())
+    		fileChooser.setInitialDirectory(geneScoreFileProperty.get().getParentFile());
 
     	// Open dialog and set file
-    	setGeneScoreFile(fileChooser.showOpenDialog(magnumApp.getPrimaryStage()));
+    	File file = fileChooser.showOpenDialog(app.getPrimaryStage());
+    	geneScoreFileProperty.set(file);
     }
 
 
@@ -205,11 +246,12 @@ public class EnrichmentController extends ViewController {
     @FXML
     private void handleOutputDirBrowseButton() {
     	
-    	// Open directory chooser
+    	// Directory chooser
     	DirectoryChooser dirChooser = new DirectoryChooser();
     	dirChooser.setTitle("Choose output directory");
-    	
-    	setOutputDir(dirChooser.showDialog(magnumApp.getPrimaryStage()));
+    	// Set directory
+    	File dir = dirChooser.showDialog(app.getPrimaryStage());
+    	outputDirProperty.set(dir);
     }
 
     
@@ -292,12 +334,10 @@ public class EnrichmentController extends ViewController {
     	String errors = "";
     	if (selectedNetworks.isEmpty())
     		errors += "- No networks selected\n";
-    	if (geneScoreFile == null)
+    	if (geneScoreFileProperty.get() == null)
     		errors += "- No GWAS gene score file selected\n";
-    	if (outputDir == null)
+    	if (outputDirProperty.get() == null)
     		errors += "- No output directory selected\n";
-    	if (kernelDir == null)
-    		errors += "- No network-kernel directory selected\n";
     	
     	if (!errors.equals("")) {
     		Alert alert = new Alert(AlertType.ERROR);
@@ -325,7 +365,7 @@ public class EnrichmentController extends ViewController {
     	args.add("3");
     	// Output directory
     	args.add("--outdir");
-    	args.add(outputDir.getAbsolutePath());
+    	args.add(outputDirProperty.get().getAbsolutePath());
     	
     	// Network
     	args.add("--net");
@@ -342,7 +382,7 @@ public class EnrichmentController extends ViewController {
     	
     	// Gene scores
     	args.add("--scores");
-    	args.add(geneScoreFile.getAbsolutePath());
+    	args.add(geneScoreFileProperty.get().getAbsolutePath());
 
     	// TBD
     	// check gene coords

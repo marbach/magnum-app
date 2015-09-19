@@ -65,7 +65,7 @@ public class RootLayoutController extends ViewController {
     /** Preferences button handle */
     @FXML
     private void handlePreferencesButton() {
-    	magnumApp.getPreferencesController().show();
+    	app.getPreferencesController().show();
     }
 
 

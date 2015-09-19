@@ -45,7 +45,7 @@
                         <Hyperlink fx:id="pascalDownloadLink" onAction="#handlePascalDownloadLink" text="Get PASCAL" />
                      </children>
                   </HBox>
-                  <CheckBox fx:id="userPrecomputedKernelsCheckBox" mnemonicParsing="false" selected="true" text="Use precomputed network kernels if available" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <CheckBox fx:id="usePrecomputedKernelsCheckBox" mnemonicParsing="false" selected="true" text="Use precomputed network kernels if available" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets bottom="8.0" top="5.0" />
                      </GridPane.margin>

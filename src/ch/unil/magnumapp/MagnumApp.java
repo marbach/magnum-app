@@ -44,9 +44,6 @@ public class MagnumApp extends Application {
 
 	/** Reference to unique instance of MagnumApp (singleton design pattern) */
 	private static MagnumApp instance;
-	/** Reference to magnum */
-	@SuppressWarnings("unused")
-	private static Magnum magnum;
 	
 	/** The main stage */
     private Stage primaryStage;
@@ -61,7 +58,7 @@ public class MagnumApp extends Application {
     /** "Settings" controller */
     private PreferencesDialogController preferencesController;
     /** "Other networks" controller */
-    private OtherNetworksController otherNetworksController;
+    private NetworkCollectionController otherNetworksController;
     /** "Connectivity enrichment" controller */
     private EnrichmentController enrichmentController;
     
@@ -72,16 +69,17 @@ public class MagnumApp extends Application {
 	/** Main */
 	public static void main(String[] args) {
 		
-		// Initialize magnum
-		magnum = new Magnum(args);
-		MagnumApp.getInstance();
 		Magnum.log.println(AppSettings.magnumAppVersion);
+		// Initialize magnum
+		new Magnum(args);
+		// Initialize magnum app
+		MagnumApp.getInstance();
 		
 		// Calls start()
 		launch(args);
 		
 		// Save settings
-		AppSettings.saveSettings();
+		instance.savePreferences();
 	}
 
 	
@@ -104,10 +102,7 @@ public class MagnumApp extends Application {
 		if (instance != null)
 			throw new RuntimeException("There should be only one instance of MagnumApp");
 		else
-			instance = this;	
-		
-		AppSettings.loadSettings();
-		networkCollection = new NetworkCollection();
+			instance = this;			
 	}
 	
 	
@@ -120,31 +115,40 @@ public class MagnumApp extends Application {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle(AppSettings.magnumAppVersion);
 
+        // Load preferences controller -- needs to be done first because of rememberSettings
+    	preferencesController = (PreferencesDialogController) ViewController.loadFxml("view/PreferencesDialog.fxml");
         // The root layout
         initRootLayout();
-
         // Panes on the left side
-        showOtherNetworks();
-        
+        showNetworkCollection();
         // Panes on the right side
         showConnetivityEnrichmentPane();
         
-        // Dialogs
-    	preferencesController = (PreferencesDialogController) ViewController.loadFxml("view/PreferencesDialog.fxml");
-
-    	applyAppSettings();
+        // Load saved/default settings
+        loadPreferences();
 	}
 	
 
 	// ----------------------------------------------------------------------------
 	
-    /** Initialize the controls with the settings from AppSettings */
-    public void applyAppSettings() {
+    /** Initialize the controls with saved/default settings */
+    public void loadPreferences() {
     	
-    	otherNetworksController.applyAppSettings();
-    	enrichmentController.applyAppSettings();
+    	preferencesController.loadPreferences();
+    	otherNetworksController.loadPreferences();
+    	enrichmentController.loadPreferences();
     }
 
+    
+	// ----------------------------------------------------------------------------
+	
+    /** Initialize the controls with saved/default settings */
+    public void savePreferences() {
+    	
+    	preferencesController.savePreferences();
+    	otherNetworksController.savePreferences();
+    	enrichmentController.savePreferences();
+    }
     
 
 	// ============================================================================
@@ -153,7 +157,7 @@ public class MagnumApp extends Application {
     /** Initializes the root layout */
     private void initRootLayout() {
     	
-    	rootLayoutController = (RootLayoutController) RootLayoutController.loadFxml("view/RootLayout.fxml");
+    	rootLayoutController = (RootLayoutController) ViewController.loadFxml("view/RootLayout.fxml");
     	rootLayout = (BorderPane) rootLayoutController.getRoot();
         
     	// Show the scene containing the root layout.
@@ -166,11 +170,15 @@ public class MagnumApp extends Application {
 	// ----------------------------------------------------------------------------
 
     /** "My networks" pane */
-    private void showOtherNetworks() {
+    private void showNetworkCollection() {
+
+    	// Initialize network collection, needs to be done before loading controller
+		networkCollection = new NetworkCollection();
 
     	// Initialize user networks pane
-    	otherNetworksController = (OtherNetworksController) ViewController.loadFxml("view/OtherNetworks.fxml");
-    	otherNetworksController.setNetworkCollection(networkCollection);
+    	otherNetworksController = (NetworkCollectionController) ViewController.loadFxml("view/NetworkCollection.fxml");
+    	//otherNetworksController.setNetworkCollection(networkCollection);
+    	
     	// Add to root layout
     	Node child = otherNetworksController.getRoot();
     	VBox.setVgrow(child, Priority.ALWAYS);
@@ -203,6 +211,6 @@ public class MagnumApp extends Application {
 
     public PreferencesDialogController getPreferencesController() { return preferencesController; }
 	public EnrichmentController getEnrichmentController() {	return enrichmentController; }
-	public OtherNetworksController getOtherNetworksController() { return otherNetworksController; }
+	public NetworkCollectionController getOtherNetworksController() { return otherNetworksController; }
     
 }

@@ -26,8 +26,10 @@ THE SOFTWARE.
 package ch.unil.magnumapp.view;
 
 import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.prefs.Preferences;
 
 import ch.unil.magnumapp.*;
 import javafx.fxml.FXMLLoader;
@@ -39,8 +41,11 @@ import javafx.scene.Node;
  */
 public class ViewController {
 
+	/** The preferences */
+	final static protected Preferences prefs = Preferences.userNodeForPackage(MagnumApp.class);
+
     /** Reference to the main application */
-    protected MagnumApp magnumApp;
+    protected MagnumApp app;
     /** The root node of this view */
     protected Node root;
     
@@ -51,7 +56,7 @@ public class ViewController {
     /** Constructor */
     public ViewController() {
     	
-    	magnumApp = MagnumApp.getInstance();
+    	app = MagnumApp.getInstance();
     }
 
 
@@ -108,6 +113,30 @@ public class ViewController {
      */
     protected void init() {  }
     
+    /** Abstract method can be implemented by subclasses to load saved/default preferences */
+    public void loadPreferences() {  }
+    /** Abstract method can be implemented by subclasses to save preferences */
+    public void savePreferences() {  }
+
+    
+	// ----------------------------------------------------------------------------
+
+    /** Get a file from a string preference, return null if preference or file doesn't exist */
+    protected File getFilePreference(String key) {
+    	String filename = prefs.get(key, null);
+    	File file = new FileStringConverter().fromString(filename);
+    	return file;
+    }
+
+
+	// ----------------------------------------------------------------------------
+
+    /** Save a file to the preferences if it is not null */
+    protected void saveFilePreference(String key, File file) {
+    	if (file != null)
+    		prefs.put(key, file.getAbsolutePath());
+    }
+
     
 	// ============================================================================
 	// GETTERS AND SETTERS

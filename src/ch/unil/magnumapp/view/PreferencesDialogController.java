@@ -25,8 +25,9 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp.view;
 
-import ch.unil.magnumapp.AppSettings;
-import ch.unil.magnumapp.MagnumApp;
+import java.util.prefs.BackingStoreException;
+
+import edu.mit.magnum.Magnum;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -45,13 +46,14 @@ public class PreferencesDialogController extends ViewController {
 	/** The dialog */
 	private Dialog<ButtonType> dialog;
 			
-    /** Remember settings checkbox */
+	
+	// ============================================================================
+	// FXML
+
 	@FXML
     private CheckBox rememberSettingsCheckBox;
-    /** Reset button */
 	@FXML
     private Button resetToDefaultsButton;
-    /** Load from file button */
 	@FXML
     private Button loadFromFileButton;
 
@@ -59,14 +61,27 @@ public class PreferencesDialogController extends ViewController {
 	// ============================================================================
 	// PUBLIC METHODS
 	
+    /** Load saved/default preferences */
+	@Override
+	public void loadPreferences() {
+        rememberSettingsCheckBox.setSelected(prefs.getBoolean("rememberSettings", true));
+	}
+	
+	/** Save preferences */
+	@Override
+	public void savePreferences() {
+		prefs.putBoolean("rememberSettings", rememberSettingsCheckBox.isSelected());
+	}
+	
+	
+	// ----------------------------------------------------------------------------
+
 	/** 
 	 * Initialize settings based on the loaded settings file (do not call this initialize(),
 	 * otherwise it get's called by the FXML loader...)
 	 */
 	@Override
 	public void init() {
-		
-		rememberSettingsCheckBox.setSelected(AppSettings.rememberSettings);
 		
     	// The dialog pane defined in the fxml file
     	dialogPane = (DialogPane) root;
@@ -85,10 +100,9 @@ public class PreferencesDialogController extends ViewController {
 
     /** Show the preferences dialog */
     public void show() {
-    	
+
     	// Note, we update the settings independently of how the window was closed
-    	dialog.showAndWait();
-    	// Controls remember their status after closing the dialog...
+    	dialog.showAndWait(); // Controls remember their status after closing the dialog...
     }
 
     
@@ -99,8 +113,12 @@ public class PreferencesDialogController extends ViewController {
     @FXML
     private void handleResetToDefaultsButton() {
     	
-    	AppSettings.setDefaults();
-    	magnumApp.applyAppSettings();
+        try {
+			prefs.clear();
+		} catch (BackingStoreException e) {
+			Magnum.log.error(e.toString());
+		}
+    	app.loadPreferences();
     }
 
     
@@ -117,13 +135,5 @@ public class PreferencesDialogController extends ViewController {
 	// ============================================================================
 	// GETTERS AND SETTERS
 
-    public boolean getRememberSettings() { 
-    	return rememberSettingsCheckBox.isSelected();
-    }
-
-
-	public Dialog<ButtonType> getDialog() {
-		return dialog;
-	}
     
 }

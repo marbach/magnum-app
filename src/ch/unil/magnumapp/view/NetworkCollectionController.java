@@ -29,12 +29,12 @@ import java.io.File;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-import ch.unil.magnumapp.AppSettings;
 import ch.unil.magnumapp.model.NetworkCollection;
 import ch.unil.magnumapp.model.NetworkModel;
-import edu.mit.magnum.MagnumUtils;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -59,24 +59,29 @@ import javafx.stage.FileChooser;
 /**
  * Controller for "Other networks" pane 
  */
-public class OtherNetworksController extends ViewController {
+public class NetworkCollectionController extends ViewController {
 
 	/** The network collection */
 	private NetworkCollection networkCollection;
-	/** The root item */
-	private TreeItem<NetworkModel> tree;
-
+	
 	/** Files selected using Browse button */
 	private List<File> filesToBeAdded;
 	/** Disables the selection handle (used when programmatically changing the selection */
 	private boolean enableHandleSelection = true;
-	
 	/** The selected networks */
 	private LinkedHashSet<TreeItem<NetworkModel>> selectedNetworks = new LinkedHashSet<>();
 	
+	/** Bound to networkDirTextField */
+	private ObjectProperty<File> networkDirProperty = new SimpleObjectProperty<File>();
+	
+	
+	// ============================================================================
+	// FXML
+
 	/** Network collection directory */
 	@FXML
-	private TextField networkDirTextField;
+	private TextField networkDirTextField; // bound
+	
 	@FXML
 	private Button networkDirBrowseButton;
 	@FXML
@@ -121,12 +126,13 @@ public class OtherNetworksController extends ViewController {
 	// PUBLIC METHODS
 
     /** Initialize, called after the fxml file has been loaded */
-    public void setNetworkCollection(NetworkCollection networkCollection) {
+    @Override
+    protected void init() {
 
-    	this.networkCollection = networkCollection;
+    	networkCollection = app.getNetworkCollection();
     	
     	// Initialize the network tree
-    	tree = networkCollection.getNetworkTree();
+    	TreeItem<NetworkModel> tree = networkCollection.getNetworkTree();
     	tree.setExpanded(true);
     	// Expand the two main branches
     	tree.getChildren().get(0).setExpanded(true); // My networks
@@ -188,24 +194,36 @@ public class OtherNetworksController extends ViewController {
         	};
         });
         
-        notesColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().notesProperty());    	
+        notesColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().notesProperty());
+        
+        // Bindings
+        Bindings.bindBidirectional(networkDirTextField.textProperty(), networkDirProperty, new FileStringConverter());
     }
 
 
     // ----------------------------------------------------------------------------
 
-    /** Initialize with settings from AppSettings */
-    public void applyAppSettings() {
+    /** Load saved/default preferences */
+    @Override
+    public void loadPreferences() {
 
         // Initialize network collection directory based on saved setting
-        File networkDir = AppSettings.networkCollectionDir;
-        networkDirTextField.setText(MagnumUtils.fileToString(networkDir));
-        networkCollection.initDirectory(networkDir);
+        networkDirProperty.setValue(getFilePreference("networkCollectionDir"));
+        networkCollection.initDirectory(networkDirProperty.getValue());
         
         // Clear selected networks
     	Platform.runLater(() -> {
     		networksTable.getSelectionModel().clearSelection();
     	});
+    }
+
+    
+    // ----------------------------------------------------------------------------
+
+    /** Save preferences */
+    @Override
+    public void savePreferences() {
+    	saveFilePreference("networkCollectionDir", networkDirProperty.get());
     }
 
     
@@ -216,19 +234,13 @@ public class OtherNetworksController extends ViewController {
     @FXML
     private void handleNetworkDirBrowseButton() {
 
-    	// Open file chooser
+    	// Directory chooser
     	DirectoryChooser dirChooser = new DirectoryChooser();
     	dirChooser.setTitle("Locate network collection directory");
-    	File networkDir = dirChooser.showDialog(magnumApp.getPrimaryStage());
-    	if (networkDir == null) {
-    		networkDirTextField.setText(null);
-    		return;
-    	}
-    	
-    	// Set network dir text field
-    	networkDirTextField.setText(networkDir.toString());
-    	// Initialize files
-    	networkCollection.initDirectory(networkDir);
+    	// Set directory
+    	File dir = dirChooser.showDialog(app.getPrimaryStage());
+    	networkDirProperty.setValue(dir);    	
+    	networkCollection.initDirectory(dir);
     }
     	
 
@@ -250,7 +262,7 @@ public class OtherNetworksController extends ViewController {
     	// Open file chooser
     	final FileChooser fileChooser = new FileChooser();
     	fileChooser.setTitle("Select network files");
-    	filesToBeAdded = fileChooser.showOpenMultipleDialog(magnumApp.getPrimaryStage());
+    	filesToBeAdded = fileChooser.showOpenMultipleDialog(app.getPrimaryStage());
     	if (filesToBeAdded == null) {
     		fileTextField.setText(null);
     		return;
@@ -414,7 +426,7 @@ public class OtherNetworksController extends ViewController {
     	});
     	
 		// Let the enrichment controller know
-		magnumApp.getEnrichmentController().networkSelectionUpdated();
+		app.getEnrichmentController().networkSelectionUpdated();
     }
 
 
