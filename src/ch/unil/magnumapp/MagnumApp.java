@@ -79,7 +79,10 @@ public class MagnumApp extends Application {
 		launch(args);
 		
 		// Save settings
+		Magnum.log.println("Saving preferences...");
 		instance.savePreferences();
+		
+		Magnum.log.println("Bye!");
 	}
 
 	

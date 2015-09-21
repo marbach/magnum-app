@@ -31,9 +31,13 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
 import ch.unil.magnumapp.AppSettings;
+import ch.unil.magnumapp.ConnectivityEnrichmentLauncher;
 import ch.unil.magnumapp.MagnumApp;
 import ch.unil.magnumapp.ThreadConnectivityEnrichment;
 import ch.unil.magnumapp.model.NetworkModel;
+import edu.mit.magnum.FileExport;
+import edu.mit.magnum.Magnum;
+import edu.mit.magnum.MagnumUtils;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -85,7 +89,7 @@ public class EnrichmentController extends ViewController {
     @FXML
     private Button geneScoreBrowseButton;
     @FXML
-    private CheckBox usePrecomputedKernelsCheckBox; // bound
+    private CheckBox usePrecomputedKernelsCheckBox;
     @FXML
     private Hyperlink geneScoreDownloadLink;
     @FXML
@@ -97,11 +101,11 @@ public class EnrichmentController extends ViewController {
     @FXML
     private Button outputDirBrowseButton;
     @FXML
-    private CheckBox deleteKernelsCheckBox; // bound
+    private CheckBox deleteKernelsCheckBox;
     
     /** Parameters */
     @FXML
-    private TextField numPermutationsTextField;
+    private TextField numPermutationsTextField; // bound
     @FXML
     private CheckBox excludeHlaGenesCheckBox;
     @FXML
@@ -309,17 +313,10 @@ public class EnrichmentController extends ViewController {
     	// Check that required options are set
     	if (!checkOptions())
     		return;
-    	
+    	    	
     	for (TreeItem<NetworkModel> item_i : selectedNetworks) {
-    		
-    		String[] args = buildMagnumArgs(item_i.getValue());
-    		
-    		// The thread responsible for loading the networks
-    		ThreadConnectivityEnrichment thread = new ThreadConnectivityEnrichment(args);
-    	
-    		// The thread controller / dialog
-    		ThreadController threadController = new ThreadController(thread);
-    		threadController.start();
+    		ConnectivityEnrichmentLauncher launcher = new ConnectivityEnrichmentLauncher(this, item_i.getValue());
+    		launcher.launch();    		
     	}
 
     }
@@ -346,54 +343,11 @@ public class EnrichmentController extends ViewController {
     		alert.setContentText("Errors:\n" + errors); 
     		alert.showAndWait();
     		return false;
-    		
     	} else
     		return true;
     }
 
-    
-    // ----------------------------------------------------------------------------
 
-    /** Get command-line arguments for the given network, with the specified options */
-    private String[] buildMagnumArgs(NetworkModel network) {
-    	
-    	// Command line options
-    	ArrayList<String> args = new ArrayList<>();
-    	
-    	// Mode
-    	args.add("--mode");
-    	args.add("3");
-    	// Output directory
-    	args.add("--outdir");
-    	args.add(outputDirProperty.get().getAbsolutePath());
-    	
-    	// Network
-    	args.add("--net");
-    	args.add(network.getFile().getAbsolutePath());
-    	// isDirected
-    	args.add("--dir");
-    	args.add(network.getIsDirected() ? "1" : "0");
-    	// isWeighted
-    	args.add("--weighted");
-    	args.add(network.getIsWeighted() ? "1" : "0");
-    	// removeSelf
-    	args.add("--noself");
-    	args.add(network.getRemoveSelf() ? "1" : "0");
-    	
-    	// Gene scores
-    	args.add("--scores");
-    	args.add(geneScoreFileProperty.get().getAbsolutePath());
-
-    	// TBD
-    	// check gene coords
-    	// check excl genes
-
-    	
-    	// 
-    	return args.toArray(new String[args.size()]);
-    }
-
-    
     // ----------------------------------------------------------------------------
 
     /** Construct commands for command-line tool based on specified options */
@@ -408,9 +362,14 @@ public class EnrichmentController extends ViewController {
 	// ============================================================================
 	// SETTERS AND GETTERS
 
-	public TextField getNetworksTextField() {
-		return networksTextField;
-	}
-
-	  
+    public File getGeneScoreFile() { return geneScoreFileProperty.get(); }
+    public File getOutputDir() { return outputDirProperty.get(); }
+    
+    public int getNumPermutations() { return numPermutationsProperty.get(); }
+    
+    public boolean getExcludeHlaGenes() { return excludeHlaGenesCheckBox.isSelected(); }
+    public boolean getExcludeXYChromosomes() { return excludeXYChromosomesCheckBox.isSelected(); }
+    
+    public boolean getUsePrecomputedKernels() { return usePrecomputedKernelsCheckBox.isSelected(); }
+    public boolean getDeleteKernels() { return deleteKernelsCheckBox.isSelected(); }
 }
