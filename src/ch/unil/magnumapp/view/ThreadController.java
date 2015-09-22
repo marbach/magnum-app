@@ -139,7 +139,7 @@ public class ThreadController {
 		okButton.setDisable(false);
 		cancelButton.setDisable(true);
 		progressIndicator.setVisible(false);
-		statusMessage.textProperty().setValue("ERROR: " + e.getMessage());
+		statusMessage.textProperty().setValue("ERROR: " + e.toString());
     	statusMessage.setStyle("-fx-text-fill: red; -fx-font-weight: bold");
 	}
 
@@ -180,7 +180,7 @@ public class ThreadController {
 		
     	alert = new Alert(AlertType.CONFIRMATION);
     	alert.setTitle("Job launched");
-    	alert.setHeaderText("Loading networks...");
+    	alert.setHeaderText("Running connectivity enrichment analysis...");
     	statusMessage = new TextField("Status: ONGOING");
     	statusMessage.setStyle("-fx-text-fill: blue");
     	alert.getDialogPane().setContent(statusMessage);

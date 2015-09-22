@@ -27,17 +27,12 @@ package ch.unil.magnumapp.view;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
 import ch.unil.magnumapp.AppSettings;
 import ch.unil.magnumapp.ConnectivityEnrichmentLauncher;
 import ch.unil.magnumapp.MagnumApp;
-import ch.unil.magnumapp.ThreadConnectivityEnrichment;
 import ch.unil.magnumapp.model.NetworkModel;
-import edu.mit.magnum.FileExport;
-import edu.mit.magnum.Magnum;
-import edu.mit.magnum.MagnumUtils;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;

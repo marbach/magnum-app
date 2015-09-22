@@ -25,6 +25,8 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp;
 
+import java.io.File;
+
 import edu.mit.magnum.Magnum;
 
 /**
@@ -32,16 +34,16 @@ import edu.mit.magnum.Magnum;
  */
 public class ThreadConnectivityEnrichment extends ThreadMagnum {
 
-	/** The arguments used to launch magnum */
-    private String[] args;
+	/** The settings file for this job */
+    private File settingsFile;
     
     
 	// ============================================================================
 	// PUBLIC METHODS
 
 	/** Constructor */
-	public ThreadConnectivityEnrichment(String[] args) {
-		this.args = args;
+	public ThreadConnectivityEnrichment(File settingsFile) {
+		this.settingsFile = settingsFile;
 	}
 
 	
@@ -51,7 +53,10 @@ public class ThreadConnectivityEnrichment extends ThreadMagnum {
 	@Override
 	protected void runJob() {
 		
-		Magnum magnum = new Magnum(args);
+		Magnum magnum = new Magnum();
+		// Load settings file
+		Magnum.set.loadSettings(settingsFile.getAbsolutePath(), false);
+		// Run
 		magnum.run();
 	}
 	

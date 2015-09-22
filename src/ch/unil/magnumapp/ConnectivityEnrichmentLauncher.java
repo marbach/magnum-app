@@ -26,8 +26,6 @@ THE SOFTWARE.
 package ch.unil.magnumapp;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.util.ArrayList;
 
 import ch.unil.magnumapp.model.NetworkModel;
 import ch.unil.magnumapp.view.EnrichmentController;
@@ -50,6 +48,9 @@ public class ConnectivityEnrichmentLauncher {
     private String jobName;
     /** Output directory */
     private File outputDir;
+    
+    /** The settings file */
+    private File settingsFile;
     
     
 	// ============================================================================
@@ -79,12 +80,12 @@ public class ConnectivityEnrichmentLauncher {
     	// Write settings
     	writeSettingsFile();
 				
-//		// The thread responsible for loading the networks
-//		ThreadConnectivityEnrichment thread = new ThreadConnectivityEnrichment(args);
-//	
-//		// The thread controller / dialog
-//		ThreadController threadController = new ThreadController(thread);
-//		threadController.start();
+		// The thread responsible for loading the networks
+		ThreadConnectivityEnrichment thread = new ThreadConnectivityEnrichment(settingsFile);
+	
+		// The thread controller / dialog
+		ThreadController threadController = new ThreadController(thread);
+		threadController.start();
 	}
 	
 	
@@ -146,11 +147,14 @@ public class ConnectivityEnrichmentLauncher {
     			+ "# Directory for network kernels\n"
     			+ "networkKernelDir = " + controller.getKernelDir().getAbsolutePath() + "\n"
     			+ "# Delete kernels after completion (saves disk space)\n"
-    			+ "deleteKernels = " + controller.getDeleteKernels() + "\n";
+    			+ "deleteKernels = " + controller.getDeleteKernels() + "\n"
+    			+ "\n"
+    			+ "# Tell magnum to launch connectivity enrichment analysis\n"
+    			+ "mode = 3\n";
     			
     	// The settings file
     	String filename = jobName + ".settings.txt";
-    	File settingsFile = new File(outputDir, filename);
+    	settingsFile = new File(outputDir, filename);
 
     	// Write the file
     	FileExport out = new FileExport(settingsFile);

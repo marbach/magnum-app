@@ -26,7 +26,6 @@ THE SOFTWARE.
 package ch.unil.magnumapp.model;
 
 import java.io.File;
-import java.nio.file.Path;
 
 import edu.mit.magnum.MagnumUtils;
 import edu.mit.magnum.net.Network;
@@ -117,9 +116,9 @@ public class NetworkModel {
 	/** Set network and initialize fields of the model accordingly */
 	public void initialize(Network network) {
 		
-		String name = MagnumUtils.extractBasicFilename(network.getFilename(), false);
+		String name = MagnumUtils.extractBasicFilename(network.getFile().getName(), false);
 		this.name = new SimpleStringProperty(name);
-		filename = new SimpleStringProperty(network.getFilename());
+		filename = new SimpleStringProperty(network.getFile().getPath());
 		
 		isWeighted = new SimpleBooleanProperty(network.getIsWeighted());
 		isDirected = new SimpleBooleanProperty(network.getIsDirected());
