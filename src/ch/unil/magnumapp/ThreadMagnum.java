@@ -57,18 +57,16 @@ abstract public class ThreadMagnum extends Thread {
 		try {
 			id = Thread.currentThread().getId();
 			runJob();
-			controller.success();
     			
 		} catch (Exception e) {
-			// It was an interrupt
-			if (Magnum.interrupted()) {
-				controller.interrupt();
-				return;
-			} else {
-				controller.error(e);
-				throw e;
-			}
+			// If it was an error, abort all jobs
+			if (!controller.getInterrupted()) {
+				controller.setException(e);
+				controller.setInterrupted(true);
+				// Should the exception be thrown on...?
+			}	
 		}
+		controller.jobFinished();
 	}
 	
 	

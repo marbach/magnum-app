@@ -27,12 +27,14 @@ package ch.unil.magnumapp.view;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 
 import ch.unil.magnumapp.AppSettings;
-import ch.unil.magnumapp.ConnectivityEnrichmentLauncher;
 import ch.unil.magnumapp.MagnumApp;
+import ch.unil.magnumapp.ThreadMagnum;
+import ch.unil.magnumapp.ConnectivityEnrichmentJob;
 import ch.unil.magnumapp.model.NetworkModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
@@ -265,8 +267,8 @@ public class ConnectivityEnrichmentController extends ViewController {
 			return;
     	
     	for (TreeItem<NetworkModel> item_i : selectedNetworks) {
-    		ConnectivityEnrichmentLauncher launcher = new ConnectivityEnrichmentLauncher(this, item_i.getValue());
-    		launcher.writeSettingsFile();
+    		ConnectivityEnrichmentJob job = new ConnectivityEnrichmentJob(this, item_i.getValue());
+    		job.writeSettingsFile();
     	}
     }
 
@@ -286,11 +288,14 @@ public class ConnectivityEnrichmentController extends ViewController {
     			return;
     	}
     	
-    	for (TreeItem<NetworkModel> item_i : selectedNetworks) {
-    		ConnectivityEnrichmentLauncher launcher = new ConnectivityEnrichmentLauncher(this, item_i.getValue());
-    		launcher.launch();
-    	}
+    	// Create a job for each network
+    	ArrayList<ThreadMagnum> jobs = new ArrayList<>();
+    	for (TreeItem<NetworkModel> item_i : selectedNetworks)
+    		jobs.add(new ConnectivityEnrichmentJob(this, item_i.getValue()));
 
+    	// The thread controller / dialog
+		ThreadController threadController = new ThreadController(jobs);
+		threadController.start();
     }
 
     

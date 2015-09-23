@@ -27,6 +27,7 @@ package ch.unil.magnumapp.view;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 
 import ch.unil.magnumapp.MagnumAppLogger;
 import ch.unil.magnumapp.ThreadMagnum;
@@ -50,12 +51,25 @@ import javafx.scene.layout.Priority;
  */
 public class ThreadController {
 
-	/** Status of thread */
+	/** Status of controller (interrupted or error can be set by any job, success only if all jobs complete */
 	public enum Status { ONGOING, INTERRUPTED, SUCCESS, ERROR };
 	
+	/** Flag indicates if jobs are interrupted */
+	volatile private boolean interrupted = false;
+	/** Flag indicates if a job encountered an error */
+	volatile private Exception exception;
+
+	/** Thread id, used to prevent reacting self from interrupt flag */
+	private long threadId;
+	
 	/** The thread -- this will become an array! */
-	private ThreadMagnum thread;
-	/** Status of thread */
+	private ArrayList<ThreadMagnum> jobs;
+	/** The next job in line */
+	volatile private int nextJob;
+	/** Number of jobs finished */
+	volatile private int numJobsFinished;
+	
+	/** Status of the jobs */
 	private Status status;
 	
 	/** The javafx alert / dialog */
@@ -76,12 +90,17 @@ public class ThreadController {
 	// PUBLIC METHODS
 
 	/** Constructor */
-	public ThreadController(ThreadMagnum thread) {
+	public ThreadController(ArrayList<ThreadMagnum> jobs) {
 
-		this.thread = thread;
-		status = Status.ONGOING;
+		if (jobs == null || jobs.isEmpty())
+			throw new RuntimeException("Null or empty job list");
 		
-		thread.setController(this);
+		this.jobs = jobs;
+		status = Status.ONGOING;
+		threadId = Thread.currentThread().getId();
+		
+		for (ThreadMagnum job_i : jobs)
+			job_i.setController(this);
 	}
 
 	
@@ -94,19 +113,66 @@ public class ThreadController {
 		Magnum.log = new MagnumAppLogger(this);
 		// Create the dialog
 		initDialog();
-		// Start the thread
-    	thread.start();
+		
+		// Start the first job (upon completion, success() will start the next job)
+		numJobsFinished = 0;
+		nextJob = 1;
+    	jobs.get(0).start();
+    	
     	// Show the dialog
     	alert.showAndWait();
-		// Remove the custom logger
+		
+    	// Remove the custom logger
 		Magnum.log = new MagnumLogger();
 	}
 	
 	
 	// ----------------------------------------------------------------------------
 
-	/** Called by the thread in case of success (not part of the FX thread!) */
-	public void success() {
+	/** Called by the thread when it finishes (not part of the FX thread!) */
+	public void jobFinished() {
+		
+		// Aha! Beautiful synchronization solution, this queues the update in the FX thread,
+		// avoiding potential collision of multiple threads finishing at the same time!
+		Platform.runLater(new Runnable() {
+			@Override 
+		    public void run() {
+				// Note, for only one thread numJobsFinished == nextJob
+				// But with multiple threads, that's not true anymore
+				
+		    	// Update number of finished jobs
+		    	numJobsFinished++;
+		    	
+		    	if (exception != null) {
+			    	// There was an error
+		    		if (numJobsFinished == nextJob)
+		    			finishedOnError();
+
+		    	} else if (interrupted) {
+		    		// There was an interrupt
+		    		if (numJobsFinished == nextJob)
+		    			finishedOnInterrupt();
+		    	
+		    	} else {
+		    		// The job finished normally
+		    		if (nextJob < jobs.size()) {
+			    		// There are more jobs
+		    			jobs.get(nextJob).start();
+		    			nextJob++;
+		    		} else if (numJobsFinished == jobs.size()) {
+		    			// All finished
+		    			finishedOnSuccess();
+		    		}
+		    	}
+			}
+		});
+	}
+	
+	
+	// ----------------------------------------------------------------------------
+
+	/** Called by success() if there are no more jobs to run */
+	public void finishedOnSuccess() {
 		
 		status = Status.SUCCESS;
 		okButton.setDisable(false);
@@ -121,14 +187,14 @@ public class ThreadController {
 	// ----------------------------------------------------------------------------
 
 	/** Called by the thread in case of error (not part of the FX thread!) */
-	public void error(Exception e) {
+	public void finishedOnError() {
 		
-		printException(e);
+		printException(exception);
 		status = Status.ERROR;
 		okButton.setDisable(false);
 		stopButton.setDisable(true);
 		progressIndicator.setVisible(false);
-		statusMessage.textProperty().setValue("ERROR: " + e.toString());
+		statusMessage.textProperty().setValue("ERROR: " + exception.toString());
     	statusMessage.setStyle("-fx-text-fill: red; -fx-font-weight: bold");
 	}
 
@@ -136,7 +202,7 @@ public class ThreadController {
 	// ----------------------------------------------------------------------------
 
 	/** Called by the thread in case of error (not part of the FX thread!) */
-	public void interrupt() {
+	public void finishedOnInterrupt() {
 		
 		Magnum.log.println("Job stopped!\n");
 		status = Status.INTERRUPTED;
@@ -207,7 +273,7 @@ public class ThreadController {
         stopButton.setOnAction((event) -> {
         	Magnum.log.println();
             Magnum.log.warning("INTERRUPT SENT, WAITING FOR THREAD TO RESPOND...");
-            thread.interrupt();
+            interrupted = true;
         });
 
         // Allow the dialog to be closed only if the thread stopped (success, error, or interrupt)
@@ -243,5 +309,28 @@ public class ThreadController {
 	// ============================================================================
 	// SETTERS AND GETTERS
 
+	public long getThreadId() {
+		return threadId;
+	}
+
+
+	public boolean getInterrupted() {
+		return interrupted;
+	}
+
+
+	public void setInterrupted(boolean interrupted) {
+		this.interrupted = interrupted;
+	}
+
+
+	public Exception getException() {
+		return exception;
+	}
+
+
+	public void setException(Exception exception) {
+		this.exception = exception;
+	}
 
 }

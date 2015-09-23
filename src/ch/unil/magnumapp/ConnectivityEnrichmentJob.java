@@ -29,15 +29,14 @@ import java.io.File;
 
 import ch.unil.magnumapp.model.NetworkModel;
 import ch.unil.magnumapp.view.ConnectivityEnrichmentController;
-import ch.unil.magnumapp.view.ThreadController;
 import edu.mit.magnum.FileExport;
 import edu.mit.magnum.Magnum;
 import edu.mit.magnum.MagnumUtils;
 
 /**
- * Class managing a connectivity enrichment job
+ * Runnable class for loading networks
  */
-public class ConnectivityEnrichmentLauncher {
+public class ConnectivityEnrichmentJob extends ThreadMagnum {
 
 	/** The network */
     private NetworkModel network;
@@ -57,8 +56,8 @@ public class ConnectivityEnrichmentLauncher {
 	// PUBLIC METHODS
 
 	/** Constructor */
-	public ConnectivityEnrichmentLauncher(ConnectivityEnrichmentController controller, NetworkModel network) {
-		
+	public ConnectivityEnrichmentJob(ConnectivityEnrichmentController controller, NetworkModel network) {
+
 		this.controller = controller;
 		this.network = network;
 		
@@ -74,24 +73,26 @@ public class ConnectivityEnrichmentLauncher {
 	
 	// ----------------------------------------------------------------------------
 
-	/** Launch the job (assumes that all required options have been set, this has to be checked before) */
-	public void launch() {
-
-		Magnum.log.println("\nLaunching job: " + jobName);
-
+	/** Main method called by the thread */
+	@Override
+	protected void runJob() {
+		
+		Magnum.log.println("\nStarting job: " + jobName);
+//		if (true)
+//			throw new RuntimeException("just to piss you off");
     	// Write settings
     	writeSettingsFile();
 				
-		// The thread responsible for loading the networks
-		ThreadConnectivityEnrichment thread = new ThreadConnectivityEnrichment(settingsFile);
-	
-		// The thread controller / dialog
-		ThreadController threadController = new ThreadController(thread);
-		threadController.start();
+
+		Magnum magnum = new Magnum();
+		// Load settings file
+		Magnum.set.loadSettings(settingsFile.getAbsolutePath(), false);
+		// Run
+		magnum.run();
 	}
 	
 	
-    // ----------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------
 
     /** Write settings file for magnum */
     public void writeSettingsFile() {
@@ -117,9 +118,7 @@ public class ConnectivityEnrichmentLauncher {
     			+ "#    java -Xmx6g -jar magnum_v1.0.jar --set <settings_file>\n"
     			+ "#\n"
     			+ "# NOTE: If your run the job on a cluster, you have to edit the file paths\n"
-    			+ "#       below so that they point to the right location.\n"  // Since Magnum works\n"
-    			//+ "#       with relative paths to the user home directory, you can avoid this\n"
-    			//+ "#       problem by putting the files in the same location (e.g., ~/Magnum/)\n"
+    			+ "#       below so that they point to the right location.\n"
     			+ "##########################################################################\n"
     			+ "\n"
     			+ "############\n"
@@ -171,7 +170,11 @@ public class ConnectivityEnrichmentLauncher {
     	out.close();
     }
 
-    
+	
+	// ============================================================================
+	// PRIVATE METHODS
+
+
 	// ============================================================================
 	// SETTERS AND GETTERS
 
