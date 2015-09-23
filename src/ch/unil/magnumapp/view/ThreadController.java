@@ -27,14 +27,12 @@ package ch.unil.magnumapp.view;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Optional;
 
 import ch.unil.magnumapp.MagnumAppLogger;
 import ch.unil.magnumapp.ThreadMagnum;
 import edu.mit.magnum.Magnum;
 import edu.mit.magnum.MagnumLogger;
 import javafx.application.Platform;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
@@ -42,6 +40,8 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
@@ -51,21 +51,19 @@ import javafx.scene.layout.Priority;
 public class ThreadController {
 
 	/** Status of thread */
-	public enum Status { ONGOING, SUCCESS, ERROR };
+	public enum Status { ONGOING, INTERRUPTED, SUCCESS, ERROR };
 	
 	/** The thread -- this will become an array! */
 	private ThreadMagnum thread;
-    /** Status for progress indicator (-1: undetermined) */
-	private double progress;
-	/** Status of thread (0: ongoing, 1: success, -1: error) */
+	/** Status of thread */
 	private Status status;
 	
 	/** The javafx alert / dialog */
 	private Alert alert;
 	/** The ok button */
-	private Node okButton;
+	private Button okButton;
 	/** The cancel button */
-	private Node cancelButton;
+	private Button stopButton;
 	/** The progress indicator */
 	private ProgressIndicator progressIndicator;
 	/** The text area -- this will become an arrya! */
@@ -81,7 +79,6 @@ public class ThreadController {
 	public ThreadController(ThreadMagnum thread) {
 
 		this.thread = thread;
-		progress = -1;
 		status = Status.ONGOING;
 		
 		thread.setController(this);
@@ -95,20 +92,12 @@ public class ThreadController {
 		
 		// Copy stdout to the console
 		Magnum.log = new MagnumAppLogger(this);
-
 		// Create the dialog
 		initDialog();
-		
 		// Start the thread
     	thread.start();
-    	
     	// Show the dialog
-    	Optional<ButtonType> result = alert.showAndWait();
-    	
-    	// Kill the thread if cancel was pressed, else nothing needs to be done
-    	if (result.get() == ButtonType.CANCEL)
-    		thread.interrupt();
-    		
+    	alert.showAndWait();
 		// Remove the custom logger
 		Magnum.log = new MagnumLogger();
 	}
@@ -121,11 +110,11 @@ public class ThreadController {
 		
 		status = Status.SUCCESS;
 		okButton.setDisable(false);
-		cancelButton.setDisable(true);
+		stopButton.setDisable(true);
 		progressIndicator.setVisible(false);
 		statusMessage.textProperty().setValue("Status: DONE!");
     	statusMessage.setStyle("-fx-text-fill: green; -fx-font-weight: bold");
-		print("\nSuccess!");
+		print("\nSuccess yo!");
 	}
 
 	
@@ -137,7 +126,7 @@ public class ThreadController {
 		printException(e);
 		status = Status.ERROR;
 		okButton.setDisable(false);
-		cancelButton.setDisable(true);
+		stopButton.setDisable(true);
 		progressIndicator.setVisible(false);
 		statusMessage.textProperty().setValue("ERROR: " + e.toString());
     	statusMessage.setStyle("-fx-text-fill: red; -fx-font-weight: bold");
@@ -146,11 +135,28 @@ public class ThreadController {
 	
 	// ----------------------------------------------------------------------------
 
+	/** Called by the thread in case of error (not part of the FX thread!) */
+	public void interrupt() {
+		
+		Magnum.log.println("JOB STOPPED!");
+		status = Status.INTERRUPTED;
+		okButton.setDisable(false);
+		stopButton.setDisable(true);
+		progressIndicator.setVisible(false);
+		statusMessage.textProperty().setValue("Status: JOB INTERRUPTED");
+    	statusMessage.setStyle("-fx-text-fill: red; -fx-font-weight: bold");
+	}
+
+
+	
+	// ----------------------------------------------------------------------------
+
 	/** Print to console of this thread */
 	public void print(String msg) {
 		
 		Platform.runLater(new Runnable() {
-		    @Override public void run() {
+		    @Override 
+		    public void run() {
 		    	console.appendText(msg);
 		    }
 		});
@@ -191,10 +197,25 @@ public class ThreadController {
     	alert.setGraphic(progressIndicator);
 
     	// Disable the ok button
-        okButton = alert.getDialogPane().lookupButton(ButtonType.OK);
+    	ButtonType stopButtonType = new ButtonType("Stop", ButtonData.OTHER);
+    	//ButtonType okButtonType = new ButtonType("OK", ButtonData.OK_DONE);
+    	alert.getButtonTypes().setAll(stopButtonType, ButtonType.OK);
+    	
+        okButton = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
         okButton.setDisable(true);
-        cancelButton = alert.getDialogPane().lookupButton(ButtonType.CANCEL);
+        stopButton = (Button) alert.getDialogPane().lookupButton(stopButtonType);
+        stopButton.setOnAction((event) -> {
+        	Magnum.log.println();
+            Magnum.log.warning("INTERRUPT SENT, WAITING FOR THREAD TO RESPOND...");
+            thread.interrupt();
+        });
 
+        // Allow the dialog to be closed only if the thread stopped (success, error, or interrupt)
+        alert.setOnCloseRequest(event -> {
+        	if (status == Status.ONGOING)
+        		event.consume();
+        });
+        
     	// The console
     	console = new TextArea();
     	console.setEditable(false);

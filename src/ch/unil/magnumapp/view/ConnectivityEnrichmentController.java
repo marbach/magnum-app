@@ -28,6 +28,7 @@ package ch.unil.magnumapp.view;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.LinkedHashSet;
+import java.util.Optional;
 
 import ch.unil.magnumapp.AppSettings;
 import ch.unil.magnumapp.ConnectivityEnrichmentLauncher;
@@ -43,15 +44,12 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.util.converter.NumberStringConverter;
@@ -59,7 +57,7 @@ import javafx.util.converter.NumberStringConverter;
 /**
  * Controller for "Connectivity Enrichment" pane 
  */
-public class EnrichmentController extends ViewController {
+public class ConnectivityEnrichmentController extends ViewController {
 
 	/** Reference to the selected networks */
 	final private LinkedHashSet<TreeItem<NetworkModel>> selectedNetworks = 
@@ -96,7 +94,7 @@ public class EnrichmentController extends ViewController {
     @FXML
     private Button outputDirBrowseButton;
     @FXML
-    private CheckBox deleteKernelsCheckBox;
+    private CheckBox exportKernelsCheckBox;
     
     /** Parameters */
     @FXML
@@ -108,7 +106,7 @@ public class EnrichmentController extends ViewController {
     //@FXML
     //private TextField numCoresTextField;
     @FXML
-    private Button showCommandButton;
+    private Button exportSettingsButton;
     @FXML
     private Button runButton;
 	
@@ -145,7 +143,7 @@ public class EnrichmentController extends ViewController {
         outputDirProperty.set(getFilePreference("outputDir"));
         
         usePrecomputedKernelsCheckBox.setSelected(prefs.getBoolean("usePrecomputedKernels", true));
-        deleteKernelsCheckBox.setSelected(prefs.getBoolean("deleteKernels", true));
+        exportKernelsCheckBox.setSelected(prefs.getBoolean("exportKernels", false));
         excludeHlaGenesCheckBox.setSelected(prefs.getBoolean("excludeHlaGenes", true));
         excludeXYChromosomesCheckBox.setSelected(prefs.getBoolean("excludeXYChromosomes", true));
 
@@ -163,7 +161,7 @@ public class EnrichmentController extends ViewController {
     	saveFilePreference("outputDir", outputDirProperty.get());
 
     	prefs.putBoolean("usePrecomputedKernels", usePrecomputedKernelsCheckBox.isSelected());
-    	prefs.putBoolean("deleteKernels", deleteKernelsCheckBox.isSelected());
+    	prefs.putBoolean("exportKernels", exportKernelsCheckBox.isSelected());
     	prefs.putBoolean("excludeHlaGenes", excludeHlaGenesCheckBox.isSelected());
     	prefs.putBoolean("excludeXYChromosomes", excludeXYChromosomesCheckBox.isSelected());
 
@@ -256,46 +254,20 @@ public class EnrichmentController extends ViewController {
     
     // ----------------------------------------------------------------------------
 
-    /** Show command button */
+    /** Export settings button */
     @FXML
-    private void handleShowCommandButton() {
+    private void handleExportSettingsButton() {
     	
     	if (!checkOptions())
     		return;
     	
-		Alert alert = new Alert(AlertType.INFORMATION);
-		//alert.setWidth(1000); does not seem to work
-		alert.setTitle("Information");
-		alert.setHeaderText("Run jobs on your computing cluster");
-		alert.setContentText("Use the Magnum command-line tool to run jobs on your computing cluster:\n" + 
-				"1. Download the tool from regulatorycircuits.org\n" +
-				"2. Run the commands below (adapt file paths where necessary)");
-		
-    	// The console
-    	TextArea console = new TextArea();
-    	console.setEditable(false);
-    	console.setWrapText(false);
-    	console.setText(constructCommands());
+		if (showExportSettingsConfirmation(selectedNetworks.size()) != ButtonType.OK)
+			return;
     	
-    	console.setMaxWidth(Double.MAX_VALUE);
-    	console.setMaxHeight(Double.MAX_VALUE);
-    	console.setPrefWidth(700);
-    	GridPane.setVgrow(console, Priority.ALWAYS);
-    	GridPane.setHgrow(console, Priority.ALWAYS);
-    	
-    	// This could be a pane with tabs for multiple threads
-    	GridPane expContent = new GridPane();
-    	expContent.setMaxWidth(Double.MAX_VALUE);
-    	Label label = new Label("Commands with your specified options");
-    	expContent.add(label, 0, 0);
-    	expContent.add(console, 0, 1);
-
-    	// Set expandable Exception into the dialog pane.
-    	alert.getDialogPane().setExpandableContent(expContent);
-    	alert.getDialogPane().setExpanded(true);
-
-		alert.showAndWait();
-
+    	for (TreeItem<NetworkModel> item_i : selectedNetworks) {
+    		ConnectivityEnrichmentLauncher launcher = new ConnectivityEnrichmentLauncher(this, item_i.getValue());
+    		launcher.writeSettingsFile();
+    	}
     }
 
     
@@ -309,9 +281,14 @@ public class EnrichmentController extends ViewController {
     	if (!checkOptions())
     		return;
     	    	
+    	if (selectedNetworks.size() > 1) {
+    		if (showMultipleNetworksWarning(selectedNetworks.size()) != ButtonType.OK)
+    			return;
+    	}
+    	
     	for (TreeItem<NetworkModel> item_i : selectedNetworks) {
     		ConnectivityEnrichmentLauncher launcher = new ConnectivityEnrichmentLauncher(this, item_i.getValue());
-    		launcher.launch();    		
+    		launcher.launch();
     	}
 
     }
@@ -342,15 +319,50 @@ public class EnrichmentController extends ViewController {
     		return true;
     }
 
-
+    
     // ----------------------------------------------------------------------------
 
-    /** Construct commands for command-line tool based on specified options */
-    private String constructCommands() {
+    /** Show a warning before launching job with multiple networks */
+    private ButtonType showExportSettingsConfirmation(int numNetworks) {
+
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.getDialogPane().setPrefWidth(540);
+		alert.setTitle("Export settings");
+		String s = (numNetworks > 1) ? "s" : "";
+		alert.setHeaderText("Writing settings file" + s + " for " + numNetworks + " network" + s);
+		alert.setContentText(
+				"Output directory:\n" +
+				outputDirProperty.get().getPath() + "\n\n" +
+				"Settings files can be used to:\n\n" + 
+				"(1) Run jobs from the command line (typically on a computing cluster)\n" +
+				"(2) Reload the settings in the App (click the \"Settings\" button)\n\n" +
+				"TIP: Settings files are also saved when launching a run, keeping them together with your results ensures reproducibility!\n\n" +
+				"See the exported settings file and user guide for further instructions.");
+
+		Optional<ButtonType> result = alert.showAndWait();
+		return result.get();
+    }
+    
+    
+    // ----------------------------------------------------------------------------
+
+    /** Show a warning before launching job with multiple networks */
+    private ButtonType showMultipleNetworksWarning(int numNetworks) {
     	
-    	String commands = "";
-    	
-    	return commands;
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.getDialogPane().setPrefWidth(540);
+		alert.setTitle("Start job");
+		alert.setHeaderText("Compute connectivity enrichment for " + numNetworks + " networks?");
+		alert.setContentText(
+				"Computing connectivity enrichment for multiple networks may take a while.\n\n" +
+				"Note that you can use the Magnum command-line tool to run jobs on a compting cluster:\n\n" + 
+				"1. Use the 'Export settings' button to save a text file with your settings\n" +
+				"2. Download the Magnum command-line tool from regulatorycircuits.org\n" +
+				"3. Run Magnum from the command line with the option '--set <settings_file>'\n\n" +
+				"See the exported settings file and user guide for further instructions.");
+
+		Optional<ButtonType> result = alert.showAndWait();
+		return result.get();
     }
 
     
@@ -366,5 +378,5 @@ public class EnrichmentController extends ViewController {
     public boolean getExcludeXYChromosomes() { return excludeXYChromosomesCheckBox.isSelected(); }
     
     public boolean getUsePrecomputedKernels() { return usePrecomputedKernelsCheckBox.isSelected(); }
-    public boolean getDeleteKernels() { return deleteKernelsCheckBox.isSelected(); }
+    public boolean getExportKernels() { return exportKernelsCheckBox.isSelected(); }
 }

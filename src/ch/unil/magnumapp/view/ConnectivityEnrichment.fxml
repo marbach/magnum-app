@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<TitledPane animated="false" stylesheets="@MagnumAppStyle.css" text="Connectivity enrichment" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.EnrichmentController">
+<TitledPane animated="false" stylesheets="@MagnumAppStyle.css" text="Connectivity enrichment" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.ConnectivityEnrichmentController">
    <content>
       <VBox minWidth="545.0" spacing="3.0">
          <children>
@@ -74,7 +74,7 @@
                   </HBox>
                   <VBox spacing="3.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <children>
-                        <CheckBox fx:id="deleteKernelsCheckBox" mnemonicParsing="false" selected="true" text="Delete network kernels after completion">
+                        <CheckBox fx:id="exportKernelsCheckBox" mnemonicParsing="false" text="Export network kernels">
                            <VBox.margin>
                               <Insets bottom="7.0" top="5.0" />
                            </VBox.margin></CheckBox>
@@ -103,10 +103,8 @@
                   <Label text="Number of permutations" GridPane.columnIndex="1" />
                   <CheckBox fx:id="excludeHlaGenesCheckBox" mnemonicParsing="false" selected="true" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                   <Label text="Exclude HLA genes" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label text="Number of cores" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <Button fx:id="runButton" defaultButton="true" mnemonicParsing="false" onAction="#handleRunButton" prefWidth="70.0" text="Run" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                  <Button fx:id="showCommandButton" mnemonicParsing="false" onAction="#handleShowCommandButton" text="Export settings" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                  <Spinner editable="true" prefWidth="65.0" GridPane.rowIndex="3" />
+                  <Button fx:id="showCommandButton" mnemonicParsing="false" onAction="#handleExportSettingsButton" text="Export settings" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                   <CheckBox fx:id="excludeXYChromosomesCheckBox" mnemonicParsing="false" selected="true" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                   <Label text="Exclude X, Y chromosomes" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>

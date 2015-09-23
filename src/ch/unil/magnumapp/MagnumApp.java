@@ -25,6 +25,8 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp;
 
+import java.util.prefs.BackingStoreException;
+
 import ch.unil.magnumapp.model.*;
 import ch.unil.magnumapp.view.*;
 import edu.mit.magnum.Magnum;
@@ -60,7 +62,7 @@ public class MagnumApp extends Application {
     /** "Other networks" controller */
     private NetworkCollectionController otherNetworksController;
     /** "Connectivity enrichment" controller */
-    private EnrichmentController enrichmentController;
+    private ConnectivityEnrichmentController enrichmentController;
     
 
 	// ============================================================================
@@ -137,9 +139,22 @@ public class MagnumApp extends Application {
     /** Initialize the controls with saved/default settings */
     public void loadPreferences() {
     	
-    	preferencesController.loadPreferences();
-    	otherNetworksController.loadPreferences();
-    	enrichmentController.loadPreferences();
+    	try {
+    		preferencesController.loadPreferences();
+    		otherNetworksController.loadPreferences();
+    		enrichmentController.loadPreferences();
+    	} catch (Exception e) {
+    		// Corrupted preferences, clear them
+    		try {
+    			Magnum.log.warning("Failed to load preferences");
+    			Magnum.log.println(e.toString());
+    			Magnum.log.println("Clearing corrupted preferences...");
+				ViewController.prefs.clear();
+			} catch (BackingStoreException e1) {
+				Magnum.log.warning("Failed to clear prefences");
+				throw new RuntimeException(e1);
+			}
+    	}
     }
 
     
@@ -195,7 +210,7 @@ public class MagnumApp extends Application {
     private void showConnetivityEnrichmentPane() {
 
     	// Initialize user networks pane
-    	enrichmentController = (EnrichmentController) ViewController.loadFxml("view/ConnectivityEnrichment.fxml");
+    	enrichmentController = (ConnectivityEnrichmentController) ViewController.loadFxml("view/ConnectivityEnrichment.fxml");
     	// Add to root layout
     	rootLayoutController.getRightSide().getChildren().add(enrichmentController.getRoot());  
     }
@@ -213,7 +228,7 @@ public class MagnumApp extends Application {
     public NetworkCollection getNetworkCollection() { return networkCollection; }
 
     public PreferencesDialogController getPreferencesController() { return preferencesController; }
-	public EnrichmentController getEnrichmentController() {	return enrichmentController; }
+	public ConnectivityEnrichmentController getEnrichmentController() {	return enrichmentController; }
 	public NetworkCollectionController getOtherNetworksController() { return otherNetworksController; }
     
 }

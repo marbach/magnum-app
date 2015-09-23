@@ -26,6 +26,7 @@ THE SOFTWARE.
 package ch.unil.magnumapp;
 
 import ch.unil.magnumapp.view.ThreadController;
+import edu.mit.magnum.Magnum;
 import edu.mit.magnum.MagnumLogger;
 
 
@@ -61,7 +62,12 @@ public class MagnumAppLogger extends MagnumLogger {
 
 	/** Overrides MagnumLogger.print(): Write string to stdout, consoles and files */
 	public void print(String msg) {
-		
+
+		// Exit the current thread if it was interrupted -- conveniently added here
+		// because print() is called periodically... Disadvantage, we never do any
+		// cleanup like closing files, but an interrupt is disruptive by definition.
+		Magnum.exitOnInterrupt();
+
 		System.out.print(msg);
 		threadController.print(msg);
 	}

@@ -42,7 +42,7 @@ import javafx.scene.Node;
 public class ViewController {
 
 	/** The preferences */
-	final static protected Preferences prefs = Preferences.userNodeForPackage(MagnumApp.class);
+	final static public Preferences prefs = Preferences.userNodeForPackage(MagnumApp.class);
 
     /** Reference to the main application */
     protected MagnumApp app;

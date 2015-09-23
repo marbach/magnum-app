@@ -62,7 +62,7 @@ abstract public class ThreadMagnum extends Thread {
 		} catch (Exception e) {
 			// It was an interrupt
 			if (Magnum.interrupted()) {
-				Magnum.log.println("Thread interrupted!");
+				controller.interrupt();
 				return;
 			} else {
 				controller.error(e);

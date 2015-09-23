@@ -28,7 +28,7 @@ package ch.unil.magnumapp;
 import java.io.File;
 
 import ch.unil.magnumapp.model.NetworkModel;
-import ch.unil.magnumapp.view.EnrichmentController;
+import ch.unil.magnumapp.view.ConnectivityEnrichmentController;
 import ch.unil.magnumapp.view.ThreadController;
 import edu.mit.magnum.FileExport;
 import edu.mit.magnum.Magnum;
@@ -42,7 +42,7 @@ public class ConnectivityEnrichmentLauncher {
 	/** The network */
     private NetworkModel network;
     /** The controller with the settings */
-    private EnrichmentController controller;
+    private ConnectivityEnrichmentController controller;
     
     /** Job name = networkName--gwasName */
     private String jobName;
@@ -57,7 +57,7 @@ public class ConnectivityEnrichmentLauncher {
 	// PUBLIC METHODS
 
 	/** Constructor */
-	public ConnectivityEnrichmentLauncher(EnrichmentController controller, NetworkModel network) {
+	public ConnectivityEnrichmentLauncher(ConnectivityEnrichmentController controller, NetworkModel network) {
 		
 		this.controller = controller;
 		this.network = network;
@@ -92,7 +92,7 @@ public class ConnectivityEnrichmentLauncher {
     // ----------------------------------------------------------------------------
 
     /** Write settings file for magnum */
-    private void writeSettingsFile() {
+    public void writeSettingsFile() {
     	
     	Magnum.log.println("Writing settings file...");
     	
@@ -142,12 +142,13 @@ public class ConnectivityEnrichmentLauncher {
     			+ "excludeHlaGenes = " + controller.getExcludeHlaGenes() + "\n"
     			+ "# Exclude X and Y chromosomes\n"
     			+ "excludeXYChromosomes = " + controller.getExcludeXYChromosomes() + "\n"
-    			+ "# Use precomputed kernels for the given network if found in the networkKernelDir\n"
+    			+ "\n"
+    			+ "# Use precomputed network kernels if available in networkKernelDir\n"
     			+ "usePrecomputedKernels = " + controller.getUsePrecomputedKernels() + "\n"
     			+ "# Directory for network kernels\n"
     			+ "networkKernelDir = " + controller.getKernelDir().getAbsolutePath() + "\n"
-    			+ "# Delete kernels after completion (saves disk space)\n"
-    			+ "deleteKernels = " + controller.getDeleteKernels() + "\n"
+    			+ "# Save network kernels for use in subsequent runs (takes a lot of space!)\n"
+    			+ "exportKernels = " + controller.getExportKernels() + "\n"
     			+ "\n"
     			+ "# Tell magnum to launch connectivity enrichment analysis\n"
     			+ "mode = 3\n";
