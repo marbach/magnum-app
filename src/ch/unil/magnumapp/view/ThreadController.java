@@ -114,7 +114,7 @@ public class ThreadController {
 		progressIndicator.setVisible(false);
 		statusMessage.textProperty().setValue("Status: DONE!");
     	statusMessage.setStyle("-fx-text-fill: green; -fx-font-weight: bold");
-		print("\nSuccess yo!");
+		//print("\nSuccess yo!");
 	}
 
 	
@@ -138,7 +138,7 @@ public class ThreadController {
 	/** Called by the thread in case of error (not part of the FX thread!) */
 	public void interrupt() {
 		
-		Magnum.log.println("JOB STOPPED!");
+		Magnum.log.println("Job stopped!\n");
 		status = Status.INTERRUPTED;
 		okButton.setDisable(false);
 		stopButton.setDisable(true);

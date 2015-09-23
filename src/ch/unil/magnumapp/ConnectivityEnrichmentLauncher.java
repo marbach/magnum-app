@@ -65,6 +65,8 @@ public class ConnectivityEnrichmentLauncher {
 		// jobName = networkName--gwasName
 		jobName = network.getName() + "--" 
 				+ MagnumUtils.extractBasicFilename(controller.getGeneScoreFile().getName(), false);
+		// Remove spaces for valid filenames
+		jobName = jobName.replace(" ", "_");
 
     	outputDir = controller.getOutputDir();
 	}
@@ -125,17 +127,23 @@ public class ConnectivityEnrichmentLauncher {
     			+ "\n"
     			+ "# NOTE: spaces in path/file names are allowed (no need to escape)\n"
     			+ "\n"
-    			+ "# The network file\n"
+    			+ "# The input network file [--net <file>]\n"
     			+ "networkFile = " + network.getFile().getAbsolutePath() + "\n"
-    			+ "# The GWAS gene score file\n"
+    			+ "# Defines if the network should be interpreted as directed or undirected [--dir]\n"
+    			+ "isDirected = " + network.getIsDirected() + "\n"
+    			+ "# Set true to treat the network as weighted [--weighted]\n"
+    			+ "isWeighted = " + network.getIsWeighted() + "\n"
+    			+ "# Defines if self loops should be removed from the network [--noself]\n"
+    			+ "removeSelfLoops = " + network.getRemoveSelf() + "\n"
+    			+ "# The GWAS gene score file [--scores <file>]\n"
     			+ "geneScoreFile = " + controller.getGeneScoreFile().getAbsolutePath() + "\n"
-    			+ "# The output directory\n"
+    			+ "# Output directory to save files (empty = home directory; '.' = working directory) [--outdir]\n"
     			+ "outputDir = " + outputDir.getAbsolutePath() + "\n"
     			+ "\n"
     			+ "############\n"
     			+ "# PARAMETERS\n"
     			+ "\n"
-    			+ "# The number of permutations\n"
+    			+ "# Number of random permutations used to compute empirical p-values [--permut <int>]\n"
     			+ "numPermutations = " + controller.getNumPermutations() + "\n"
     			+ "\n"
     			+ "# Exclude HLA genes\n"
@@ -145,7 +153,7 @@ public class ConnectivityEnrichmentLauncher {
     			+ "\n"
     			+ "# Use precomputed network kernels if available in networkKernelDir\n"
     			+ "usePrecomputedKernels = " + controller.getUsePrecomputedKernels() + "\n"
-    			+ "# Directory for network kernels\n"
+    			+ "# Directory for network kernels (default: <outputDir>/network_kernels/)\n"
     			+ "networkKernelDir = " + controller.getKernelDir().getAbsolutePath() + "\n"
     			+ "# Save network kernels for use in subsequent runs (takes a lot of space!)\n"
     			+ "exportKernels = " + controller.getExportKernels() + "\n"

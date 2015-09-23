@@ -193,7 +193,7 @@ public class ConnectivityEnrichmentController extends ViewController {
     	if (outputDirProperty.get() == null)
     		return null;
     	Path outputDirPath = outputDirProperty.get().toPath();
-    	Path kernelDirPath = outputDirPath.resolve("tmp_network_kernels"); 
+    	Path kernelDirPath = outputDirPath.resolve("network_kernels"); 
     	return kernelDirPath.toFile();
     }
 
