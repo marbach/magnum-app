@@ -41,34 +41,6 @@ public class MagnumAppLogger extends MagnumLogger {
 	/** Manager of the threads, responsible for printing to consoles */
 	private ThreadController threadController;
 
-//	/** Gets and resets the interrupted flag (same behaviour as Thread.interrupted() */
-//	static public boolean interrupted() {
-//		boolean returnValue = interrupted_;
-//		interrupted_ = false;
-//		return returnValue;
-//	}
-
-
-	/** Throws a runtime exception if the thread has been interrupted */
-	public void exitOnInterrupt() {
-		if (threadController.getInterrupted() && !(Thread.currentThread().getId() == threadController.getThreadId()))
-			throw new RuntimeException("Thread interrupted");
-	}
-	
-//	/** Checks if there has been an interrupt, useful if cleanup has to be done before exciting */
-//	static public boolean checkInterrupt() {
-//		// Return true on interrupt
-//		if (Thread.interrupted())
-//			interrupted_ = true;
-//		return interrupted_;
-//	}
-
-	
-	// ============================================================================
-	// STATIC FUNCTIONS
-
-
-	
 	// ============================================================================
 	// PUBLIC METHODS
 	    
@@ -87,28 +59,26 @@ public class MagnumAppLogger extends MagnumLogger {
 		// Exit the current thread if it was interrupted -- conveniently added here
 		// because print() is called periodically... Disadvantage, we never do any
 		// cleanup like closing files, but an interrupt is disruptive by definition.
-		exitOnInterrupt();
+		if (threadController.getInterrupted() && !(Thread.currentThread().getId() == threadController.getThreadId())) {
+			msg = "\nThread " + Thread.currentThread().getId() + ": interrupted";			
+			System.out.print(msg);
+			threadController.print(msg);
+			throw new RuntimeException("Thread interrupted");
+		}
 
 		System.out.print(msg);
 		threadController.print(msg);
 	}
 
 
+	
+
+
 		
 	// ============================================================================
 	// PRIVATE METHODS
 
-
-	
 	// ============================================================================
 	// SETTERS AND GETTERS
-
-//	public boolean isInterrupted() {
-//		return interrupted;
-//	}
-//
-//	public void setInterrupted() {
-//		interrupted = true;
-//	}
 
 }

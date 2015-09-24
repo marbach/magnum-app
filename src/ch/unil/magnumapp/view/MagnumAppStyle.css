@@ -1,3 +1,16 @@
 .background-pane {
     -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgb(150,150,150) 0%, rgb(80,80,80) 100%);
 }
+
+.status-ongoing-label {
+	-fx-text-fill: royalblue;
+	-fx-font-weight: bold;
+}
+.status-success-label {
+	-fx-text-fill: limegreen;
+	-fx-font-weight: bold;
+}
+.status-error-label {
+	-fx-text-fill: crimson;
+	-fx-font-weight: bold;
+}

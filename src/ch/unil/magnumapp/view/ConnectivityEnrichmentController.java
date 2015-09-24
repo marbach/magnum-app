@@ -56,6 +56,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.util.converter.NumberStringConverter;
 
+
 /**
  * Controller for "Connectivity Enrichment" pane 
  */
@@ -294,8 +295,8 @@ public class ConnectivityEnrichmentController extends ViewController {
     		jobs.add(new ConnectivityEnrichmentJob(this, item_i.getValue()));
 
     	// The thread controller / dialog
-		ThreadController threadController = new ThreadController(jobs);
-		threadController.start();
+    	ThreadController threadController = (ThreadController) ViewController.loadFxml("view/ThreadStatus.fxml");
+		threadController.start(jobs, 1); // TODO select num cores
     }
 
     

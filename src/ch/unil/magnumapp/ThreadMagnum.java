@@ -27,6 +27,7 @@ package ch.unil.magnumapp;
 
 import ch.unil.magnumapp.view.ThreadController;
 import edu.mit.magnum.Magnum;
+import javafx.application.Platform;
 
 /**
  * Runnable class for loading networks
@@ -59,14 +60,15 @@ abstract public class ThreadMagnum extends Thread {
 			runJob();
     			
 		} catch (Exception e) {
-			// If it was an error, abort all jobs
 			if (!controller.getInterrupted()) {
-				controller.setException(e);
-				controller.setInterrupted(true);
-				// Should the exception be thrown on...?
+				Platform.runLater(() ->	controller.jobFinished(e));
+				// Should the exception be thrown on...? Printed to console?
+				return;
 			}	
 		}
-		controller.jobFinished();
+		// Aha! Beautiful synchronization solution, this queues the update in the FX thread,
+		// avoiding potential collision of multiple threads finishing at the same time!
+		Platform.runLater(() ->	controller.jobFinished(null));
 	}
 	
 	

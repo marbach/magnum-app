@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<VBox fx:id="threadStatusVBox" spacing="5.0" stylesheets="@MagnumAppStyle.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.ThreadController">
+   <children>
+      <Label fx:id="statusLabel" styleClass="status-ongoing-label" text="Status: ONGOING" />
+      <GridPane fx:id="statusGridPane" hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="600.0" vgap="5.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" />
+          <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints vgrow="SOMETIMES" />
+          <RowConstraints vgrow="SOMETIMES" />
+          <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Queued:" GridPane.rowIndex="1" />
+            <Label text="Running:" GridPane.rowIndex="2" />
+            <Label text="Finished:" GridPane.rowIndex="3" />
+            <Label text="Aborted:" GridPane.rowIndex="4" />
+            <Label text="#Jobs" GridPane.columnIndex="1" />
+            <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <children>
+                  <Rectangle fx:id="numRunningRectangle" arcHeight="5.0" arcWidth="5.0" fill="ROYALBLUE" height="15.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.75" width="150.0" HBox.hgrow="NEVER" />
+                  <Label fx:id="numRunningLabel" text="Label" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <Rectangle fx:id="numQueuedRectangle" arcHeight="5.0" arcWidth="5.0" fill="LIGHTSTEELBLUE" height="15.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.75" width="150.0" HBox.hgrow="NEVER" />
+                  <Label fx:id="numQueuedLabel" text="Label" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <children>
+                  <Rectangle fx:id="numFinishedRectangle" arcHeight="5.0" arcWidth="5.0" fill="LIMEGREEN" height="15.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.75" width="150.0" HBox.hgrow="NEVER" />
+                  <Label fx:id="numFinishedLabel" text="Label" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+               <children>
+                  <Rectangle fx:id="numAbortedRectangle" arcHeight="5.0" arcWidth="5.0" fill="CRIMSON" height="15.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.75" width="150.0" HBox.hgrow="NEVER" />
+                  <Label fx:id="numAbortedLabel" text="Label" />
+               </children>
+            </HBox>
+         </children>
+      </GridPane>
+   </children>
+</VBox>
