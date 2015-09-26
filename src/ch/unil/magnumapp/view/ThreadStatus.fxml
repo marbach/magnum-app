@@ -7,11 +7,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<VBox fx:id="threadStatusVBox" spacing="5.0" stylesheets="@MagnumAppStyle.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.ThreadController">
+<VBox fx:id="threadStatusVBox" spacing="5.0" stylesheets="@MagnumAppStyle.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.JobManager">
    <children>
       <Label fx:id="statusLabel" styleClass="status-ongoing-label" text="Status: ONGOING" />
-      <GridPane fx:id="statusGridPane" hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="600.0" vgap="5.0">
+      <GridPane fx:id="statusGridPane" hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="650.0" vgap="5.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" />
           <ColumnConstraints hgrow="ALWAYS" />

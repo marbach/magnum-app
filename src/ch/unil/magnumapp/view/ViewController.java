@@ -42,10 +42,10 @@ import javafx.scene.Node;
 public class ViewController {
 
 	/** The preferences */
-	final static public Preferences prefs = Preferences.userNodeForPackage(MagnumApp.class);
+	final static public Preferences prefs = Preferences.userNodeForPackage(App.class);
 
     /** Reference to the main application */
-    protected MagnumApp app;
+    protected App app;
     /** The root node of this view */
     protected Node root;
     
@@ -56,7 +56,7 @@ public class ViewController {
     /** Constructor */
     public ViewController() {
     	
-    	app = MagnumApp.getInstance();
+    	app = App.app;
     }
 
 
@@ -67,14 +67,14 @@ public class ViewController {
         
         // Load root layout from fxml file.
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(MagnumApp.class.getResource(location));
+        loader.setLocation(App.class.getResource(location));
 
         // Load FXML
         Node root = null;
         try {
 			root = loader.load();
 		} catch (IOException e) {
-			MagnumApp.error(e);
+			throw new RuntimeException(e);
 		}
         
         // Initialize controller

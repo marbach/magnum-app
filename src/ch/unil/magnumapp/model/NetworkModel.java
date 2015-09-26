@@ -27,7 +27,7 @@ package ch.unil.magnumapp.model;
 
 import java.io.File;
 
-import edu.mit.magnum.MagnumUtils;
+import ch.unil.magnumapp.App;
 import edu.mit.magnum.net.Network;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -101,7 +101,7 @@ public class NetworkModel {
 	/** Constructor from file */
 	public NetworkModel(File file, boolean isDirected, boolean isWeighted, boolean removeSelf) {
 		
-		this.name = new SimpleStringProperty(MagnumUtils.extractBasicFilename(file.getName(), false));
+		this.name = new SimpleStringProperty(App.mag.utils.extractBasicFilename(file.getName(), false));
 		this.filename = new SimpleStringProperty(file.getName());
 		this.file = file;
 		this.fileExists = file.exists();
@@ -116,7 +116,7 @@ public class NetworkModel {
 	/** Set network and initialize fields of the model accordingly */
 	public void initialize(Network network) {
 		
-		String name = MagnumUtils.extractBasicFilename(network.getFile().getName(), false);
+		String name = App.mag.utils.extractBasicFilename(network.getFile().getName(), false);
 		this.name = new SimpleStringProperty(name);
 		filename = new SimpleStringProperty(network.getFile().getPath());
 		

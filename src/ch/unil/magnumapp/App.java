@@ -25,6 +25,7 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp;
 
+import java.io.File;
 import java.util.prefs.BackingStoreException;
 
 import ch.unil.magnumapp.model.*;
@@ -42,10 +43,14 @@ import javafx.stage.Stage;
 /**
  * The main class starting the JavaFX app
  */
-public class MagnumApp extends Application {
+public class App extends Application {
 
+	/** For convenicen, a magnum reference -- do not use in threads, they need their own one! */
+	public static Magnum mag; 
 	/** Reference to unique instance of MagnumApp (singleton design pattern) */
-	private static MagnumApp instance;
+	public static App app;
+	/** The logger (also set for mag) */
+	public static AppLogger log;
 	
 	/** The main stage */
     private Stage primaryStage;
@@ -62,7 +67,7 @@ public class MagnumApp extends Application {
     /** "Other networks" controller */
     private NetworkCollectionController otherNetworksController;
     /** "Connectivity enrichment" controller */
-    private ConnectivityEnrichmentController enrichmentController;
+    private EnrichmentController enrichmentController;
     
 
 	// ============================================================================
@@ -70,44 +75,46 @@ public class MagnumApp extends Application {
 
 	/** Main */
 	public static void main(String[] args) {
-		
-		Magnum.log.println(AppSettings.magnumAppVersion);
-		// Initialize magnum
-		new Magnum(args);
-		// Initialize magnum app
-		MagnumApp.getInstance();
-		
-		// Calls start()
-		launch(args);
-		
-		// Save settings
-		Magnum.log.println("Saving preferences...");
-		instance.savePreferences();
-		
-		Magnum.log.println("Bye!");
+
+		try {
+			// The logger
+			log = new AppLogger();
+			File logFile = new File(System.getProperty("user.dir"), ".magnum-app.log.txt");
+			log.createLogFile(logFile);
+			// Say hello
+			log.println(AppSettings.magnumAppVersion);
+
+			// Initialize magnum with our logger
+			mag = new Magnum(args, log);
+
+			// Calls start()
+			launch(args);
+
+			// Save settings
+			log.println("Saving preferences...");
+			app.savePreferences();
+			log.println("Bye!");
+			
+		} catch (Throwable e) {
+			log.setConsole(null);
+			log.printStackTrace(e);
+
+		} finally {
+			log.closeLogFile();
+		}
 	}
 
-	
-	// ----------------------------------------------------------------------------
-
-	/** Print the stack trace of the exception and exit */
-	static public void error(Exception e) {
 		
-		e.printStackTrace();
-		System.exit(-1);
-	}
-
-	
 	// ============================================================================
 	// PUBLIC METHODS
 
 	/** Constructor */
-	public MagnumApp() {
+	public App() {
 			
-		if (instance != null)
+		if (app != null)
 			throw new RuntimeException("There should be only one instance of MagnumApp");
 		else
-			instance = this;			
+			app = this;			
 	}
 	
 	
@@ -146,12 +153,12 @@ public class MagnumApp extends Application {
     	} catch (Exception e) {
     		// Corrupted preferences, clear them
     		try {
-    			Magnum.log.warning("Failed to load preferences");
-    			Magnum.log.println(e.toString());
-    			Magnum.log.println("Clearing corrupted preferences...");
+    			log.warning("Failed to load preferences");
+    			log.println(e.toString());
+    			log.println("Clearing corrupted preferences...");
 				ViewController.prefs.clear();
 			} catch (BackingStoreException e1) {
-				Magnum.log.warning("Failed to clear prefences");
+				log.warning("Failed to clear prefences");
 				throw new RuntimeException(e1);
 			}
     	}
@@ -210,7 +217,7 @@ public class MagnumApp extends Application {
     private void showConnetivityEnrichmentPane() {
 
     	// Initialize user networks pane
-    	enrichmentController = (ConnectivityEnrichmentController) ViewController.loadFxml("view/ConnectivityEnrichment.fxml");
+    	enrichmentController = (EnrichmentController) ViewController.loadFxml("view/ConnectivityEnrichment.fxml");
     	// Add to root layout
     	rootLayoutController.getRightSide().getChildren().add(enrichmentController.getRoot());  
     }
@@ -219,16 +226,13 @@ public class MagnumApp extends Application {
 	// ============================================================================
 	// SETTERS AND GETTERS
 
-	public static MagnumApp getInstance() {
-		return instance;
-	}
-
     public Stage getPrimaryStage() { return primaryStage; }
+    public BorderPane getRootLayout() { return rootLayout; }
     
     public NetworkCollection getNetworkCollection() { return networkCollection; }
 
     public PreferencesDialogController getPreferencesController() { return preferencesController; }
-	public ConnectivityEnrichmentController getEnrichmentController() {	return enrichmentController; }
+	public EnrichmentController getEnrichmentController() {	return enrichmentController; }
 	public NetworkCollectionController getOtherNetworksController() { return otherNetworksController; }
     
 }

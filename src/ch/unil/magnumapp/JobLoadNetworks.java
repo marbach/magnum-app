@@ -25,66 +25,58 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp;
 
-import ch.unil.magnumapp.view.ThreadController;
-import edu.mit.magnum.Magnum;
-import javafx.application.Platform;
+import java.io.File;
+import java.util.List;
+
+import ch.unil.magnumapp.model.NetworkGroup;
 
 /**
  * Runnable class for loading networks
  */
-abstract public class ThreadMagnum extends Thread {
+public class JobLoadNetworks extends JobMagnum {
 
-	/** The view controller of the dialog/alert of this thread */
-	protected ThreadController controller;
-	/** The id of this thread */
-	protected long id;
+	/** The network group where the files will be added */
+	NetworkGroup networkGroup;
+	
+	/** Network files */
+    private List<File> files;
+    /** Directed network */
+    private boolean directed;
+    /** Weighted network */
+    private boolean weighted;
+    /** Remove self loops */
+    private boolean removeSelf;
     
     
 	// ============================================================================
 	// PUBLIC METHODS
 
 	/** Constructor */
-	public ThreadMagnum() {
-		
+	public JobLoadNetworks(NetworkGroup networkGroup, List<File> files, boolean directed, boolean weighted, boolean removeSelf) {
+
+		super(null, "TBD!");
+		this.networkGroup = networkGroup;
+		this.files = files;
+		this.directed = directed;
+		this.weighted = weighted;
+		this.removeSelf = removeSelf;
 	}
 
-
+	
 	// ----------------------------------------------------------------------------
 
-	/** The main method called by the thread */
+	/** Called by MagnumThread.run() */
 	@Override
-	public void run() {
-		
-		try {
-			id = Thread.currentThread().getId();
-			runJob();
-    			
-		} catch (Exception e) {
-			if (!controller.getInterrupted()) {
-				Platform.runLater(() ->	controller.jobFinished(e));
-				// Should the exception be thrown on...? Printed to console?
-				return;
-			}	
-		}
-		// Aha! Beautiful synchronization solution, this queues the update in the FX thread,
-		// avoiding potential collision of multiple threads finishing at the same time!
-		Platform.runLater(() ->	controller.jobFinished(null));
-	}
-	
-	
-	// ============================================================================
-	// PROTECTED METHODS
+	protected void runJob() {
 
-	/** The method called by run() */
-	protected abstract void runJob();
+		for (File file : files)
+			networkGroup.loadNetworkAddModel(file, directed, weighted, removeSelf);
+	}
 	
 	
 	// ============================================================================
 	// SETTERS AND GETTERS
 
-	public void setController(ThreadController controller) {
-		this.controller = controller;
-	}
 
 
 }

@@ -14,3 +14,7 @@
 	-fx-text-fill: crimson;
 	-fx-font-weight: bold;
 }
+.status-warning-label {
+	-fx-text-fill: darkorange;
+	-fx-font-weight: bold;
+}

@@ -25,16 +25,12 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp.view;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.File;
 import java.util.ArrayList;
 
-
 import javafx.scene.shape.Rectangle;
-import ch.unil.magnumapp.MagnumAppLogger;
-import ch.unil.magnumapp.ThreadMagnum;
-import edu.mit.magnum.Magnum;
-import edu.mit.magnum.MagnumLogger;
+import ch.unil.magnumapp.App;
+import ch.unil.magnumapp.JobMagnum;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
@@ -55,31 +51,32 @@ import javafx.scene.layout.VBox;
 /**
  * Controller for a single "launch job" dialog managing multiple threads
  */
-public class ThreadController extends ViewController {
+public class JobManager extends ViewController {
 
-	/** Flag indicates if jobs are interrupted */
-	volatile private boolean interrupted = false;
+	/** Static flag indicates if jobs are interrupted => there can be only one ThreadController instance */
+	volatile static public boolean interrupted = false;
 
-	/** Number of cores to be used for jobs */
-	private int numCores;
-	/** Thread id, used to prevent reacting self from interrupt flag */
-	private long threadId;
 	
 	/** The thread -- this will become an array! */
-	private ArrayList<ThreadMagnum> jobs;
+	private ArrayList<JobMagnum> jobs;
+	/** Number of cores to be used for jobs */
+	private int numCores;
+	/** The output directory for the jobs */
+	private File outputDir;
+
 	/** The next job in line */
-	volatile private int nextJob;
+	private int nextJob;
 	/** No more jobs are running (they finished with success, error or interrupt) */
 	private boolean allDone;
 	
 	/** Jobs in queue */
-	volatile private IntegerProperty numJobsQueued = new SimpleIntegerProperty();
+	private IntegerProperty numJobsQueued = new SimpleIntegerProperty();
 	/** Jobs running */
-	volatile private IntegerProperty numJobsRunning = new SimpleIntegerProperty();
+	private IntegerProperty numJobsRunning = new SimpleIntegerProperty();
 	/** Jobs finished successfully */
-	volatile private IntegerProperty numJobsFinished = new SimpleIntegerProperty();
+	private IntegerProperty numJobsFinished = new SimpleIntegerProperty();
 	/** Jobs aborted (interrupt or error) */
-	volatile private IntegerProperty numJobsAborted = new SimpleIntegerProperty();
+	private IntegerProperty numJobsAborted = new SimpleIntegerProperty();
 	
 	/** The javafx alert / dialog */
 	private Alert alert;
@@ -126,84 +123,83 @@ public class ThreadController extends ViewController {
 	// PUBLIC METHODS
 
 	/** Open the dialog, start the thread */
-	public void start(ArrayList<ThreadMagnum> jobs, int numCores) {
+	public void start(ArrayList<JobMagnum> jobs, int numCores) {
 		
-		// Initialize
-		initializeJobs(jobs, numCores);
+		// Initialize jobs
+		this.numCores = numCores;
+		initializeJobs(jobs);
 		
+		// Header text
+    	String networkS = ((jobs.size() == 1) ? "" : "s");
+    	String coreS = ((numCores == 1) ? "" : "s");
+    	String headerText = "Running: " + jobs.size() + " network" + networkS;
+    	if (numCores > jobs.size())
+    		headerText += " (" + jobs.size() + " out of " + numCores + " core" + coreS + " used)";
+    	else
+    		headerText += " (" + numCores + " core" + coreS + " used)";
+
+		// Create the javafx dialog
+		initializeDialog(headerText);
 		// Copy stdout to the console
-		Magnum.log = new MagnumAppLogger(this);
-		// Create the dialog
-		initializeDialog();
-		
-		// Start the first job (upon completion, success() will start the next job)
-		startNextJob();
-    	
-    	// Show the dialog
+		App.log.setConsole(console);
+		App.log.println(headerText);
+		App.log.println("- Output directory: " + App.app.getEnrichmentController().getOutputDir().getPath() + "\n");
+		if (numCores > 1)
+			App.log.println("==> NOTE: Using multiple cores, console output of individual jobs turned OFF!\n"
+					      + "==> See the log files in the output directory instead: <job_name>.log.txt\n");
+
+		// Start the first job (jobFinished() callback will start the subsequent jobs)
+		int numInitialJobs = (numCores <= jobs.size()) ? numCores : jobs.size();
+		for (int i=0; i<numInitialJobs; i++)
+			startNextJob();
+		// Show dialog and wait
     	alert.showAndWait();
 		
-    	// Remove the custom logger
-		Magnum.log = new MagnumLogger();
+    	// Remove console from logger
+    	App.log.setConsole(null);
 	}
 	
-	private void startNextJob() {
 
-		// Update counts before start for good measure
-		int index = nextJob;
-    	nextJob++;
-    	reduce(numJobsQueued);
-    	increment(numJobsRunning);
-    	assert assertJobCountsConsistency();
-    	
-    	// Print info
-    	//Magnum.log.println("STARTING JOB: ");
-    	
-    	// Start the job
-    	jobs.get(index).start();
-	}
-	
-	private void increment(IntegerProperty prop) {
-		prop.set(prop.get() + 1);
-	}
-	
-	private void reduce(IntegerProperty prop) {
-		prop.set(prop.get() - 1);
-	}
-	
-	
-	/** Always returns true, asserts that job counts are consistent */
-	private boolean assertJobCountsConsistency() {
-		
-		int total = numJobsQueued.get() + numJobsRunning.get() + numJobsFinished.get() + numJobsAborted.get();
-		assert total == jobs.size();
-		assert nextJob == total - numJobsQueued.get();
-		return true;
-	}
-
-	
 	// ----------------------------------------------------------------------------
 
 	/** JavaFX thread: scheduled using Platform.runLater() by the launched jobs upon completion */
-	public void jobFinished(Exception e) {
+	public void jobFinished(JobMagnum job, Throwable e) {
 		
 		reduce(numJobsRunning);
 
 		if (interrupted) {
+	    	App.log.println("Job interrupted: " + job.getJobName());
 			increment(numJobsAborted);
 			if (numJobsRunning.get() == 0)
 				allJobsDone();
+			return;
+		} 
 
+		// Normal finish
+		if (e == null) {
+			App.log.println("Job finished:\t" + job.getJobName());
+			increment(numJobsFinished);
+
+		// Exception
+		} else if (e instanceof Exception){
+			App.log.println("\nJOB ABORTED:\t" + job.getJobName());
+			App.log.printStackTrace(e);
+			increment(numJobsAborted);
+			updateStatusLabel("Status: ONGOING, ENCOUNTERED ERRORS! (See console and log files for details)", "status-warning-label");
+
+		// Out of memory error
 		} else {
-			if (e == null)
-				increment(numJobsFinished);
-			else
-				increment(numJobsAborted);
-			
-			if (numJobsQueued.get() != 0)
-				startNextJob();
-			else if (numJobsRunning.get() == 0)
-				allJobsDone();
+			App.log.println("\nOUT OF MEMORY ERROR:\t" + job.getJobName());
+			App.log.printStackTrace(e);
+			App.log.println("TBD MSG -- ALERT");
+			interrupted = true;
+			return;
 		}
+
+		if (numJobsQueued.get() != 0)
+			startNextJob();
+		else if (numJobsRunning.get() == 0)
+			allJobsDone();
 	}
 	
 	
@@ -217,10 +213,12 @@ public class ThreadController extends ViewController {
 		stopButton.setDisable(true);
 		progressIndicator.setVisible(false);
 		allDone = true;
+		App.log.println("\nDone!");
 		
 		if (interrupted) {
 			updateStatusLabel("Status: JOBS STOPPED!", "status-error-label");
 			statusGridPane.setDisable(true);
+			interrupted = false;
 		
 		} else if (numJobsAborted.get() > 0) {
 			updateStatusLabel("Status: FINISHED WITH ERRORS! (See console and log files for details)", "status-error-label");
@@ -236,46 +234,25 @@ public class ThreadController extends ViewController {
 	/** Print to console of this thread */
 	public void print(String msg) {
 		
-		Platform.runLater(new Runnable() {
-		    @Override 
-		    public void run() {
-		    	console.appendText(msg);
-		    }
+		Platform.runLater(() -> {
+			console.appendText(msg);
 		});
 	}
-
-	
-	/** Prints the exception to the custom outputs (not stdout) */
-	public void printException(Exception e) {
-		
-		// Print exception to string
-		StringWriter sw = new StringWriter();
-		PrintWriter pw = new PrintWriter(sw);
-		e.printStackTrace(pw);
-		String exceptionText = sw.toString();
-		
-		// Print exception text to console
-		print(exceptionText + "\nABORTED WITH ERROR!");
-	}	
-
 
 	
 	// ============================================================================
 	// PRIVATE
 
 	/** Creates the alert dialog */
-	private void initializeDialog() {
+	private void initializeDialog(String headerText) {
 		
 		// The alert
     	alert = new Alert(AlertType.CONFIRMATION);
     	alert.setTitle("Connectivity enrichment");
-    	alert.getDialogPane().setPrefHeight(650);
+    	//alert.getDialogPane().setPrefHeight(650);
     	
     	// Header text
-    	String networkS = ((jobs.size() == 1) ? "" : "s");
-    	String coreS = ((numCores == 1) ? "" : "s");
-    	alert.setHeaderText("Running: " + jobs.size() + " network" + networkS + "... " 
-    			+ "(using " + numCores + " core" + coreS + ")");
+    	alert.setHeaderText(headerText);
     	
     	// The content
     	//alert.getDialogPane().setContent(statusMessage);
@@ -296,8 +273,11 @@ public class ThreadController extends ViewController {
         okButton.setDisable(true);
         stopButton = (Button) alert.getDialogPane().lookupButton(stopButtonType);
         stopButton.setOnAction((event) -> {
-        	Magnum.log.println();
-            Magnum.log.warning("INTERRUPT SENT -- WAITING FOR THREADS ...");
+        	App.log.println();
+        	if (!interrupted)
+        		App.log.println("INTERRUPT: Waiting for threads ...");
+        	else
+        		App.log.println("Still waiting for threads to exit gracefully, this can take a minute ...");
             updateStatusLabel("Status: STOPPING JOBS ...", "status-error-label");
             interrupted = true;
         });
@@ -315,7 +295,8 @@ public class ThreadController extends ViewController {
 
     	console.setMaxWidth(Double.MAX_VALUE);
     	console.setMaxHeight(Double.MAX_VALUE);
-    	console.setPrefWidth(700);
+    	console.setPrefWidth(650);
+    	console.setPrefHeight(400);
     	GridPane.setVgrow(console, Priority.ALWAYS);
     	GridPane.setHgrow(console, Priority.ALWAYS);
 
@@ -347,23 +328,21 @@ public class ThreadController extends ViewController {
 	// ----------------------------------------------------------------------------
 
 	/** Initialize with a list of jobs */
-	private void initializeJobs(ArrayList<ThreadMagnum> jobs, int numCores) {
+	private void initializeJobs(ArrayList<JobMagnum> jobs) {
 
 		if (jobs == null || jobs.isEmpty())
 			throw new RuntimeException("Null or empty job list");
 		
 		this.jobs = jobs;
-		this.numCores = numCores;
 		allDone = false;
-		threadId = Thread.currentThread().getId();
-		
+				
 		numJobsQueued.set(jobs.size());
 		numJobsRunning.set(0);
 		numJobsFinished.set(0);
 		numJobsAborted.set(0);
 		nextJob = 0;
 
-		for (ThreadMagnum job_i : jobs)
+		for (JobMagnum job_i : jobs)
 			job_i.setController(this);
 	}
 
@@ -378,21 +357,54 @@ public class ThreadController extends ViewController {
 	}
 	
 	
+	// ----------------------------------------------------------------------------
+
+	/** Called by jobFinished(), runs on the FX thread */
+	private void startNextJob() {
+
+		// Update counts before start for good measure
+		int tbdJob = nextJob;
+    	nextJob++;
+    	reduce(numJobsQueued);
+    	increment(numJobsRunning);
+    	assert assertJobCountsConsistency();
+    	
+    	// Start the job
+    	App.log.println("Running job:\t" + jobs.get(tbdJob).getJobName());
+    	jobs.get(tbdJob).start();
+	}
+	
+	
+	// ----------------------------------------------------------------------------
+
+	private void increment(IntegerProperty prop) {
+		prop.set(prop.get() + 1);
+	}
+	
+	private void reduce(IntegerProperty prop) {
+		prop.set(prop.get() - 1);
+	}
+
+
+	// ----------------------------------------------------------------------------
+	
+	/** Always returns true, asserts that job counts are consistent */
+	private boolean assertJobCountsConsistency() {
+		
+		int total = numJobsQueued.get() + numJobsRunning.get() + numJobsFinished.get() + numJobsAborted.get();
+		assert total == jobs.size();
+		assert nextJob == total - numJobsQueued.get();
+		return true;
+	}
+
+	
+
+	
 	// ============================================================================
 	// SETTERS AND GETTERS
 
-	public long getThreadId() {
-		return threadId;
-	}
-
-
-	public boolean getInterrupted() {
-		return interrupted;
-	}
-
-
-	public void setInterrupted(boolean interrupted) {
-		this.interrupted = interrupted;
-	}
+	public boolean getInterrupted() { return interrupted; }
+	public File getOutputDir() { return outputDir; }
+	public void setOutputDir(File outputDir) { this.outputDir = outputDir; }
 
 }

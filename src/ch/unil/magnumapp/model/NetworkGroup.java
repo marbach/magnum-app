@@ -27,6 +27,7 @@ package ch.unil.magnumapp.model;
 
 import java.io.File;
 
+import ch.unil.magnumapp.App;
 import edu.mit.magnum.net.Network;
 import javafx.scene.control.TreeItem;
 
@@ -75,7 +76,7 @@ public class NetworkGroup {
 	/** Load the network, add the model (not the network!) to the collection */
 	public void loadNetworkAddModel(File file, boolean directed, boolean weighted, boolean removeSelf) {
 		
-		Network network = new Network(file, directed, removeSelf, weighted, 0);
+		Network network = new Network(App.mag, file, directed, removeSelf, weighted, 0);
 		TreeItem<NetworkModel> next = new TreeItem<>(new NetworkModel(network));
 		treeViewRoot.getChildren().add(next);
 	}

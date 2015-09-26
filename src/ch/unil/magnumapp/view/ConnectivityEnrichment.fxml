@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<TitledPane animated="false" stylesheets="@MagnumAppStyle.css" text="Connectivity enrichment" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.ConnectivityEnrichmentController">
+<TitledPane animated="false" stylesheets="@MagnumAppStyle.css" text="Connectivity enrichment" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.EnrichmentController">
    <content>
       <VBox minWidth="545.0" spacing="3.0">
          <children>
@@ -104,9 +104,11 @@
                   <CheckBox fx:id="excludeHlaGenesCheckBox" mnemonicParsing="false" selected="true" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                   <Label text="Exclude HLA genes" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Button fx:id="runButton" defaultButton="true" mnemonicParsing="false" onAction="#handleRunButton" prefWidth="70.0" text="Run" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                  <Button fx:id="showCommandButton" mnemonicParsing="false" onAction="#handleExportSettingsButton" text="Export settings" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                  <Button fx:id="exportSettingsButton" mnemonicParsing="false" onAction="#handleExportSettingsButton" text="Export settings" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                   <CheckBox fx:id="excludeXYChromosomesCheckBox" mnemonicParsing="false" selected="true" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                   <Label text="Exclude X, Y chromosomes" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <ChoiceBox fx:id="numCoresChoiceBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="50.0" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+                  <Label text="Number of cores (parallel jobs)" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                </children>
                <VBox.margin>
                   <Insets top="5.0" />

@@ -27,7 +27,6 @@ package ch.unil.magnumapp.view;
 
 import java.util.prefs.BackingStoreException;
 
-import edu.mit.magnum.Magnum;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -116,7 +115,7 @@ public class PreferencesDialogController extends ViewController {
         try {
 			prefs.clear();
 		} catch (BackingStoreException e) {
-			Magnum.log.error(e.toString());
+			throw new RuntimeException(e);
 		}
     	app.loadPreferences();
     }

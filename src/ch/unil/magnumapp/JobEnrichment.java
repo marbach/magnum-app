@@ -28,23 +28,21 @@ package ch.unil.magnumapp;
 import java.io.File;
 
 import ch.unil.magnumapp.model.NetworkModel;
-import ch.unil.magnumapp.view.ConnectivityEnrichmentController;
+import ch.unil.magnumapp.view.EnrichmentController;
+import ch.unil.magnumapp.view.JobManager;
 import edu.mit.magnum.FileExport;
-import edu.mit.magnum.Magnum;
-import edu.mit.magnum.MagnumUtils;
+import edu.mit.magnum.MagnumLogger;
 
 /**
  * Runnable class for loading networks
  */
-public class ConnectivityEnrichmentJob extends ThreadMagnum {
+public class JobEnrichment extends JobMagnum {
 
 	/** The network */
     private NetworkModel network;
     /** The controller with the settings */
-    private ConnectivityEnrichmentController controller;
+    private EnrichmentController controller;
     
-    /** Job name = networkName--gwasName */
-    private String jobName;
     /** Output directory */
     private File outputDir;
     
@@ -56,17 +54,12 @@ public class ConnectivityEnrichmentJob extends ThreadMagnum {
 	// PUBLIC METHODS
 
 	/** Constructor */
-	public ConnectivityEnrichmentJob(ConnectivityEnrichmentController controller, NetworkModel network) {
+	public JobEnrichment(JobManager jobManager, String jobName, EnrichmentController controller, NetworkModel network) {
 
+		super(jobManager, jobName);
 		this.controller = controller;
 		this.network = network;
 		
-		// jobName = networkName--gwasName
-		jobName = network.getName() + "--" 
-				+ MagnumUtils.extractBasicFilename(controller.getGeneScoreFile().getName(), false);
-		// Remove spaces for valid filenames
-		jobName = jobName.replace(" ", "_");
-
     	outputDir = controller.getOutputDir();
 	}
 
@@ -77,27 +70,24 @@ public class ConnectivityEnrichmentJob extends ThreadMagnum {
 	@Override
 	protected void runJob() {
 		
-		Magnum.log.println("\nStarting job: " + jobName);
-//		if (true)
-//			throw new RuntimeException("just to piss you off");
-    	// Write settings
-    	writeSettingsFile();
-				
+		myMag.log.println("\nRunning job: " + jobName);
 
-		Magnum magnum = new Magnum();
+    	// Write settings
+    	writeSettingsFile(myMag.log);
+
 		// Load settings file
-		Magnum.set.loadSettings(settingsFile.getAbsolutePath(), false);
+		myMag.set.loadSettings(settingsFile.getAbsolutePath(), false);
 		// Run
-		magnum.run();
+		myMag.run();
 	}
 	
 	
 	// ----------------------------------------------------------------------------
 
     /** Write settings file for magnum */
-    public void writeSettingsFile() {
+    public void writeSettingsFile(MagnumLogger log) {
     	
-    	Magnum.log.println("Writing settings file...");
+    	log.println("Writing settings file...");
     	
     	// The content of the file
     	String text = "##########################################################################\n"
@@ -137,7 +127,7 @@ public class ConnectivityEnrichmentJob extends ThreadMagnum {
     			+ "# The GWAS gene score file [--scores <file>]\n"
     			+ "geneScoreFile = " + controller.getGeneScoreFile().getAbsolutePath() + "\n"
     			+ "# Output directory to save files (empty = home directory; '.' = working directory) [--outdir]\n"
-    			+ "outputDir = " + outputDir.getAbsolutePath() + "\n"
+    			+ "outputDirectory = " + outputDir.getAbsolutePath() + "\n"
     			+ "\n"
     			+ "############\n"
     			+ "# PARAMETERS\n"
@@ -165,7 +155,7 @@ public class ConnectivityEnrichmentJob extends ThreadMagnum {
     	settingsFile = new File(outputDir, filename);
 
     	// Write the file
-    	FileExport out = new FileExport(settingsFile);
+    	FileExport out = new FileExport(log, settingsFile);
     	out.print(text);  	
     	out.close();
     }

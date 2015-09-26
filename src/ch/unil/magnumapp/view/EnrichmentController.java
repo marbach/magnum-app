@@ -32,9 +32,9 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 
 import ch.unil.magnumapp.AppSettings;
-import ch.unil.magnumapp.MagnumApp;
-import ch.unil.magnumapp.ThreadMagnum;
-import ch.unil.magnumapp.ConnectivityEnrichmentJob;
+import ch.unil.magnumapp.App;
+import ch.unil.magnumapp.JobMagnum;
+import ch.unil.magnumapp.JobEnrichment;
 import ch.unil.magnumapp.model.NetworkModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
@@ -48,6 +48,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
@@ -60,11 +61,11 @@ import javafx.util.converter.NumberStringConverter;
 /**
  * Controller for "Connectivity Enrichment" pane 
  */
-public class ConnectivityEnrichmentController extends ViewController {
+public class EnrichmentController extends ViewController {
 
 	/** Reference to the selected networks */
 	final private LinkedHashSet<TreeItem<NetworkModel>> selectedNetworks = 
-			MagnumApp.getInstance().getOtherNetworksController().getSelectedNetworks();
+			App.app.getOtherNetworksController().getSelectedNetworks();
 	
 	/** Bound to geneScoreTextField */
 	private ObjectProperty<File> geneScoreFileProperty = new SimpleObjectProperty<File>();
@@ -106,8 +107,8 @@ public class ConnectivityEnrichmentController extends ViewController {
     private CheckBox excludeHlaGenesCheckBox;
     @FXML
     private CheckBox excludeXYChromosomesCheckBox;
-    //@FXML
-    //private TextField numCoresTextField;
+    @FXML
+    private ChoiceBox<Integer> numCoresChoiceBox;
     @FXML
     private Button exportSettingsButton;
     @FXML
@@ -121,6 +122,7 @@ public class ConnectivityEnrichmentController extends ViewController {
     @Override
     protected void init() {
 
+    	// Number of permutations
     	numPermutationsTextField.textProperty().addListener(new ChangeListener<String>() {
     	    @Override 
     	    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -131,6 +133,13 @@ public class ConnectivityEnrichmentController extends ViewController {
     	    }
     	});
     	
+    	// Number of cores
+    	int numCoresSyst = Runtime.getRuntime().availableProcessors();
+    	for (int i=1; i<=numCoresSyst; i++)
+    		numCoresChoiceBox.getItems().add(i);
+    	numCoresChoiceBox.getSelectionModel().selectFirst();
+    	
+    	// Bindings
         Bindings.bindBidirectional(geneScoreTextField.textProperty(), geneScoreFileProperty, new FileStringConverter());
         Bindings.bindBidirectional(outputDirTextField.textProperty(), outputDirProperty, new FileStringConverter());
         Bindings.bindBidirectional(numPermutationsTextField.textProperty(), numPermutationsProperty, new NumberStringConverter("###"));
@@ -268,8 +277,8 @@ public class ConnectivityEnrichmentController extends ViewController {
 			return;
     	
     	for (TreeItem<NetworkModel> item_i : selectedNetworks) {
-    		ConnectivityEnrichmentJob job = new ConnectivityEnrichmentJob(this, item_i.getValue());
-    		job.writeSettingsFile();
+    		JobEnrichment job = new JobEnrichment(null, getJobName(item_i.getValue()), this, item_i.getValue());
+    		job.writeSettingsFile(App.log);
     	}
     }
 
@@ -289,14 +298,24 @@ public class ConnectivityEnrichmentController extends ViewController {
     			return;
     	}
     	
-    	// Create a job for each network
-    	ArrayList<ThreadMagnum> jobs = new ArrayList<>();
-    	for (TreeItem<NetworkModel> item_i : selectedNetworks)
-    		jobs.add(new ConnectivityEnrichmentJob(this, item_i.getValue()));
+    	// Disable the main window
+    	app.getRootLayout().setDisable(true);;
 
-    	// The thread controller / dialog
-    	ThreadController threadController = (ThreadController) ViewController.loadFxml("view/ThreadStatus.fxml");
-		threadController.start(jobs, 1); // TODO select num cores
+    	// Create the thread controller / dialog
+    	JobManager jobManager = (JobManager) ViewController.loadFxml("view/ThreadStatus.fxml");
+    	jobManager.setOutputDir(outputDirProperty.get()); // Has to be done before creating the jobs
+
+    	// Create a job for each network
+    	ArrayList<JobMagnum> jobs = new ArrayList<>();
+    	for (TreeItem<NetworkModel> item_i : selectedNetworks) {
+    		JobEnrichment job_i = new JobEnrichment(jobManager, getJobName(item_i.getValue()), this, item_i.getValue());
+    		jobs.add(job_i);
+    	}
+    	int numCores = numCoresChoiceBox.getSelectionModel().getSelectedItem();
+		jobManager.start(jobs, numCores); 
+		
+		// Enable the main window
+    	app.getRootLayout().setDisable(false);
     }
 
     
@@ -360,15 +379,25 @@ public class ConnectivityEnrichmentController extends ViewController {
 		alert.setTitle("Start job");
 		alert.setHeaderText("Compute connectivity enrichment for " + numNetworks + " networks?");
 		alert.setContentText(
-				"Computing connectivity enrichment for multiple networks may take a while.\n\n" +
-				"Note that you can use the Magnum command-line tool to run jobs on a compting cluster:\n\n" + 
-				"1. Use the 'Export settings' button to save a text file with your settings\n" +
+				"Runtime is ~20min on high-end laptop for 1 network (1 core, default settings)\n\n" +
+				"Multiple networks can be run in parallel (using >1 cores)\n\n" +
+				"With the command-line tool you can run these jobs on your compting cluster:\n\n" + 
+				"1. Use the \"Export settings\" button to save a text file with your settings\n" +
 				"2. Download the Magnum command-line tool from regulatorycircuits.org\n" +
-				"3. Run Magnum from the command line with the option '--set <settings_file>'\n\n" +
+				"3. Run Magnum from the command line with the option \"--set <settings_file>\"\n\n" +
 				"See the exported settings file and user guide for further instructions.");
 
 		Optional<ButtonType> result = alert.showAndWait();
 		return result.get();
+    }
+    
+
+    // ----------------------------------------------------------------------------
+
+    /** Get the job name for this network (geneScoreName--networkName) */
+    private String getJobName(NetworkModel network) {
+    	return App.mag.utils.extractBasicFilename(geneScoreFileProperty.get().getName(), false)
+    			+ "--" + App.mag.utils.extractBasicFilename(network.getFile().getName(), false);
     }
 
     

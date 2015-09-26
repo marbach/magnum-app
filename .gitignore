@@ -1,0 +1,9 @@
+.project
+.classpath
+.settings
+
+build/*
+!build/build.xml
+
+bin/
+lib/
