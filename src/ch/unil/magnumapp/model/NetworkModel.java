@@ -51,6 +51,8 @@ public class NetworkModel {
 	private File file;
 	/** Flag showing if file exists */
 	private boolean fileExists;
+	/** Flag indicates that this is not a network, but a directory in the network collection tree */
+	private boolean isGroup;
 
 	/** Notes */
 	private StringProperty notes;
@@ -80,8 +82,10 @@ public class NetworkModel {
 
 	
 	/** Constructor initializing only the name (useful for root nodes in tree view) */
-	public NetworkModel(String name) {
+	public NetworkModel(String name, String filename, boolean isGroup) {
+		this.isGroup = isGroup;
 		this.name = new SimpleStringProperty(name);
+		this.filename = new SimpleStringProperty(filename);
 		this.notes = new SimpleStringProperty();
 	}
 
@@ -89,6 +93,7 @@ public class NetworkModel {
 	/** Constructor initializing most fields */
 	public NetworkModel(String name, String filename, boolean isDirected, boolean isWeighted, boolean removeSelf) {
 		
+		this.isGroup = false;
 		this.name = new SimpleStringProperty(name);
 		this.filename = new SimpleStringProperty(filename);
 		this.isDirected = new SimpleBooleanProperty(isDirected);
@@ -100,14 +105,12 @@ public class NetworkModel {
 	
 	/** Constructor from file */
 	public NetworkModel(File file, boolean isDirected, boolean isWeighted, boolean removeSelf) {
-		
+
+		this(null, null, isDirected, isWeighted, removeSelf);
 		this.name = new SimpleStringProperty(App.mag.utils.extractBasicFilename(file.getName(), false));
 		this.filename = new SimpleStringProperty(file.getName());
 		this.file = file;
 		this.fileExists = file.exists();
-		this.isDirected = new SimpleBooleanProperty(isDirected);
-		this.isWeighted = new SimpleBooleanProperty(isWeighted);
-		this.removeSelf = new SimpleBooleanProperty(removeSelf);
 	}
 
 	
@@ -126,6 +129,7 @@ public class NetworkModel {
 		numRegulators = new SimpleIntegerProperty(network.getNumRegulators());
 		numNodes = new SimpleIntegerProperty(network.getNumNodes());
 		numEdges = new SimpleIntegerProperty(network.getNumEdges());
+		notes = new SimpleStringProperty();
 	}
 
 
@@ -151,7 +155,7 @@ public class NetworkModel {
 				
 		// Use notes property to display warning if file does not exist
 		if (file != null && !file.exists()) {
-			if (isDirected == null) // hack to know if this is a group node
+			if (isGroup) 
 				notes.set("Directory not found");
 			else
 				notes.set("File not found");

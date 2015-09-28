@@ -27,7 +27,7 @@ package ch.unil.magnumapp;
 
 import java.io.File;
 
-import ch.unil.magnumapp.view.JobManager;
+import ch.unil.magnumapp.view.JobController;
 import edu.mit.magnum.Magnum;
 import javafx.application.Platform;
 
@@ -42,7 +42,7 @@ abstract public class JobMagnum extends Thread {
 	protected AppLogger myLog;
 	
 	/** The view controller of the dialog/alert of this thread */
-	protected JobManager jobManager;
+	protected JobController jobManager;
     
     /** Job name, used as basis for output filenames */
     protected String jobName;
@@ -52,7 +52,7 @@ abstract public class JobMagnum extends Thread {
 	// PUBLIC METHODS
 
 	/** Constructor */
-	public JobMagnum(JobManager jobManager, String jobName) {
+	public JobMagnum(JobController jobManager, String jobName) {
 
 		this.jobManager = jobManager;
 		// Remove spaces for valid filenames
@@ -133,7 +133,7 @@ abstract public class JobMagnum extends Thread {
 	// ============================================================================
 	// SETTERS AND GETTERS
 
-	public void setController(JobManager controller) {
+	public void setController(JobController controller) {
 		this.jobManager = controller;
 	}
 

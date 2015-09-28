@@ -51,7 +51,7 @@ import javafx.scene.layout.VBox;
 /**
  * Controller for a single "launch job" dialog managing multiple threads
  */
-public class JobManager extends ViewController {
+public class JobController extends ViewController {
 
 	/** Static flag indicates if jobs are interrupted => there can be only one ThreadController instance */
 	volatile static public boolean interrupted = false;

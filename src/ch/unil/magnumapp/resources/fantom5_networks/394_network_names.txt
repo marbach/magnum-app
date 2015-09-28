@@ -1,0 +1,394 @@
+b_lymphoblastoid_cell_line	B lymphoblastoid cell line
+burkitts_lymphoma_cell_line	Burkitts lymphoma cell line
+ewings_sarcoma_cell_line	Ewings sarcoma cell line
+hep-2_cells	Hep-2 cells
+hodgkins_lymphoma_cell_line	Hodgkins lymphoma cell line
+nk_t_cell_leukemia_cell_line	NK T cell leukemia cell line
+wilms_tumor_cell_line	Wilms tumor cell line
+acantholytic_squamous_carcinoma_cell_line	acantholytic squamous carcinoma cell line
+acute_lymphoblastic_leukemia_b-all_cell_line	acute lymphoblastic leukemia (B-ALL) cell line
+acute_lymphoblastic_leukemia_t-all_cell_line	acute lymphoblastic leukemia (T-ALL) cell line
+acute_myeloid_leukemia_fab_m0_cell_line	acute myeloid leukemia (FAB M0) cell line
+acute_myeloid_leukemia_fab_m1_cell_line	acute myeloid leukemia (FAB M1) cell line
+acute_myeloid_leukemia_fab_m2_cell_line	acute myeloid leukemia (FAB M2) cell line
+acute_myeloid_leukemia_fab_m3_cell_line	acute myeloid leukemia (FAB M3) cell line
+acute_myeloid_leukemia_fab_m4_cell_line	acute myeloid leukemia (FAB M4) cell line
+acute_myeloid_leukemia_fab_m4eo_cell_line	acute myeloid leukemia (FAB M4eo) cell line
+acute_myeloid_leukemia_fab_m5_cell_line	acute myeloid leukemia (FAB M5) cell line
+acute_myeloid_leukemia_fab_m6_cell_line	acute myeloid leukemia (FAB M6) cell line
+acute_myeloid_leukemia_fab_m7_cell_line	acute myeloid leukemia (FAB M7) cell line
+adenocarcinoma_cell_line	adenocarcinoma cell line
+adrenal_cortex_adenocarcinoma_cell_line	adrenal cortex adenocarcinoma cell line
+adult_t-cell_leukemia_cell_line	adult T-cell leukemia cell line
+alveolar_cell_carcinoma_cell_line	alveolar cell carcinoma cell line
+anaplastic_carcinoma_cell_line	anaplastic carcinoma cell line
+anaplastic_large_cell_lymphoma_cell_line	anaplastic large cell lymphoma cell line
+anaplastic_squamous_cell_carcinoma_cell_line	anaplastic squamous cell carcinoma cell line
+argyrophil_small_cell_carcinoma_cell_line	argyrophil small cell carcinoma cell line
+astrocytoma_cell_line	astrocytoma cell line
+b_cell_line	b cell line
+basal_cell_carcinoma_cell_line	basal cell carcinoma cell line
+bile_duct_carcinoma_cell_line	bile duct carcinoma cell line
+biphenotypic_b_myelomonocytic_leukemia_cell_line	biphenotypic B myelomonocytic leukemia cell line
+bone_marrow_stromal_cell_line	bone marrow stromal cell line
+breast_carcinoma_cell_line	breast carcinoma cell line
+bronchial_squamous_cell_carcinoma_cell_line	bronchial squamous cell carcinoma cell line
+bronchioalveolar_carcinoma_cell_line	bronchioalveolar carcinoma cell line
+bronchogenic_carcinoma_cell_line	bronchogenic carcinoma cell line
+carcinoid_cell_line	carcinoid cell line
+carcinosarcoma_cell_line	carcinosarcoma cell line
+cervical_cancer_cell_line	cervical cancer cell line
+cholangiocellular_carcinoma_cell_line	cholangiocellular carcinoma cell line
+choriocarcinoma__cell_line	choriocarcinoma  cell line
+chronic_lymphocytic_leukemia_t-cll_cell_line	chronic lymphocytic leukemia (T-CLL) cell line
+chronic_myelogenous_leukemia_cml_cell_line	chronic myelogenous leukemia (CML) cell line
+clear_cell_carcinoma_cell_line	clear cell carcinoma cell line
+colon_carcinoma_cell_line	colon carcinoma cell line
+cord_blood_derived_cell_line	cord blood derived cell line
+diffuse_large_b-cell_lymphoma_cell_line	diffuse large B-cell lymphoma cell line
+ductal_cell_carcinoma_cell_line	ductal cell carcinoma cell line
+embryonic_kidney_cell_line	embryonic kidney cell line
+embryonic_pancreas_cell_line	embryonic pancreas cell line
+endometrial_cancer_cell_line	endometrial cancer cell line
+epidermoid_carcinoma_cell_line	epidermoid carcinoma cell line
+epitheloid_cancer_cell_line	epitheloid cancer cell line
+extraskeletal_myxoid_chondrosarcoma_cell_line	extraskeletal myxoid chondrosarcoma cell line
+fibrosarcoma_cell_line	fibrosarcoma cell line
+fibrous_histiocytoma_cell_line	fibrous histiocytoma cell line
+gall_bladder_carcinoma_cell_line	gall bladder carcinoma cell line
+gastric_cancer_cell_line	gastric cancer cell line
+giant_cell_carcinoma_cell_line	giant cell carcinoma cell line
+glassy_cell_carcinoma_cell_line	glassy cell carcinoma cell line
+glioma_cell_line	glioma cell line
+granulosa_cell_tumor_cell_line	granulosa cell tumor cell line
+hairy_cell_leukemia_cell_line	hairy cell leukemia cell line
+hepatic_mesenchymal_tumor_cell_line	hepatic mesenchymal tumor cell line
+hepatoblastoma_cell_line	hepatoblastoma cell line
+hepatocellular_carcinoma_cell_line	hepatocellular carcinoma cell line
+hereditary_spherocytic_anemia_cell_line	hereditary spherocytic anemia cell line
+keratoacanthoma_cell_line	keratoacanthoma cell line
+large_cell_lung_carcinoma_cell_line	large cell lung carcinoma cell line
+large_cell_non-keratinizing_squamous_carcinoma_cell_line	large cell non-keratinizing squamous carcinoma cell line
+leiomyoblastoma_cell_line	leiomyoblastoma cell line
+leiomyoma_cell_line	leiomyoma cell line
+lens_epithelial_cell_line	lens epithelial cell line
+leukemia_chronic_megakaryoblastic__cell_line	leukemia, chronic megakaryoblastic  cell line
+liposarcoma_cell_line	liposarcoma cell line
+lung_adenocarcinoma_cell_line	lung adenocarcinoma cell line
+lymphangiectasia_cell_line	lymphangiectasia cell line
+lymphoma_malignant_hairy_b-cell_cell_line	lymphoma, malignant, hairy B-cell cell line
+malignant_trichilemmal_cyst_cell_line	malignant trichilemmal cyst cell line
+maxillary_sinus_tumor_cell_line	maxillary sinus tumor cell line
+medulloblastoma_cell_line	medulloblastoma cell line
+melanoma_cell_line	melanoma cell line
+meningioma_cell_line	meningioma cell line
+merkel_cell_carcinoma_cell_line	merkel cell carcinoma cell line
+mesenchymal_stem_cell_line	mesenchymal stem cell line
+mesothelioma_cell_line	mesothelioma cell line
+mixed_mullerian_tumor_cell_line	mixed mullerian tumor cell line
+mucinous_adenocarcinoma_cell_line	mucinous adenocarcinoma cell line
+mycosis_fungoides_t_cell_lymphoma_cell_line	mycosis fungoides, T cell lymphoma cell line
+myelodysplastic_syndrome_cell_line	myelodysplastic syndrome cell line
+myeloma_cell_line	myeloma cell line
+myxofibrosarcoma_cell_line	myxofibrosarcoma cell line
+neuroblastoma_cell_line	neuroblastoma cell line
+neuroectodermal_tumor_cell_line	neuroectodermal tumor cell line
+neuroepithelioma_cell_line	neuroepithelioma cell line
+neurofibroma_cell_line	neurofibroma cell line
+non_t_non_b_acute_lymphoblastic_leukemia_all_cell_line	non T non B acute lymphoblastic leukemia (ALL) cell line
+normal_embryonic_palatal_mesenchymal_cell_line	normal embryonic palatal mesenchymal cell line
+normal_intestinal_epithelial_cell_line	normal intestinal epithelial cell line
+oral_squamous_cell_carcinoma_cell_line	oral squamous cell carcinoma cell line
+osteoclastoma_cell_line	osteoclastoma cell line
+osteosarcoma_cell_line	osteosarcoma cell line
+pagetoid_sarcoma_cell_line	pagetoid sarcoma cell line
+pancreatic_carcinoma_cell_line	pancreatic carcinoma cell line
+papillary_adenocarcinoma_cell_line	papillary adenocarcinoma cell line
+papillotubular_adenocarcinoma_cell_line	papillotubular adenocarcinoma cell line
+peripheral_neuroectodermal_tumor_cell_line	peripheral neuroectodermal tumor cell line
+pharyngeal_carcinoma_cell_line	pharyngeal carcinoma cell line
+plasma_cell_leukemia_cell_line	plasma cell leukemia cell line
+pleomorphic_hepatocellular_carcinoma_cell_line	pleomorphic hepatocellular carcinoma cell line
+prostate_cancer_cell_line	prostate cancer cell line
+rectal_cancer_cell_line	rectal cancer cell line
+renal_cell_carcinoma_cell_line	renal cell carcinoma cell line
+retinoblastoma_cell_line	retinoblastoma cell line
+rhabdomyosarcoma_cell_line	rhabdomyosarcoma cell line
+sacrococcigeal_teratoma_cell_line	sacrococcigeal teratoma cell line
+schwannoma_cell_line	schwannoma cell line
+serous_adenocarcinoma_cell_line	serous adenocarcinoma cell line
+serous_cystadenocarcinoma_cell_line	serous cystadenocarcinoma cell line
+signet_ring_carcinoma_cell_line	signet ring carcinoma cell line
+small_cell_cervical_cancer_cell_line	small cell cervical cancer cell line
+small_cell_gastrointestinal_carcinoma_cell_line	small cell gastrointestinal carcinoma cell line
+small_cell_lung_carcinoma_cell_line	small cell lung carcinoma cell line
+somatostatinoma_cell_line	somatostatinoma cell line
+spindle_cell_sarcoma_cell_line	spindle cell sarcoma cell line
+splenic_lymphoma_with_villous_lymphocytes_cell_line	splenic lymphoma with villous lymphocytes cell line
+squamous_cell_carcinoma_cell_line	squamous cell carcinoma cell line
+squamous_cell_lung_carcinoma_cell_line	squamous cell lung carcinoma cell line
+synovial_sarcoma_cell_line	synovial sarcoma cell line
+teratocarcinoma_cell_line	teratocarcinoma cell line
+testicular_germ_cell_embryonal_carcinoma_cell_line	testicular germ cell embryonal carcinoma cell line
+thyroid_carcinoma_cell_line	thyroid carcinoma cell line
+transitional-cell_carcinoma_cell_line	transitional-cell carcinoma cell line
+tridermal_teratoma_cell_line	tridermal teratoma cell line
+tubular_adenocarcinoma_cell_line	tubular adenocarcinoma cell line
+xeroderma_pigentosum_b_cell_line	xeroderma pigentosum b cell line
+adipocyte_-_breast	Adipocyte - breast
+adipocyte_-_omental	Adipocyte - omental
+adipocyte_-_perirenal	Adipocyte - perirenal
+adipocyte_-_subcutaneous	Adipocyte - subcutaneous
+alveolar_epithelial_cells	Alveolar Epithelial Cells
+amniotic_epithelial_cells	Amniotic Epithelial Cells
+anulus_pulposus_cell	Anulus Pulposus Cell
+astrocyte_-_cerebellum	Astrocyte - cerebellum
+astrocyte_-_cerebral_cortex	Astrocyte - cerebral cortex
+basophils	Basophils
+bronchial_epithelial_cell	Bronchial Epithelial Cell
+cd14+_monocytes	CD14+ Monocytes
+cd14+cd16+_monocytes	CD14+CD16+ Monocytes
+cd14+cd16-_monocytes	CD14+CD16- Monocytes
+cd14-cd16+_monocytes	CD14-CD16+ Monocytes
+cd19+_b_cells	CD19+ B Cells
+cd34+_stem_cells_-_adult_bone_marrow_derived	CD34+ stem cells - adult bone marrow derived
+cd4+_t_cells	CD4+ T Cells
+cd4+cd25+cd45ra+_naive_regulatory_t_cells	CD4+CD25+CD45RA+ naive regulatory T cells
+cd4+cd25+cd45ra-_memory_regulatory_t_cells	CD4+CD25+CD45RA- memory regulatory T cells
+cd4+cd25-cd45ra+_naive_conventional_t_cells	CD4+CD25-CD45RA+ naive conventional T cells
+cd4+cd25-cd45ra-_memory_conventional_t_cells	CD4+CD25-CD45RA- memory conventional T cells
+cd8+_t_cells	CD8+ T Cells
+cardiac_myocyte	Cardiac Myocyte
+chondrocyte_-_de_diff	Chondrocyte - de diff
+chondrocyte_-_re_diff	Chondrocyte - re diff
+ciliary_epithelial_cells	Ciliary Epithelial Cells
+corneal_epithelial_cells	Corneal Epithelial Cells
+dendritic_cells_-_monocyte_immature_derived	Dendritic Cells - monocyte immature derived
+dendritic_cells_-_plasmacytoid	Dendritic Cells - plasmacytoid
+endothelial_cells_-_aortic	Endothelial Cells - Aortic
+endothelial_cells_-_artery	Endothelial Cells - Artery
+endothelial_cells_-_lymphatic	Endothelial Cells - Lymphatic
+endothelial_cells_-_microvascular	Endothelial Cells - Microvascular
+endothelial_cells_-_thoracic	Endothelial Cells - Thoracic
+endothelial_cells_-_umbilical_vein	Endothelial Cells - Umbilical vein
+endothelial_cells_-_vein	Endothelial Cells - Vein
+endothelial_progenitor_cells	Endothelial Progenitor Cells
+esophageal_epithelial_cells	Esophageal Epithelial Cells
+fibroblast_-_aortic_adventitial	Fibroblast - Aortic Adventitial
+fibroblast_-_cardiac	Fibroblast - Cardiac
+fibroblast_-_choroid_plexus	Fibroblast - Choroid Plexus
+fibroblast_-_conjunctival	Fibroblast - Conjunctival
+fibroblast_-_dermal	Fibroblast - Dermal
+fibroblast_-_gingival	Fibroblast - Gingival
+fibroblast_-_lymphatic	Fibroblast - Lymphatic
+fibroblast_-_periodontal_ligament_fetal	Fibroblast - Periodontal Ligament, fetal
+fibroblast_-_periodontal_ligament_adult	Fibroblast - Periodontal Ligament, adult
+fibroblast_-_pulmonary_artery	Fibroblast - Pulmonary Artery
+fibroblast_-_skin_dystrophia_myotonica	Fibroblast - skin dystrophia myotonica
+fibroblast_-_skin_normal	Fibroblast - skin normal
+fibroblast_-_skin_spinal_muscular_atrophy	Fibroblast - skin spinal muscular atrophy
+fibroblast_-_skin_walker_warburg	Fibroblast - skin walker warburg
+gingival_epithelial_cells	Gingival epithelial cells
+hair_follicle_dermal_papilla_cells	Hair Follicle Dermal Papilla Cells
+hair_follicle_outer_root_sheath_cells	Hair Follicle Outer Root Sheath Cells
+hepatic_sinusoidal_endothelial_cells	Hepatic Sinusoidal Endothelial Cells
+hepatic_stellate_cells_lipocyte	Hepatic Stellate Cells (lipocyte)
+hepatocyte	Hepatocyte
+intestinal_epithelial_cells_polarized	Intestinal epithelial cells (polarized)
+iris_pigment_epithelial_cells	Iris Pigment Epithelial Cells
+keratinocyte_-_epidermal	Keratinocyte - epidermal
+keratinocyte_-_oral	Keratinocyte - oral
+keratocytes	Keratocytes
+lens_epithelial_cells	Lens Epithelial Cells
+macrophage_-_monocyte_derived	Macrophage - monocyte derived
+mallassez-derived_cells	Mallassez-derived cells
+mammary_epithelial_cell	Mammary Epithelial Cell
+mast_cell	Mast cell
+melanocyte	Melanocyte
+meningeal_cells	Meningeal Cells
+mesenchymal_stem_cells_-_whartons_jelly	Mesenchymal Stem Cells - Whartons Jelly
+mesenchymal_stem_cells_-_adipose	Mesenchymal Stem Cells - adipose
+mesenchymal_stem_cells_-_amniotic_membrane	Mesenchymal Stem Cells - amniotic membrane
+mesenchymal_stem_cells_-_bone_marrow	Mesenchymal Stem Cells - bone marrow
+mesenchymal_stem_cells_-_hepatic	Mesenchymal Stem Cells - hepatic
+mesenchymal_stem_cells_-_umbilical	Mesenchymal Stem Cells - umbilical
+mesothelial_cells	Mesothelial Cells
+multipotent_cord_blood_unrestricted_somatic_stem_cells	Multipotent Cord Blood Unrestricted Somatic Stem Cells
+myoblast	Myoblast
+natural_killer_cells	Natural Killer Cells
+neural_stem_cells	Neural stem cells
+neurons	Neurons
+neutrophils	Neutrophils
+nucleus_pulposus_cell	Nucleus Pulposus Cell
+olfactory_epithelial_cells	Olfactory epithelial cells
+osteoblast_-_differentiated	Osteoblast - differentiated
+osteoblast	Osteoblast
+pancreatic_stromal_cells	Pancreatic stromal cells
+pericytes	Pericytes
+peripheral_blood_mononuclear_cells	Peripheral Blood Mononuclear Cells
+placental_epithelial_cells	Placental Epithelial Cells
+preadipocyte_-_breast	Preadipocyte - breast
+preadipocyte_-_omental	Preadipocyte - omental
+preadipocyte_-_perirenal	Preadipocyte - perirenal
+preadipocyte_-_subcutaneous	Preadipocyte - subcutaneous
+preadipocyte_-_visceral	Preadipocyte - visceral
+prostate_epithelial_cells	Prostate Epithelial Cells
+prostate_stromal_cells	Prostate Stromal Cells
+renal_cortical_epithelial_cells	Renal Cortical Epithelial Cells
+renal_epithelial_cells	Renal Epithelial Cells
+renal_glomerular_endothelial_cells	Renal Glomerular Endothelial Cells
+renal_mesangial_cells	Renal Mesangial Cells
+renal_proximal_tubular_epithelial_cell	Renal Proximal Tubular Epithelial Cell
+reticulocytes	Reticulocytes
+retinal_pigment_epithelial_cells	Retinal Pigment Epithelial Cells
+sebocyte	Sebocyte
+sertoli_cells	Sertoli Cells
+skeletal_muscle_cells	Skeletal Muscle Cells
+skeletal_muscle_satellite_cells	Skeletal Muscle Satellite Cells
+skeletal_muscle_cells_differentiated_into_myotubes_-_multinucleated	Skeletal muscle cells differentiated into Myotubes - multinucleated
+small_airway_epithelial_cells	Small Airway Epithelial Cells
+smooth_muscle_cells_-_aortic	Smooth Muscle Cells - Aortic
+smooth_muscle_cells_-_brachiocephalic	Smooth Muscle Cells - Brachiocephalic
+smooth_muscle_cells_-_brain_vascular	Smooth Muscle Cells - Brain Vascular
+smooth_muscle_cells_-_bronchial	Smooth Muscle Cells - Bronchial
+smooth_muscle_cells_-_carotid	Smooth Muscle Cells - Carotid
+smooth_muscle_cells_-_colonic	Smooth Muscle Cells - Colonic
+smooth_muscle_cells_-_coronary_artery	Smooth Muscle Cells - Coronary Artery
+smooth_muscle_cells_-_esophageal	Smooth Muscle Cells - Esophageal
+smooth_muscle_cells_-_internal_thoracic_artery	Smooth Muscle Cells - Internal Thoracic Artery
+smooth_muscle_cells_-_prostate	Smooth Muscle Cells - Prostate
+smooth_muscle_cells_-_pulmonary_artery	Smooth Muscle Cells - Pulmonary Artery
+smooth_muscle_cells_-_subclavian_artery	Smooth Muscle Cells - Subclavian Artery
+smooth_muscle_cells_-_tracheal	Smooth Muscle Cells - Tracheal
+smooth_muscle_cells_-_umbilical_artery	Smooth Muscle Cells - Umbilical Artery
+smooth_muscle_cells_-_umbilical_vein	Smooth Muscle Cells - Umbilical Vein
+smooth_muscle_cells_-_uterine	Smooth Muscle Cells - Uterine
+synoviocyte	Synoviocyte
+trabecular_meshwork_cells	Trabecular Meshwork Cells
+tracheal_epithelial_cells	Tracheal Epithelial Cells
+urothelial_cells	Urothelial Cells
+whole_blood_ribopure	Whole blood (ribopure)
+amniotic_membrane_cells	amniotic membrane cells
+chorionic_membrane_cells	chorionic membrane cells
+langerhans_cells_immature	langerhans cells, immature
+langerhans_cells_migratory	langerhans cells, migratory
+mesenchymal_precursor_cell_-_adipose	mesenchymal precursor cell - adipose
+mesenchymal_precursor_cell_-_bone_marrow	mesenchymal precursor cell - bone marrow
+mesenchymal_precursor_cell_-_cardiac	mesenchymal precursor cell - cardiac
+mesenchymal_precursor_cell_-_ovarian_cancer_left_ovary	mesenchymal precursor cell - ovarian cancer left ovary
+mesenchymal_precursor_cell_-_ovarian_cancer_metastasis	mesenchymal precursor cell - ovarian cancer metastasis
+mesenchymal_precursor_cell_-_ovarian_cancer_right_ovary	mesenchymal precursor cell - ovarian cancer right ovary
+nasal_epithelial_cells	nasal epithelial cells
+salivary_acinar_cells	salivary acinar cells
+tenocyte	tenocyte
+clontech_human_universal_reference_total_rna	Clontech Human Universal Reference Total RNA
+sabiosciences_xpressref_human_universal_total_rna	SABiosciences XpressRef Human Universal Total RNA
+universal_rna_-_human_normal_tissues_biochain	Universal RNA - Human Normal Tissues Biochain
+adipose_tissue_adult	adipose tissue, adult
+amygdala_adult	amygdala, adult
+aorta_adult	aorta, adult
+appendix_adult	appendix, adult
+bladder_adult	bladder, adult
+blood_adult	blood, adult
+brain_adult	brain, adult
+brain_fetal	brain, fetal
+breast_adult	breast, adult
+caudate_nucleus_adult	caudate nucleus, adult
+cerebellum_adult	cerebellum, adult
+cerebral_meninges_adult	cerebral meninges, adult
+cervix_adult	cervix, adult
+colon_adult	colon, adult
+colon_fetal	colon, fetal
+corpus_callosum_adult	corpus callosum, adult
+diaphragm_fetal	diaphragm, fetal
+diencephalon_adult	diencephalon, adult
+ductus_deferens_adult	ductus deferens, adult
+duodenum_fetal	duodenum, fetal
+dura_mater_adult	dura mater, adult
+epididymis_adult	epididymis, adult
+esophagus_adult	esophagus, adult
+eye_fetal	eye, fetal
+frontal_lobe_adult	frontal lobe, adult
+gall_bladder_adult	gall bladder, adult
+globus_pallidus_adult	globus pallidus, adult
+heart_-_mitral_valve_adult	heart - mitral valve, adult
+heart_-_pulmonic_valve_adult	heart - pulmonic valve, adult
+heart_-_tricuspid_valve_adult	heart - tricuspid valve, adult
+heart_adult	heart, adult
+heart_fetal	heart, fetal
+hippocampus_adult	hippocampus, adult
+insula_adult	insula, adult
+kidney_adult	kidney, adult
+kidney_fetal	kidney, fetal
+left_atrium_adult	left atrium, adult
+left_ventricle_adult	left ventricle, adult
+liver_adult	liver, adult
+liver_fetal	liver, fetal
+locus_coeruleus_adult	locus coeruleus, adult
+lung_adult	lung, adult
+lung_fetal	lung, fetal
+lung_right_lower_lobe_adult	lung, right lower lobe, adult
+lymph_node_adult	lymph node, adult
+medial_frontal_gyrus_adult	medial frontal gyrus, adult
+medial_temporal_gyrus_adult	medial temporal gyrus, adult
+medial_temporal_gyrus	medial temporal gyrus
+medulla_oblongata_adult	medulla oblongata, adult
+nucleus_accumbens_adult	nucleus accumbens, adult
+occipital_cortex_adult	occipital cortex, adult
+occipital_lobe_adult	occipital lobe, adult
+occipital_lobe_fetal	occipital lobe, fetal
+occipital_pole_adult	occipital pole, adult
+olfactory_region_adult	olfactory region, adult
+optic_nerve	optic nerve
+ovary_adult	ovary, adult
+pancreas_adult	pancreas, adult
+paracentral_gyrus_adult	paracentral gyrus, adult
+parietal_lobe_adult	parietal lobe, adult
+parietal_lobe_fetal	parietal lobe, fetal
+parotid_gland_adult	parotid gland, adult
+penis_adult	penis, adult
+pineal_gland_adult	pineal gland, adult
+pituitary_gland_adult	pituitary gland, adult
+placenta_adult	placenta, adult
+pons_adult	pons, adult
+postcentral_gyrus_adult	postcentral gyrus, adult
+prostate_adult	prostate, adult
+putamen_adult	putamen, adult
+rectum_fetal	rectum, fetal
+retina_adult	retina, adult
+salivary_gland_adult	salivary gland, adult
+seminal_vesicle_adult	seminal vesicle, adult
+skeletal_muscle_-_soleus_muscle	skeletal muscle - soleus muscle
+skeletal_muscle_adult	skeletal muscle, adult
+skeletal_muscle_fetal	skeletal muscle, fetal
+skin_fetal	skin, fetal
+small_intestine_adult	small intestine, adult
+small_intestine_fetal	small intestine, fetal
+smooth_muscle_adult	smooth muscle, adult
+spinal_cord_adult	spinal cord, adult
+spinal_cord_fetal	spinal cord, fetal
+spleen_adult	spleen, adult
+spleen_fetal	spleen, fetal
+stomach_fetal	stomach, fetal
+submaxillary_gland_adult	submaxillary gland, adult
+substantia_nigra_adult	substantia nigra, adult
+temporal_lobe_adult	temporal lobe, adult
+temporal_lobe_fetal	temporal lobe, fetal
+testis_adult	testis, adult
+thalamus_adult	thalamus, adult
+throat_adult	throat, adult
+throat_fetal	throat, fetal
+thymus_adult	thymus, adult
+thymus_fetal	thymus, fetal
+thyroid_adult	thyroid, adult
+thyroid_fetal	thyroid, fetal
+tongue_adult	tongue, adult
+tongue_fetal	tongue, fetal
+tonsil_adult	tonsil, adult
+trachea_adult	trachea, adult
+trachea_fetal	trachea, fetal
+umbilical_cord_fetal	umbilical cord, fetal
+uterus_adult	uterus, adult
+uterus_fetal	uterus, fetal
+vagina_adult	vagina, adult
+vein_adult	vein, adult

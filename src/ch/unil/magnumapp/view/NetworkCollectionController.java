@@ -26,9 +26,13 @@ THE SOFTWARE.
 package ch.unil.magnumapp.view;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+import ch.unil.magnumapp.App;
+import ch.unil.magnumapp.JobEnrichment;
+import ch.unil.magnumapp.JobMagnum;
 import ch.unil.magnumapp.model.NetworkCollection;
 import ch.unil.magnumapp.model.NetworkModel;
 import javafx.application.Platform;
@@ -40,18 +44,24 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.TreeTableView.TreeTableViewSelectionModel;
 import javafx.scene.control.cell.CheckBoxTreeTableCell;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -194,6 +204,11 @@ public class NetworkCollectionController extends ViewController {
         	};
         });
         
+        // isDirected icon -- Now set directly in SceneBuilder
+		//InputStream in = App.class.getClassLoader().getResourceAsStream("ch/unil/magnumapp/resources/icons/isDirectedIcon.png");
+        //Image icon = new Image(in);
+        //isDirectedIcon.setImage(icon);
+        
         notesColumn.setCellValueFactory(cellData -> cellData.getValue().getValue().notesProperty());
         
         // Bindings
@@ -249,6 +264,28 @@ public class NetworkCollectionController extends ViewController {
     /** Network directory download link */
     @FXML
     private void handleNetworkDirDownloadLink() {
+
+    	// Disable the main window
+    	app.getRootLayout().setDisable(true);
+
+    	// Create the thread controller / dialog
+    	DownloadNetworksController controller = (DownloadNetworksController) ViewController.loadFxml("view/DownloadNetworks.fxml");
+
+		// The alert
+    	Alert alert = new Alert(AlertType.INFORMATION);
+    	alert.setTitle("Download networks");
+    	// Header text
+    	alert.setHeaderText("Installing the network compendium");
+    	
+    	// The content
+    	alert.getDialogPane().setContent(controller.getDownloadNetworksVBox());
+
+    	// Show the dialog
+    	alert.showAndWait();
+    	
+		// Enable the main window
+    	app.getRootLayout().setDisable(false);
+
 
     }
 
@@ -311,10 +348,7 @@ public class NetworkCollectionController extends ViewController {
     	//threadController.start();
     	
     	// Add the network without loading
-		for (File file : filesToBeAdded)
-			networkCollection.getMyNetworks().addNetwork(file, directed, weighted, removeSelf);
-
-    	
+    	networkCollection.addNetworks(filesToBeAdded, directed, weighted, removeSelf);
     }
 
 
@@ -342,7 +376,7 @@ public class NetworkCollectionController extends ViewController {
     			continue;
     		
     		String name = item.getValue().getName();
-    		if (name.equals("My networks") || name.equals("Network collection"))
+    		if (networkCollection.selectionDisabled(name))
     			continue;
 
     		if (!item.getValue().getFileExists()) {
@@ -397,7 +431,8 @@ public class NetworkCollectionController extends ViewController {
    			// Add all children
     		} else {
     			// Expand
-    			Platform.runLater(() -> item.setExpanded(true));
+    			if (!item.isExpanded())
+    				Platform.runLater(() -> item.setExpanded(true));
     			// Add kids
     			for (TreeItem<NetworkModel> child : item.getChildren()) {
     				if (!child.isLeaf())

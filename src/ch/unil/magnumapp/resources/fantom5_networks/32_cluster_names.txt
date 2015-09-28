@@ -1,0 +1,32 @@
+01_neurons_fetal_brain	01 Neurons & fetal brain
+02_nervous_system_adult_hindbrain	02 Nervous system & adult hindbrain
+03_adult_forebrain	03 Adult forebrain
+04_mesenchymal_mixed	04 Mesenchymal, mixed
+05_sarcoma	05 Sarcoma
+06_endothelial_cells	06 Endothelial cells
+07_mesenchymal_stem_smooth_muscle_cells	07 Mesenchymal stem & smooth muscle cells
+08_connective_tissue_muscle_cells	08 Connective tissue & muscle cells
+09_connective_tissue_integumental_cells	09 Connective tissue & integumental cells
+10_lymphocytes	10 Lymphocytes
+11_myeloid_leukocytes	11 Myeloid leukocytes
+12_lymphocytes_of_b_lineage	12 Lymphocytes of B lineage
+13_lymphoma	13 Lymphoma
+14_immune_organs	14 Immune organs
+15_myeloid_leukemia	15 Myeloid leukemia
+16_endo-epithelial_cells	16 Endo-epithelial cells
+17_adenocarcinoma	17 Adenocarcinoma
+18_male_reproductive_organs	18 Male reproductive organs
+19_liver_kidney	19 Liver & kidney
+20_gastrointestinal_system	20 Gastrointestinal system
+21_heart	21 Heart
+22_mouth_throat_skeletal_muscle_tissue	22 Mouth, throat & skeletal muscle tissue
+23_lung	23 Lung
+24_glands_internal_genitalia	24 Glands & internal genitalia
+25_pineal_gland_eye	25 Pineal gland & eye
+26_neuron-associated_cells_cancer	26 Neuron-associated cells & cancer
+27_astrocytes_pigment_cells	27 Astrocytes & pigment cells
+28_neuroectodermal_tumors_sarcoma	28 Neuroectodermal tumors & sarcoma
+29_epithelial_cells	29 Epithelial cells
+30_extraembryonic_membrane	30 Extraembryonic membrane
+31_epithelial_cells_of_kidney_uterus	31 Epithelial cells of kidney & uterus
+32_lung_epithelium_lung_cancer	32 lung epithelium & lung cancer

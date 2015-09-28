@@ -29,7 +29,7 @@ import java.io.File;
 
 import ch.unil.magnumapp.model.NetworkModel;
 import ch.unil.magnumapp.view.EnrichmentController;
-import ch.unil.magnumapp.view.JobManager;
+import ch.unil.magnumapp.view.JobController;
 import edu.mit.magnum.FileExport;
 import edu.mit.magnum.MagnumLogger;
 
@@ -54,7 +54,7 @@ public class JobEnrichment extends JobMagnum {
 	// PUBLIC METHODS
 
 	/** Constructor */
-	public JobEnrichment(JobManager jobManager, String jobName, EnrichmentController controller, NetworkModel network) {
+	public JobEnrichment(JobController jobManager, String jobName, EnrichmentController controller, NetworkModel network) {
 
 		super(jobManager, jobName);
 		this.controller = controller;

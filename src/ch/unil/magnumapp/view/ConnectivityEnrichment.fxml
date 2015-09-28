@@ -8,7 +8,7 @@
 
 <TitledPane animated="false" stylesheets="@MagnumAppStyle.css" text="Connectivity enrichment" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.EnrichmentController">
    <content>
-      <VBox minWidth="545.0" spacing="3.0">
+      <VBox minWidth="515.0" spacing="3.0">
          <children>
             <Label text="Input" />
             <GridPane hgap="10.0" VBox.vgrow="NEVER">
@@ -36,7 +36,7 @@
                   <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1">
                      <children>
                         <TextField fx:id="networksTextField" editable="false" prefHeight="26.0" prefWidth="200.0" promptText="No networks selected" />
-                        <Label text="Select from panels on the left " />
+                        <Label text="Select in table on the left " />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="4">

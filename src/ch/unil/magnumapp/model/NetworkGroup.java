@@ -37,9 +37,8 @@ import javafx.scene.control.TreeItem;
  */
 public class NetworkGroup {
 
-	/** The name of this network groups (also the name of its directory) */
-	private String name;
-
+	/** The name of this network group */
+	//private String name;
 	/** The root for the tree view */
 	private TreeItem<NetworkModel> treeViewRoot;
 	
@@ -48,9 +47,9 @@ public class NetworkGroup {
 	// PUBLIC METHODS
 	    
 	/** Constructor */
-	public NetworkGroup(String name) {
-		this.name = name;
-		treeViewRoot = new TreeItem<>(new NetworkModel(name));
+	public NetworkGroup(String name, String filename) {
+		//this.name = name;
+		treeViewRoot = new TreeItem<>(new NetworkModel(name, filename, true));
 	}
 
 	
@@ -84,17 +83,17 @@ public class NetworkGroup {
 
     // ----------------------------------------------------------------------------
 
-	/** Sets network dir for the group and all its networks */
-	public void initDirectory(File parentDir) {
-		
-		File dir = null;
-		if (parentDir != null)
-			dir = parentDir.toPath().resolve(name).toFile();
-		treeViewRoot.getValue().setFile(dir);
-		
-		for (TreeItem<NetworkModel> item : treeViewRoot.getChildren())
-			item.getValue().initFile(dir);
-	}
+//	/** Sets network dir for the group and all its networks */
+//	public void initDirectory(File parentDir) {
+//		
+//		File dir = null;
+//		if (parentDir != null)
+//			dir = parentDir.toPath().resolve(name).toFile();
+//		treeViewRoot.getValue().setFile(dir);
+//		
+//		for (TreeItem<NetworkModel> item : treeViewRoot.getChildren())
+//			item.getValue().initFile(dir);
+//	}
 
 
 

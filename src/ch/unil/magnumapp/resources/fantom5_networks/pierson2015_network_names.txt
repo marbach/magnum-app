@@ -1,0 +1,35 @@
+01_stomach	01 Stomach
+02_esophagus_-_muscularis	02 Esophagus - Muscularis
+03_thyroid	03 Thyroid
+04_whole_blood	04 Whole Blood
+05_brain_-_amygdala	05 Brain - Amygdala
+06_adrenal_gland	06 Adrenal Gland
+07_brain_-_putamen_basal_ganglia	07 Brain - Putamen (basal ganglia)
+08_brain_-_cortex	08 Brain - Cortex
+09_skin_-_not_sun_exposed_suprapubic	09 Skin - Not Sun Exposed (Suprapubic)
+10_testis	10 Testis
+11_brain_-_anterior_cingulate_cortex_ba24	11 Brain - Anterior cingulate cortex (BA24)
+12_pancreas	12 Pancreas
+13_brain_-_spinal_cord_cervical_c-1	13 Brain - Spinal cord (cervical c-1)
+14_brain_-_hypothalamus	14 Brain - Hypothalamus
+15_brain_-_caudate_basal_ganglia	15 Brain - Caudate (basal ganglia)
+16_artery_-_tibial	16 Artery - Tibial
+17_pituitary	17 Pituitary
+18_esophagus_-_mucosa	18 Esophagus - Mucosa
+19_lung	19 Lung
+20_skin_-_sun_exposed_lower_leg	20 Skin - Sun Exposed (Lower leg)
+21_nerve_-_tibial	21 Nerve - Tibial
+22_muscle_-_skeletal	22 Muscle - Skeletal
+23_breast_-_mammary_tissue	23 Breast - Mammary Tissue
+24_brain_-_nucleus_accumbens_basal_ganglia	24 Brain - Nucleus accumbens (basal ganglia)
+25_adipose_-_subcutaneous	25 Adipose - Subcutaneous
+26_heart_-_atrial_appendage	26 Heart - Atrial Appendage
+27_adipose_-_visceral_omentum	27 Adipose - Visceral (Omentum)
+28_artery_-_aorta	28 Artery - Aorta
+29_brain_-_substantia_nigra	29 Brain - Substantia nigra
+30_heart_-_left_ventricle	30 Heart - Left Ventricle
+31_brain_-_hippocampus	31 Brain - Hippocampus
+32_brain_-_cerebellar_hemisphere	32 Brain - Cerebellar Hemisphere
+33_colon_-_transverse	33 Colon - Transverse
+34_brain_-_cerebellum	34 Brain - Cerebellum
+35_brain_-_frontal_cortex_ba9	35 Brain - Frontal Cortex (BA9)

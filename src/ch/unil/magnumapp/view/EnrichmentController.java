@@ -299,10 +299,10 @@ public class EnrichmentController extends ViewController {
     	}
     	
     	// Disable the main window
-    	app.getRootLayout().setDisable(true);;
+    	app.getRootLayout().setDisable(true);
 
     	// Create the thread controller / dialog
-    	JobManager jobManager = (JobManager) ViewController.loadFxml("view/ThreadStatus.fxml");
+    	JobController jobManager = (JobController) ViewController.loadFxml("view/ThreadStatus.fxml");
     	jobManager.setOutputDir(outputDirProperty.get()); // Has to be done before creating the jobs
 
     	// Create a job for each network

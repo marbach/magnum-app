@@ -27,7 +27,7 @@ package ch.unil.magnumapp;
 
 import java.io.File;
 
-import ch.unil.magnumapp.view.JobManager;
+import ch.unil.magnumapp.view.JobController;
 import edu.mit.magnum.FileExport;
 import edu.mit.magnum.MagnumLogger;
 import javafx.application.Platform;
@@ -63,7 +63,7 @@ public class AppLogger extends MagnumLogger {
 		// cleanup like closing files, but an interrupt is disruptive by definition.
 		// A solution would be a static registry for anything that's closable, then
 		// close all of them at the end...
-		if (checkInterrupt && JobManager.interrupted) {
+		if (checkInterrupt && JobController.interrupted) {
 			printAll("\nJOB INTERRUPTED!\n");
 			throw new RuntimeException("Thread interrupted");
 		}

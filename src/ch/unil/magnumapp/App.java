@@ -154,7 +154,7 @@ public class App extends Application {
     		// Corrupted preferences, clear them
     		try {
     			log.warning("Failed to load preferences");
-    			log.println(e.toString());
+    			log.printStackTrace(e);
     			log.println("Clearing corrupted preferences...");
 				ViewController.prefs.clear();
 			} catch (BackingStoreException e1) {
