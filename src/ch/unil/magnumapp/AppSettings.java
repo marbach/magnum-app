@@ -43,11 +43,10 @@ final public class AppSettings {
 	final static public String pascalLink = "http://www2.unil.ch/cbg/index.php?title=Pascal";
 	
 	/** Partial network compendium */
-	final static public String networkCompendiumLink = "http://broadinstitute.org/~marbach/regulatorycircuits/Network_compendium_partial.zip";
+	final static public String networkCompendiumLink = "http://www2.unil.ch/cbg/regulatorycircuits/Network_compendium.zip";
 	/** Full network compendium */
-	final static public String individualNetworksLink = "http://broadinstitute.org/~marbach/regulatorycircuits/Network_compendium_partial.zip";
+	final static public String individualNetworksLink = "http://www2.unil.ch/cbg/regulatorycircuits/FANTOM5_individual_networks.zip";
 	/** regulatorycircuits.org */
 	final static public String regulatoryCircuitsLink = "http://regulatorycircuits.org";
-
 
 }

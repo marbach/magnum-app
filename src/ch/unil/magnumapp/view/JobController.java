@@ -38,6 +38,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
@@ -177,7 +178,8 @@ public class JobController extends ViewController {
 
 		// Normal finish
 		if (e == null) {
-			App.log.println("Job finished:\t" + job.getJobName());
+			App.log.println("Job finished:\t" + job.getJobName() + "\n" +
+					"- Runtime = " + App.mag.utils.chronometer(job.getRuntime()));			
 			increment(numJobsFinished);
 
 		// Exception
@@ -248,15 +250,16 @@ public class JobController extends ViewController {
 		
 		// The alert
     	alert = new Alert(AlertType.CONFIRMATION);
-    	alert.setTitle("Connectivity enrichment");
-    	//alert.getDialogPane().setPrefHeight(650);
-    	
+    	DialogPane dialog = alert.getDialogPane();
+    	dialog.getStylesheets().add(
+    			   getClass().getResource("MagnumAppStyle.css").toExternalForm());
+
     	// Header text
+    	alert.setTitle("Connectivity enrichment");
     	alert.setHeaderText(headerText);
     	
     	// The content
-    	//alert.getDialogPane().setContent(statusMessage);
-    	alert.getDialogPane().setContent(threadStatusVBox);
+    	dialog.setContent(threadStatusVBox);
     	updateStatusLabel("Status: ONGOING", "status-ongoing-label");
     	
     	// Set the icon
@@ -269,9 +272,9 @@ public class JobController extends ViewController {
     	//ButtonType okButtonType = new ButtonType("OK", ButtonData.OK_DONE);
     	alert.getButtonTypes().setAll(stopButtonType, ButtonType.OK);
     	
-        okButton = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
+        okButton = (Button) dialog.lookupButton(ButtonType.OK);
         okButton.setDisable(true);
-        stopButton = (Button) alert.getDialogPane().lookupButton(stopButtonType);
+        stopButton = (Button) dialog.lookupButton(stopButtonType);
         stopButton.setOnAction((event) -> {
         	App.log.println();
         	if (!interrupted)
@@ -292,6 +295,7 @@ public class JobController extends ViewController {
     	console = new TextArea();
     	console.setEditable(false);
     	console.setWrapText(true);
+    	console.getStyleClass().add("console-text");
 
     	console.setMaxWidth(Double.MAX_VALUE);
     	console.setMaxHeight(Double.MAX_VALUE);
@@ -308,8 +312,8 @@ public class JobController extends ViewController {
     	expContent.add(console, 0, 1);
 
     	// Set expandable Exception into the dialog pane.
-    	alert.getDialogPane().setExpandableContent(expContent);
-    	alert.getDialogPane().setExpanded(true);
+    	dialog.setExpandableContent(expContent);
+    	dialog.setExpanded(true);
     	
     	// Bindings
     	numQueuedLabel.textProperty().bind(Bindings.convert(numJobsQueued));
@@ -322,6 +326,11 @@ public class JobController extends ViewController {
     	numRunningRectangle.widthProperty().bind(numJobsRunning.multiply(maxWidth/jobs.size()).add(1));
     	numFinishedRectangle.widthProperty().bind(numJobsFinished.multiply(maxWidth/jobs.size()).add(1));
     	numAbortedRectangle.widthProperty().bind(numJobsAborted.multiply(maxWidth/jobs.size()).add(1));
+    	
+    	// Bind the console to the jobs
+		if (numCores == 1)
+			for (JobMagnum job_i : jobs)
+				job_i.setConsole(console);
 	}
 	
 	
@@ -370,7 +379,11 @@ public class JobController extends ViewController {
     	assert assertJobCountsConsistency();
     	
     	// Start the job
+    	if (numCores == 1)
+    		App.log.println("\n=========================================================================");
     	App.log.println("Running job:\t" + jobs.get(tbdJob).getJobName());
+    	if (numCores == 1)
+    		App.log.println("=========================================================================\n");
     	jobs.get(tbdJob).start();
 	}
 	

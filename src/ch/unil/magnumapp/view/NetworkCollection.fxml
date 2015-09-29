@@ -7,13 +7,13 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<TitledPane animated="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="558.0" stylesheets="@MagnumAppStyle.css" text="Other networks" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.NetworkCollectionController">
+<TitledPane animated="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="558.0" stylesheets="@MagnumAppStyle.css" text="Networks" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.NetworkCollectionController">
    <content>
       <VBox fx:id="contentVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0">
          <children>
             <HBox alignment="CENTER_LEFT" spacing="5.0">
                <children>
-                  <Label text="Network directory:" />
+                  <Label text="Network compendium:" />
                   <TextField fx:id="networkDirTextField" editable="false" prefWidth="220.0" promptText="Locate directory" />
                   <Button fx:id="networkDirBrowseButton" mnemonicParsing="false" onAction="#handleNetworkDirBrowseButton" text="Browse ..." />
                   <Hyperlink fx:id="networkDirDownloadLink" onAction="#handleNetworkDirDownloadLink" text="Download" />

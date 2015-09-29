@@ -18,3 +18,8 @@
 	-fx-text-fill: darkorange;
 	-fx-font-weight: bold;
 }
+
+.console-text {
+	-fx-font-family: monospace;
+	-fx-font-size: 12.5;
+}

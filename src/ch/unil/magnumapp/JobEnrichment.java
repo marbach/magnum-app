@@ -44,8 +44,7 @@ public class JobEnrichment extends JobMagnum {
     private EnrichmentController controller;
     
     /** Output directory */
-    private File outputDir;
-    
+    private File outputDir;   
     /** The settings file */
     private File settingsFile;
     
@@ -70,14 +69,12 @@ public class JobEnrichment extends JobMagnum {
 	@Override
 	protected void runJob() {
 		
-		myMag.log.println("\nRunning job: " + jobName);
-
-    	// Write settings
+    	// Write settings file
     	writeSettingsFile(myMag.log);
-
-		// Load settings file
+    	
+    	// Start magnum
+    	myMag.log.println("\nStarting job...\n");
 		myMag.set.loadSettings(settingsFile.getAbsolutePath(), false);
-		// Run
 		myMag.run();
 	}
 	
@@ -148,7 +145,9 @@ public class JobEnrichment extends JobMagnum {
     			+ "exportKernels = " + controller.getExportKernels() + "\n"
     			+ "\n"
     			+ "# Tell magnum to launch connectivity enrichment analysis\n"
-    			+ "mode = 3\n";
+    			+ "mode = 3\n"
+    			+ "# Verbose console output\n"
+    			+ "verbose = false\n";
     			
     	// The settings file
     	String filename = jobName + ".settings.txt";

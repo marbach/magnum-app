@@ -30,6 +30,7 @@ import java.io.File;
 import ch.unil.magnumapp.view.JobController;
 import edu.mit.magnum.Magnum;
 import javafx.application.Platform;
+import javafx.scene.control.TextArea;
 
 /**
  * Runnable class for loading networks
@@ -43,9 +44,13 @@ abstract public class JobMagnum extends Thread {
 	
 	/** The view controller of the dialog/alert of this thread */
 	protected JobController jobManager;
+	/** Write stdout to the console */
+	protected TextArea console;
     
     /** Job name, used as basis for output filenames */
     protected String jobName;
+    /** The runtime */
+    protected long runtime = -1;
 
     
 	// ============================================================================
@@ -65,21 +70,29 @@ abstract public class JobMagnum extends Thread {
 	/** The main method called by the thread */
 	@Override
 	public void run() {
-
+		
 		// Note, I tried to group all the cleanup in a finally block at the end, but just
 		// didn't get it to work because of weird variable scope problems --- so keep as is!
 		try {
 			// Personal logger
 			myLog = new AppLogger();
+			myLog.setVerbose(false); // TODO add a checkbox in the gui, note this also needs to be set in the settings file!
+			
 			File logFile = new File(jobManager.getOutputDir(), this.jobName + ".log.txt");
 			myLog.createLogFile(logFile);
+			if (console != null)
+				myLog.setConsole(console);
 			// Check for interrupts
 			myLog.setCheckInterrupt(true);			
 			// Personal Magnum
 			myMag = new Magnum(null, myLog);
-
-			// Do the job
+			
+			// Do the job, take runtime
+			runtime = -1;
+			long t0 = System.currentTimeMillis();
 			runJob();
+			long t1 = System.currentTimeMillis();
+			runtime = t1-t0;
 
 		} catch (Exception e) {
 			if (!jobManager.getInterrupted()) {
@@ -139,6 +152,14 @@ abstract public class JobMagnum extends Thread {
 
 	public String getJobName() {
 		return jobName;
+	}
+	
+	public long getRuntime() {
+		return runtime;
+	}
+	
+	public void setConsole(TextArea console) {
+		this.console = console;
 	}
 
 }

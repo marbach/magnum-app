@@ -26,13 +26,9 @@ THE SOFTWARE.
 package ch.unil.magnumapp.view;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-import ch.unil.magnumapp.App;
-import ch.unil.magnumapp.JobEnrichment;
-import ch.unil.magnumapp.JobMagnum;
 import ch.unil.magnumapp.model.NetworkCollection;
 import ch.unil.magnumapp.model.NetworkModel;
 import javafx.application.Platform;
@@ -44,24 +40,18 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.TreeTableView.TreeTableViewSelectionModel;
 import javafx.scene.control.cell.CheckBoxTreeTableCell;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -285,8 +275,6 @@ public class NetworkCollectionController extends ViewController {
     	
 		// Enable the main window
     	app.getRootLayout().setDisable(false);
-
-
     }
 
     	
