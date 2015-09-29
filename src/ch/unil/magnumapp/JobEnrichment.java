@@ -72,10 +72,13 @@ public class JobEnrichment extends JobMagnum {
     	// Write settings file
     	writeSettingsFile(myMag.log);
     	
-    	// Start magnum
+    	// Run magnum
     	myMag.log.println("\nStarting job...\n");
 		myMag.set.loadSettings(settingsFile.getAbsolutePath(), false);
 		myMag.run();
+		
+		// Get result
+		controller.writeScore(network.getName(), myMag.getEnrichMain().getEnrichmentScore(), settingsFile.getName());
 	}
 	
 	

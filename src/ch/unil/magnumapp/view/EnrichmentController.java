@@ -36,6 +36,7 @@ import ch.unil.magnumapp.App;
 import ch.unil.magnumapp.JobMagnum;
 import ch.unil.magnumapp.JobEnrichment;
 import ch.unil.magnumapp.model.NetworkModel;
+import edu.mit.magnum.FileExport;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -73,6 +74,9 @@ public class EnrichmentController extends ViewController {
 	private ObjectProperty<File> outputDirProperty = new SimpleObjectProperty<File>();
 	/** Bound to numPermutationsTextField */
 	private IntegerProperty numPermutationsProperty = new SimpleIntegerProperty();
+	
+	/** Writes the enrichment scores for each job */
+	private FileExport scoreWriter;
 	
 
 	// ============================================================================
@@ -210,6 +214,19 @@ public class EnrichmentController extends ViewController {
     }
 
     
+    // ----------------------------------------------------------------------------
+
+    /** Get the job name for this network (geneScoreName--networkName) */
+    public void writeScore(String networkName, double score, String settingsFile) {
+    	
+    	if (scoreWriter == null)
+    		initScoreWriter();
+    	
+    	scoreWriter.println(networkName + "\t" + App.mag.utils.toStringScientific10(score) + "\t" + settingsFile);
+    	scoreWriter.flush();
+    }
+
+    
 	// ============================================================================
 	// HANDLES
 
@@ -311,11 +328,19 @@ public class EnrichmentController extends ViewController {
     		JobEnrichment job_i = new JobEnrichment(jobManager, getJobName(item_i.getValue()), this, item_i.getValue());
     		jobs.add(job_i);
     	}
+    	
+    	// Open output file for enrichment scores
+    	//initScoreWriter();
+    	scoreWriter = null;
+
+    	// Start the jobs
     	int numCores = numCoresChoiceBox.getSelectionModel().getSelectedItem();
 		jobManager.start(jobs, numCores); 
 		
-		// Enable the main window
+		// Cleanup
+		scoreWriter.close();
     	app.getRootLayout().setDisable(false);
+    	System.gc();
     }
 
     
@@ -396,9 +421,39 @@ public class EnrichmentController extends ViewController {
 
     /** Get the job name for this network (geneScoreName--networkName) */
     private String getJobName(NetworkModel network) {
-    	return App.mag.utils.extractBasicFilename(geneScoreFileProperty.get().getName(), false)
-    			+ "--" + App.mag.utils.extractBasicFilename(network.getFile().getName(), false);
+    	String gwasName = App.mag.utils.extractBasicFilename(geneScoreFileProperty.get().getName(), false);
+    	String jobName = gwasName	+ "--" + App.mag.utils.extractBasicFilename(network.getFile().getName(), false);
+    	return jobName;
     }
+
+    
+    // ----------------------------------------------------------------------------
+
+    /** Get the job name for this network (geneScoreName--networkName) */
+    private void initScoreWriter() {
+    	
+    	App.log.println("Creating gene score result file ...");
+    	// The output file
+    	String gwasName = App.mag.utils.extractBasicFilename(geneScoreFileProperty.get().getName(), false);
+    	String fileprefix = gwasName + ".pvals";
+    	File file = new File(outputDirProperty.get(), fileprefix + ".txt");
+    	
+    	// If it already exists, don't overwrite - add index
+    	if (file.exists()) {
+    		for (int i=1; i<Integer.MAX_VALUE; i++) {
+    			file = new File(outputDirProperty.get(), fileprefix + "." + i + ".txt");
+    			if (!file.exists())
+    				break;
+    		}
+    	}
+    	scoreWriter = new FileExport(App.log, file);
+    	
+    	// Write header
+    	scoreWriter.println("# GWAS = " + gwasName);
+    	scoreWriter.println("Network\tPvalue\tSettings");
+    	scoreWriter.flush();
+    }
+
 
     
 	// ============================================================================

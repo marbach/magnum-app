@@ -179,7 +179,7 @@ public class JobController extends ViewController {
 		// Normal finish
 		if (e == null) {
 			App.log.println("Job finished:\t" + job.getJobName() + "\n" +
-					"- Runtime = " + App.mag.utils.chronometer(job.getRuntime()));			
+					"- Runtime = " + App.mag.utils.chronometer(job.getRuntime()));
 			increment(numJobsFinished);
 
 		// Exception
