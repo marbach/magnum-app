@@ -217,7 +217,7 @@ public class App extends Application {
     private void showConnetivityEnrichmentPane() {
 
     	// Initialize user networks pane
-    	enrichmentController = (EnrichmentController) ViewController.loadFxml("view/ConnectivityEnrichment.fxml");
+    	enrichmentController = (EnrichmentController) ViewController.loadFxml("view/Enrichment.fxml");
     	// Add to root layout
     	rootLayoutController.getRightSide().getChildren().add(enrichmentController.getRoot());  
     }

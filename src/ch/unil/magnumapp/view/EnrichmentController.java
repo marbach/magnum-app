@@ -69,11 +69,14 @@ public class EnrichmentController extends ViewController {
 			App.app.getOtherNetworksController().getSelectedNetworks();
 	
 	/** Bound to geneScoreTextField */
-	private ObjectProperty<File> geneScoreFileProperty = new SimpleObjectProperty<File>();
+	private ObjectProperty<File> geneScoreFileProperty = new SimpleObjectProperty<>();
 	/** Bound to outputDirTextField */
-	private ObjectProperty<File> outputDirProperty = new SimpleObjectProperty<File>();
+	private ObjectProperty<File> outputDirProperty = new SimpleObjectProperty<>();
 	/** Bound to numPermutationsTextField */
 	private IntegerProperty numPermutationsProperty = new SimpleIntegerProperty();
+	
+	/** The enrichment score / p-value file */
+	private ObjectProperty<File> pvalFileProperty = new SimpleObjectProperty<>();
 	
 	/** Writes the enrichment scores for each job */
 	private FileExport scoreWriter;
@@ -117,7 +120,17 @@ public class EnrichmentController extends ViewController {
     private Button exportSettingsButton;
     @FXML
     private Button runButton;
-	
+    
+    /** Results */
+    @FXML
+    private TextField pvalFileTextField;
+    @FXML
+    private Button pvalFileBrowseButton;
+    @FXML
+	private Button plotButton;
+    @FXML
+    private CheckBox bonferroniCheckBox;
+    
     
 	// ============================================================================
 	// PUBLIC METHODS
@@ -147,10 +160,13 @@ public class EnrichmentController extends ViewController {
         Bindings.bindBidirectional(geneScoreTextField.textProperty(), geneScoreFileProperty, new FileStringConverter());
         Bindings.bindBidirectional(outputDirTextField.textProperty(), outputDirProperty, new FileStringConverter());
         Bindings.bindBidirectional(numPermutationsTextField.textProperty(), numPermutationsProperty, new NumberStringConverter("###"));
-        //numPermutationsTextField.textProperty().bindBidirectional(numPermutationsProperty, new NumberStringConverter());        
+        //numPermutationsTextField.textProperty().bindBidirectional(numPermutationsProperty, new NumberStringConverter());
+        Bindings.bindBidirectional(pvalFileTextField.textProperty(), pvalFileProperty, new FileStringConverter());
     }
     
     
+    // ----------------------------------------------------------------------------
+
     /** Initialize with settings from AppSettings */
     @Override
     public void loadPreferences() {
@@ -256,9 +272,6 @@ public class EnrichmentController extends ViewController {
     	openWebpage(AppSettings.geneScoresLink);
     }
 
-    
-    // ----------------------------------------------------------------------------
-
     /** PASCAL download link */
     @FXML
     private void handlePascalDownloadLink() {
@@ -338,9 +351,63 @@ public class EnrichmentController extends ViewController {
 		jobManager.start(jobs, numCores); 
 		
 		// Cleanup
-		scoreWriter.close();
+		if (scoreWriter != null)
+			scoreWriter.close();
     	app.getRootLayout().setDisable(false);
     	System.gc();
+    	
+    	// Set pval file
+    	pvalFileProperty.set(scoreWriter.getFile());
+    	plotButton.setDisable(false);
+    }
+
+    
+    // ----------------------------------------------------------------------------
+
+    /** Run button */
+    @FXML
+    private void handlePvalFileBrowseButton() {
+
+    	// File chooser
+    	FileChooser fileChooser = new FileChooser();
+    	fileChooser.setTitle("Select an enrichment p-value file");
+    	
+    	// Set initial directory to the output dir
+    	if (outputDirProperty.get() != null && outputDirProperty.get().exists())
+    		fileChooser.setInitialDirectory(outputDirProperty.get());
+
+    	// Open dialog and set file
+    	File file = fileChooser.showOpenDialog(app.getPrimaryStage());
+    	pvalFileProperty.set(file);
+    	
+    	// Enable plot button
+    	plotButton.setDisable(false);
+    }
+    
+    
+    // ----------------------------------------------------------------------------
+
+    /** Run button */
+    @FXML
+    private void handlePlotButton() {
+
+    	EnrichmentPlotController controller = new EnrichmentPlotController(pvalFileProperty.get(), bonferroniCheckBox.isSelected());
+    	controller.show();
+    }
+    
+
+    // ----------------------------------------------------------------------------
+
+    /** Gene score download link */
+    @FXML
+    private void handleExampleFileLink() {  	
+    	openWebpage(AppSettings.examplePvalFileLink);
+    }
+
+    /** PASCAL download link */
+    @FXML
+    private void downloadRScriptsLink() {
+    	openWebpage(AppSettings.downloadRScriptsLink);
     }
 
     

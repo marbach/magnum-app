@@ -6,9 +6,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<TitledPane animated="false" stylesheets="@MagnumAppStyle.css" text="Connectivity enrichment" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.EnrichmentController">
+<TitledPane animated="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="519.0" stylesheets="@MagnumAppStyle.css" text="Connectivity enrichment" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.EnrichmentController">
    <content>
-      <VBox minWidth="515.0" spacing="3.0">
+      <VBox spacing="3.0">
          <children>
             <Label text="Input" />
             <GridPane hgap="10.0" VBox.vgrow="NEVER">
@@ -62,7 +62,7 @@
                <rowConstraints>
                   <RowConstraints vgrow="SOMETIMES" />
                   <RowConstraints vgrow="SOMETIMES" />
-                  <RowConstraints vgrow="SOMETIMES" />
+                  <RowConstraints vgrow="NEVER" />
                </rowConstraints>
                <children>
                   <Label text="Output directory:" />
@@ -72,14 +72,11 @@
                         <Button fx:id="outputDirBrowseButton" mnemonicParsing="false" onAction="#handleOutputDirBrowseButton" text="Browse ..." />
                      </children>
                   </HBox>
-                  <VBox spacing="3.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                     <children>
-                        <CheckBox fx:id="exportKernelsCheckBox" mnemonicParsing="false" text="Export network kernels">
-                           <VBox.margin>
-                              <Insets bottom="7.0" top="5.0" />
-                           </VBox.margin></CheckBox>
-                     </children>
-                  </VBox>
+                  <CheckBox fx:id="exportKernelsCheckBox" mnemonicParsing="false" text="Export network kernels" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="4.0" top="5.0" />
+                     </GridPane.margin>
+                  </CheckBox>
                </children>
             </GridPane>
             <Separator prefWidth="200.0" />
@@ -88,7 +85,7 @@
               <columnConstraints>
                 <ColumnConstraints hgrow="NEVER" />
                 <ColumnConstraints hgrow="NEVER" />
-                  <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+                  <ColumnConstraints hgrow="ALWAYS" />
                   <ColumnConstraints hgrow="NEVER" />
                   <ColumnConstraints hgrow="NEVER" />
               </columnConstraints>
@@ -113,6 +110,38 @@
                <VBox.margin>
                   <Insets top="5.0" />
                </VBox.margin>
+               <padding>
+                  <Insets bottom="3.0" />
+               </padding>
+            </GridPane>
+            <Separator prefWidth="200.0" />
+            <Label text="Results" />
+            <GridPane hgap="5.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="125.0" />
+                <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" />
+                  <ColumnConstraints hgrow="NEVER" />
+                  <ColumnConstraints hgrow="NEVER" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints vgrow="NEVER" />
+                  <RowConstraints vgrow="NEVER" />
+                  <RowConstraints vgrow="NEVER" />
+              </rowConstraints>
+               <children>
+                  <Label text="Enrichment scores:" />
+                  <TextField fx:id="pvalFileTextField" editable="false" prefHeight="26.0" prefWidth="200.0" promptText="Choose file (*.pvals.txt)" GridPane.columnIndex="1" />
+                  <Button fx:id="plotButton" defaultButton="true" disable="true" mnemonicParsing="false" onAction="#handlePlotButton" prefWidth="70.0" text="Plot" GridPane.columnIndex="3" />
+                  <HBox alignment="CENTER_LEFT" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+                     <children>
+                        <Label text="Other plots:" />
+                        <Hyperlink text="Download R-scripts" />
+                     </children>
+                  </HBox>
+                  <CheckBox fx:id="bonferroniCheckBox" mnemonicParsing="false" selected="true" text="Bonferroni correction" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button fx:id="pvalFileBrowseButton" mnemonicParsing="false" onAction="#handlePvalFileBrowseButton" text="Browse ..." GridPane.columnIndex="2" />
+                  <Hyperlink text="Example file" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+               </children>
             </GridPane>
          </children>
       </VBox>

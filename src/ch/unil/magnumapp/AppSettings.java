@@ -37,11 +37,6 @@ final public class AppSettings {
 	/** MagnumApp version */
 	final static public String magnumAppVersion = "Magnum v1.0";
 
-	/** Download gene scores */
-	final static public String geneScoresLink = "http://regulatorycircuits.org/data/GWAS%20gene%20scores%20v1.zip";
-	/** Download PASCAL */
-	final static public String pascalLink = "http://www2.unil.ch/cbg/index.php?title=Pascal";
-	
 	/** Partial network compendium */
 	final static public String networkCompendiumLink = "http://www2.unil.ch/cbg/regulatorycircuits/Network_compendium.zip";
 	/** Full network compendium */
@@ -49,4 +44,13 @@ final public class AppSettings {
 	/** regulatorycircuits.org */
 	final static public String regulatoryCircuitsLink = "http://regulatorycircuits.org";
 
+	/** Download gene scores */
+	final static public String geneScoresLink = "http://regulatorycircuits.org/data/GWAS%20gene%20scores%20v1.zip";
+	/** Download PASCAL */
+	final static public String pascalLink = "http://www2.unil.ch/cbg/index.php?title=Pascal";
+	/** Example p-value file */
+	final static public String examplePvalFileLink = "";
+	/** Download R-scripts */
+	final static public String downloadRScriptsLink = "";
+	
 }
