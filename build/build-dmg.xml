@@ -5,6 +5,7 @@
 			<filelist>
 				<file name="${java.home}\..\lib\ant-javafx.jar"/>
 				<file name="${java.home}\lib\jfxrt.jar"/>
+			    <file name="${basedir}"/>
 			</filelist>
 		</path>
 	
@@ -92,12 +93,42 @@
 			</fileset>
 		</copy>
 	
-	
+
+		<!-- START Code from tutorial (dan) -->
+		
+		<!--
+		<mkdir dir="dist/resources" />
+		<copy todir="dist/resources" >
+		    <fileset dir="../resources" />
+		</copy>
+		-->
+		<mkdir dir="package" />
+
+		<!-- Icons only for Windows -->
+		<mkdir dir="package/windows" />
+		<copy todir="package/windows">
+		    <fileset dir="..">
+		        <include name="Magnum.ico" />
+		        <include name="Magnum-setup-icon.bmp" />
+		    </fileset>
+		</copy>
+
+		<!-- Icons only for MacOS -->
+		<mkdir dir="package/macosx" />
+		<copy todir="package/macosx">
+		    <fileset dir="..">
+		        <include name="Magnum.icns" />
+		    </fileset>
+		</copy>        
+
+		<!-- END Code from tutorial -->
+
+		
 		<fx:resources id="appRes">
 			<fx:fileset dir="dist" includes="magnum-app.jar"/>
 			<fx:fileset dir="dist" includes="libs/*"/>
 		</fx:resources>
-	
+				
 		<fx:application id="fxApplication"
 			name="Magnum"
 			mainClass="ch.unil.magnumapp.App"
@@ -130,10 +161,16 @@
 			includeDT="false"
 			offlineAllowed="true"
 			outdir="${basedir}/deploy"
-			outfile="magnum-app" nativeBundles="none"
+			outfile="magnum-app" nativeBundles="dmg"
 			updatemode="background" >
 	
+			<!-- Add jvm args  (dan)
 			<fx:platform basedir="${java.home}"/>
+			-->
+			<fx:platform basedir="${java.home}">
+				<fx:jvmarg value="-Xmx32g"/>
+			</fx:platform>	
+
 			<fx:info title="magnum-app" vendor="University of Lausanne"/>
 	
 			<fx:application refId="fxApplication"/>

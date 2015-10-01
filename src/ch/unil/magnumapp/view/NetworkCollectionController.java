@@ -47,11 +47,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.TreeTableView.TreeTableViewSelectionModel;
 import javafx.scene.control.cell.CheckBoxTreeTableCell;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -81,11 +83,12 @@ public class NetworkCollectionController extends ViewController {
 	/** Network collection directory */
 	@FXML
 	private TextField networkDirTextField; // bound
-	
 	@FXML
 	private Button networkDirBrowseButton;
 	@FXML
 	private Hyperlink networkDirDownloadLink;
+	@FXML
+	private HBox networkDirHBox;
 	
     /** Network table */
     @FXML
@@ -100,6 +103,10 @@ public class NetworkCollectionController extends ViewController {
     private TreeTableColumn<NetworkModel, String> notesColumn;
     @FXML
     private Label numNetworksSelectedLabel;
+    @FXML
+    private HBox isDirectedHBox;
+    @FXML
+    private HBox isWeightedHBox;
 
     /** Load */
     @FXML
@@ -203,6 +210,9 @@ public class NetworkCollectionController extends ViewController {
         
         // Bindings
         Bindings.bindBidirectional(networkDirTextField.textProperty(), networkDirProperty, new FileStringConverter());
+        
+        // Tooltips
+        initTooltips();
     }
 
 
@@ -453,19 +463,48 @@ public class NetworkCollectionController extends ViewController {
     }
 
 
-	public LinkedHashSet<TreeItem<NetworkModel>> getSelectedNetworks() {
-		return selectedNetworks;
-	}
-
-        
-    
 	// ============================================================================
 	// PRIVATE METHODS
 
+    /** Add tooltips */
+	private void initTooltips() {
+		
+		Tooltip tip = new Tooltip("The \"Network_compendium\" directory: click the\n"
+				+ "\"Download\" link for instructions how to install");
+		Tooltip.install(networkDirHBox, tip);
+		networkDirBrowseButton.setTooltip(tip);
+
+		tip = new Tooltip("Select one or multiple\n"
+				+ "networks in the table");
+		//networksTable.setTooltip(tip);
+		numNetworksSelectedLabel.setTooltip(tip);
+		
+		Tooltip.install(isDirectedHBox, new Tooltip("Directed networks"));
+		Tooltip.install(isWeightedHBox, new Tooltip("Weighted networks"));
+		
+		tip = new Tooltip("Choose your own networks to add");
+		fileTextField.setTooltip(tip);
+		fileBrowseButton.setTooltip(tip);
+		addButton.setTooltip(new Tooltip("Add the chosen networks: they appear\n"
+				                       + "under \"My networks\" in the table"));
+		
+		tip = new Tooltip("Specify if your networks are directed");
+		directedRadio.setTooltip(tip);
+		undirectedRadio.setTooltip(tip);
+		
+		tip = new Tooltip("Specify if your networks are weighted");
+		weightedRadio.setTooltip(tip);
+		unweightedRadio.setTooltip(tip);
+		removeSelfCheckBox.setTooltip(new Tooltip("Specify if self-loops should be\nremoved from your network"));
+	}
+    
 	
 	// ============================================================================
 	// SETTERS AND GETTERS
 
+	public LinkedHashSet<TreeItem<NetworkModel>> getSelectedNetworks() {
+		return selectedNetworks;
+	}
 
 	  
 }

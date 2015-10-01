@@ -1,9 +1,10 @@
 .project
 .classpath
 .settings
+.magnum-app.log.txt
 
 build/*
-!build/build.xml
+!build/build-dmg.xml
 
 bin/
 lib/

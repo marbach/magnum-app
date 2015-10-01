@@ -52,6 +52,7 @@ public class NetworkModel {
 	/** Flag showing if file exists */
 	private boolean fileExists;
 	/** Flag indicates that this is not a network, but a directory in the network collection tree */
+	@SuppressWarnings("unused")
 	private boolean isGroup;
 
 	/** Notes */
@@ -154,14 +155,10 @@ public class NetworkModel {
 		fileExists = (file != null && file.exists());
 				
 		// Use notes property to display warning if file does not exist
-		if (file != null && !file.exists()) {
-			if (isGroup) 
-				notes.set("Directory not found");
-			else
-				notes.set("File not found");
-		} else {
+		if (file != null && !file.exists())
+			notes.set("Not installed");
+		else
 			notes.set(null);
-		}
 	}
 	
 

@@ -110,16 +110,16 @@ abstract public class JobMagnum extends Thread {
 		} catch (OutOfMemoryError e) {
 			// Print error
 			myLog.printStackTrace(e);
-			myLog.println("ERROR: OUT OF MEMORY!\n\n" +
+			myLog.println("=== OUT OF MEMORY ERROR! ===\n\n" +
 					//"For large networks, Magnum requires a lot of memory because the kernels are dense matrices of size N*N, where N is the number of genes.\n\n" +
 					"Solutions:\n" +
-					"- reduce the number of cores (parallel jobs) or\n" +
-					"- export settings and run jobs with the command-line tool (increase memory: e.g. \"-Xmx8g\" for 8GB)\n\n" +
+					"- Reduce the number of cores (parallel jobs) or\n" +
+					"- Export settings and run jobs with the command-line tool\n" +
+					"  (increase memory using -Xmx, e.g. \"-Xmx8g\" for 8GB)\n\n" +
 					"See the user guide for further instructions.");
 			myLog.closeLogFile();
 			myMag = null;
 			myLog = null;
-			// TODO: Interrupt jobs or quit?
 			// Tell controller
 			Platform.runLater(() ->	jobManager.jobFinished(this, e));
 			return;

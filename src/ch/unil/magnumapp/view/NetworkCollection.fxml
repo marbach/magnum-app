@@ -11,7 +11,7 @@
    <content>
       <VBox fx:id="contentVBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0">
          <children>
-            <HBox alignment="CENTER_LEFT" spacing="5.0">
+            <HBox fx:id="networkDirHBox" alignment="CENTER_LEFT" spacing="5.0">
                <children>
                   <Label text="Network compendium:" />
                   <TextField fx:id="networkDirTextField" editable="false" prefWidth="220.0" promptText="Locate directory" />
@@ -37,7 +37,7 @@
                            </image>
                         </ImageView>
                      </graphic></TreeTableColumn>
-                  <TreeTableColumn fx:id="notesColumn" maxWidth="133.0" minWidth="133.0" prefWidth="133.0" sortable="false" text="Warnings" />
+                  <TreeTableColumn fx:id="notesColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" resizable="false" sortable="false" text="Warnings" />
                </columns>
                <columnResizePolicy>
                   <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -55,7 +55,7 @@
               </rowConstraints>
                <children>
                   <Label fx:id="numNetworksSelectedLabel" text="No networks selected" />
-                  <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1">
+                  <HBox fx:id="isDirectedHBox" alignment="CENTER_LEFT" GridPane.columnIndex="1">
                      <children>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -65,7 +65,7 @@
                         <Label text="Directed" />
                      </children>
                   </HBox>
-                  <HBox GridPane.columnIndex="2">
+                  <HBox fx:id="isWeightedHBox" GridPane.columnIndex="2">
                      <children>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>

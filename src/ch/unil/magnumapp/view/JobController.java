@@ -127,17 +127,20 @@ public class JobController extends ViewController {
 	public void start(ArrayList<JobMagnum> jobs, int numCores) {
 		
 		// Initialize jobs
-		this.numCores = numCores;
+		if (numCores > jobs.size())
+			this.numCores = jobs.size();
+		else
+			this.numCores = numCores;
 		initializeJobs(jobs);
 		
 		// Header text
     	String networkS = ((jobs.size() == 1) ? "" : "s");
     	String coreS = ((numCores == 1) ? "" : "s");
     	String headerText = "Running: " + jobs.size() + " network" + networkS;
-    	if (numCores > jobs.size())
-    		headerText += " (" + jobs.size() + " out of " + numCores + " core" + coreS + " used)";
+    	if (numCores > this.numCores)
+    		headerText += " (" + this.numCores + " out of " + numCores + " core" + coreS + " used)";
     	else
-    		headerText += " (" + numCores + " core" + coreS + " used)";
+    		headerText += " (" + this.numCores + " core" + coreS + " used)";
 
 		// Create the javafx dialog
 		initializeDialog(headerText);
@@ -145,13 +148,12 @@ public class JobController extends ViewController {
 		App.log.setConsole(console);
 		App.log.println(headerText);
 		App.log.println("- Output directory: " + App.app.getEnrichmentController().getOutputDir().getPath() + "\n");
-		if (numCores > 1)
+		if (this.numCores > 1)
 			App.log.println("==> NOTE: Using multiple cores, console output of individual jobs turned OFF!\n"
 					      + "==> See the log files in the output directory instead: <job_name>.log.txt\n");
 
-		// Start the first job (jobFinished() callback will start the subsequent jobs)
-		int numInitialJobs = (numCores <= jobs.size()) ? numCores : jobs.size();
-		for (int i=0; i<numInitialJobs; i++)
+		// Start the first jobs (jobFinished() callback will start the subsequent jobs)
+		for (int i=0; i<this.numCores; i++)
 			startNextJob();
 		// Show dialog and wait
     	alert.showAndWait();
@@ -191,11 +193,36 @@ public class JobController extends ViewController {
 
 		// Out of memory error
 		} else {
+			increment(numJobsAborted);
+			interrupted = true;
+
 			App.log.println("\nOUT OF MEMORY ERROR:\t" + job.getJobName());
 			App.log.printStackTrace(e);
-			App.log.println("TBD MSG -- ALERT");
-			interrupted = true;
-			return;
+			App.log.println("=== OUT OF MEMORY ERROR ===\n\n" +
+					"Solutions:\n" +
+					"- Reduce the number of cores (parallel jobs) or\n" +
+					"- Export settings and run jobs with the command-line tool\n" +
+					"  (increase memory using -Xmx, e.g. \"-Xmx8g\" for 8GB)\n\n" +
+					"See the user guide for further instructions.\n");
+			
+			// Interestingly, this does not end up at App.main()...
+			//throw new RuntimeException(e);
+			
+			// Show an alert and quit
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.getDialogPane().setPrefWidth(420);
+			alert.setTitle("Error");
+			alert.setHeaderText("Out of memory error!");
+			alert.setContentText("It is not save to recover from an out of memory error, Magnum will now EXIT!\n\n" +
+					"Solutions:\n" +
+					"- Reduce the number of cores (parallel jobs) or\n" +
+					"- Export settings and run jobs with the command-line tool\n" +
+					"  (increase memory using -Xmx, e.g. \"-Xmx8g\" for 8GB)\n\n" +
+					"See the user guide for further instructions.\n");
+			alert.getButtonTypes().clear();
+			alert.getButtonTypes().add(new ButtonType("Quit", ButtonData.OK_DONE));
+			alert.showAndWait();
+			System.exit(-1);
 		}
 
 		if (numJobsQueued.get() != 0)
