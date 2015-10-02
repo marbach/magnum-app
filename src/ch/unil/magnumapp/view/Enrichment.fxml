@@ -97,15 +97,15 @@
               </rowConstraints>
                <children>
                   <TextField fx:id="numPermutationsTextField" alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="65.0" text="10000" />
-                  <Label text="Number of permutations" GridPane.columnIndex="1" />
+                  <Label fx:id="numPermutationsLabel" text="Number of permutations" GridPane.columnIndex="1" />
                   <CheckBox fx:id="excludeHlaGenesCheckBox" mnemonicParsing="false" selected="true" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                  <Label text="Exclude HLA genes" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label fx:id="excludeHlaGenesLabel" text="Exclude HLA genes" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Button fx:id="runButton" defaultButton="true" mnemonicParsing="false" onAction="#handleRunButton" prefWidth="70.0" text="Run" GridPane.columnIndex="4" GridPane.rowIndex="3" />
                   <Button fx:id="exportSettingsButton" mnemonicParsing="false" onAction="#handleExportSettingsButton" text="Export settings" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                   <CheckBox fx:id="excludeXYChromosomesCheckBox" mnemonicParsing="false" selected="true" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-                  <Label text="Exclude X, Y chromosomes" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Label fx:id="excludeXYChromosomesLabel" text="Exclude X, Y chromosomes" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <ChoiceBox fx:id="numCoresChoiceBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="50.0" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-                  <Label text="Number of cores (parallel jobs)" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Label fx:id="numCoresLabel" text="Number of cores (parallel jobs)" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                </children>
                <VBox.margin>
                   <Insets top="5.0" />
@@ -135,12 +135,12 @@
                   <HBox alignment="CENTER_LEFT" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
                      <children>
                         <Label text="Other plots:" />
-                        <Hyperlink text="Download R-scripts" />
+                        <Hyperlink fx:id="downloadRScriptsLink" text="Download R-scripts" />
                      </children>
                   </HBox>
                   <CheckBox fx:id="bonferroniCheckBox" mnemonicParsing="false" selected="true" text="Bonferroni correction" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Button fx:id="pvalFileBrowseButton" mnemonicParsing="false" onAction="#handlePvalFileBrowseButton" text="Browse ..." GridPane.columnIndex="2" />
-                  <Hyperlink text="Example file" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Hyperlink fx:id="exampleFileLink" text="Example file" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                </children>
             </GridPane>
          </children>

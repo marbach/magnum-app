@@ -59,7 +59,7 @@
                         <Font name="System Bold" size="13.0" />
                      </font>
                   </Hyperlink>
-                  <Label text="(921 MB, 73 networks)">
+                  <Label text="(878 MB, 73 networks)">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font>
@@ -78,7 +78,7 @@
                         <Font name="System Bold" size="13.0" />
                      </font>
                   </Hyperlink>
-                  <Label text="(4.5 GB, 394 networks)" textFill="CRIMSON">
+                  <Label text="(4.2 GB, 394 networks)" textFill="CRIMSON">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font>

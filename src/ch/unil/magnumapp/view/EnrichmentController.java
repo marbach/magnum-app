@@ -37,6 +37,7 @@ import ch.unil.magnumapp.JobMagnum;
 import ch.unil.magnumapp.JobEnrichment;
 import ch.unil.magnumapp.model.NetworkModel;
 import edu.mit.magnum.FileExport;
+import edu.mit.magnum.MagnumSettings;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
@@ -52,6 +53,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
@@ -116,11 +118,19 @@ public class EnrichmentController extends ViewController {
     @FXML
     private TextField numPermutationsTextField; // bound
     @FXML
+    private Label numPermutationsLabel;
+    @FXML
     private CheckBox excludeHlaGenesCheckBox;
+    @FXML
+    private Label excludeHlaGenesLabel;
     @FXML
     private CheckBox excludeXYChromosomesCheckBox;
     @FXML
+    private Label excludeXYChromosomesLabel;
+    @FXML
     private ChoiceBox<Integer> numCoresChoiceBox;
+    @FXML
+    private Label numCoresLabel;
     @FXML
     private Button exportSettingsButton;
     @FXML
@@ -135,6 +145,10 @@ public class EnrichmentController extends ViewController {
 	private Button plotButton;
     @FXML
     private CheckBox bonferroniCheckBox;
+    @FXML
+    private Hyperlink downloadRScriptsLink;
+    @FXML
+    private Hyperlink exampleFileLink;
     
     
 	// ============================================================================
@@ -270,6 +284,22 @@ public class EnrichmentController extends ViewController {
     	scoreWriter.println(networkName + "\t" + App.mag.utils.toStringScientific10(score) + "\t" + settingsFile);
     	scoreWriter.flush();
     }
+
+    
+	// ----------------------------------------------------------------------------
+	
+    /** Apply settings from the given magnum settings instance */
+    public void applySettings(MagnumSettings set) {
+    	
+    	usePrecomputedKernelsCheckBox.setSelected(set.usePrecomputedKernels);
+    	geneScoreFileProperty.set(set.geneScoreFile_);
+    	outputDirProperty.set(set.outputDirectory_);
+    	exportKernelsCheckBox.setSelected(set.exportKernels);
+    	numPermutationsProperty.set(set.numPermutations_);
+    	excludeHlaGenesCheckBox.setSelected(set.excludeHlaGenes_);
+    	excludeXYChromosomesCheckBox.setSelected(set.excludeXYChromosomes_);    	
+    }
+
 
     
 	// ============================================================================
@@ -559,59 +589,84 @@ public class EnrichmentController extends ViewController {
     			"Select at least one network\n" +
     			"in the table on the left"));
 
-    	Tooltip tip = new Tooltip("Choose your GWAS results file (gene-level" +
+    	Tooltip tip = new Tooltip("Choose your GWAS results file (gene-level\n" +
     			"p-values, e.g., computed using PASCAL)");
     	geneScoreTextField.setTooltip(tip);
     	geneScoreBrowseButton.setTooltip(tip);
     	geneScoreDownloadLink.setTooltip(new Tooltip(
-    			"Download a collection of GWAS gene\n"
-    			+ "scores (37 traits used in our paper)"));
+    			"Download a collection of GWAS gene scores\n"
+    			+ "(37 traits used by Marbach et al.)"));
 
     	pascalDownloadLink.setTooltip(new Tooltip(
     			"Download the PASCAL tool to compute gene scores\n"
     			+ "from GWAS summary statistics (SNP p-values)"));
     	
     	usePrecomputedKernelsCheckBox.setTooltip(new Tooltip(
-    			"Check if precomputed random-walk kernels are available for\n" +
-    			"the selected networks in the directory \"network_kernels\" in\n" +
-    			"the output directory (speed gain is not substantial, it is\n" +
-    			"only relevant when running many GWASs with the same network)"));
+    			"Check if precomputed network kernels\nare available at:\n" +
+    			"<output_directory>/network_kernels"));
 
     	exportKernelsCheckBox.setTooltip(new Tooltip(
-    			"Export the random-walk kernels to compressed text files." +
-    			"WARNING: File sizes can be >1GB!"));
+    			"Export network kernels to compressed text files.\n" +
+    			"WARNING: File sizes can be >1GB! Only useful for\n" +
+    			"running many GWASs on the same network."));
     	
     	tip = new Tooltip(
-    			"Select directory for writing\n" +
-    			"all result and log files");
+    			"Select directory for\n" +
+    			"result and log files");
     	outputDirTextField.setTooltip(tip);
     	outputDirBrowseButton.setTooltip(tip);
     	
-//        /** Parameters */
-//        @FXML
-//        private TextField numPermutationsTextField; // bound
-//        @FXML
-//        private CheckBox excludeHlaGenesCheckBox;
-//        @FXML
-//        private CheckBox excludeXYChromosomesCheckBox;
-//        @FXML
-//        private ChoiceBox<Integer> numCoresChoiceBox;
-//        @FXML
-//        private Button exportSettingsButton;
-//        @FXML
-//        private Button runButton;
-//        
-//        /** Results */
-//        @FXML
-//        private TextField pvalFileTextField;
-//        @FXML
-//        private Button pvalFileBrowseButton;
-//        @FXML
-//    	private Button plotButton;
-//        @FXML
-//        private CheckBox bonferroniCheckBox;
-        
-
+    	tip = new Tooltip(
+    			"Number of permutations N to estimate p-values:\n" +
+    			"- Lower bound for p-values is 1/N\n" + 
+    			"- Runtime scales linearly with N");
+    	numPermutationsTextField.setTooltip(tip);
+    	numPermutationsLabel.setTooltip(tip);
+    	
+    	tip = new Tooltip(
+    			"Exclude all genes in the HLA region (exceptionally\n" +
+    			"strong LD and associations for some immune traits)");
+    	excludeHlaGenesCheckBox.setTooltip(tip);
+    	excludeHlaGenesLabel.setTooltip(tip);
+    	
+    	tip = new Tooltip("Exclude the sex chromosomes");
+    	excludeXYChromosomesCheckBox.setTooltip(tip);
+    	excludeXYChromosomesLabel.setTooltip(tip);
+    	
+    	tip = new Tooltip(
+    			"Number of jobs launched in parallel. Rule of thumb:\n" +
+    			"1 job = 1 core and <8 GB memory (depends on network size)");
+    	numCoresChoiceBox.setTooltip(tip);
+    	numCoresLabel.setTooltip(tip);
+    	
+    	exportSettingsButton.setTooltip(new Tooltip(
+    			"Export files with the current settings, can be used to:\n" +
+    			"(1) Run jobs from the command line (typically on a computing cluster)\n" +
+    			"(2) Reload the settings in the App (click the \"Settings\" button)"));
+    	
+    	runButton.setTooltip(new Tooltip("Run enrichment analysis\nfor all selected networks"));
+    	
+    	tip = new Tooltip(
+    			"Result file with the enrichment p-value for each network.\n" +
+    			"The file can be found in the output directory of your run:\n" +
+    			"\t<gwas_name>.pvals.txt");
+    	pvalFileTextField.setTooltip(tip);
+    	pvalFileBrowseButton.setTooltip(tip);
+    	
+    	bonferroniCheckBox.setTooltip(new Tooltip(
+    			"Adjust the p-values of the N networks\n" +
+    			"using Bonferroni correction"));
+    	
+    	plotButton.setTooltip(new Tooltip(
+    			"Generate enrichment score plot\n" +
+    			"(Fig. 6 in Marbach et al.)"));
+    	
+    	downloadRScriptsLink.setTooltip(new Tooltip(
+    			"Download R-scripts\n" +
+    			"to plot results"));
+    	exampleFileLink.setTooltip(new Tooltip(
+    			"Download results for the psychiatric, cross-\n" +
+    			"disorder study (Fig. 6a, Marbach et al.)"));
     }
 
     

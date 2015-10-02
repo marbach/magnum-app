@@ -87,7 +87,7 @@ public class JobController extends ViewController {
 	private Button stopButton;
 	/** The progress indicator */
 	private ProgressIndicator progressIndicator;
-	/** The text area -- this will become an arrya! */
+	/** The console text area */
 	private TextArea console; 
 	
 	
@@ -321,7 +321,7 @@ public class JobController extends ViewController {
     	// The console
     	console = new TextArea();
     	console.setEditable(false);
-    	console.setWrapText(true);
+    	console.setWrapText(false);
     	console.getStyleClass().add("console-text");
 
     	console.setMaxWidth(Double.MAX_VALUE);

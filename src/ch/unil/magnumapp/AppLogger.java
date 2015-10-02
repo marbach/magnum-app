@@ -48,8 +48,8 @@ public class AppLogger extends MagnumLogger {
 	private TextArea console;
 	/** A log file */
 	private FileExport logFile;
-//	/** A string copy of the log */
-//	private String logCopy;
+	/** A string copy of the log */
+	private String logCopy;
 		
 	
 	// ============================================================================
@@ -112,8 +112,8 @@ public class AppLogger extends MagnumLogger {
 		if (logFile != null)
 			logFile.print(msg);
 		
-//		if (logCopy != null)
-//			logCopy += msg;
+		if (logCopy != null)
+			logCopy += msg;
 	}
 
 	
@@ -134,7 +134,15 @@ public class AppLogger extends MagnumLogger {
 		this.console = console;
 	}
 	
-//	public void keepLogCopy() {
-//		logCopy = "";
-//	}
+	public void keepLogCopy() {
+		logCopy = "";
+	}
+	
+	public void disableLogCopy() {
+		logCopy = null;
+	}
+	
+	public String getLogCopy() {
+		return logCopy;
+	}
 }

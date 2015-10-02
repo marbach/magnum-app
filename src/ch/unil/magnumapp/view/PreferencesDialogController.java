@@ -25,14 +25,18 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp.view;
 
+import java.io.File;
 import java.util.prefs.BackingStoreException;
 
+import ch.unil.magnumapp.App;
+import edu.mit.magnum.Magnum;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
+import javafx.stage.FileChooser;
 
 
 /**
@@ -127,7 +131,19 @@ public class PreferencesDialogController extends ViewController {
     @FXML
     private void handleLoadFromFileButton() {
     	
+    	// File chooser
+    	FileChooser fileChooser = new FileChooser();
+    	fileChooser.setTitle("Select a settings file");
+    	File file = fileChooser.showOpenDialog(app.getPrimaryStage());
+    	if (file == null)
+    		return;
     	
+    	// Load settings
+    	Magnum mag = new Magnum(App.log);
+    	mag.set.loadSettings(file.getAbsolutePath(), false);
+    	// Apply settings
+    	App.app.applySettings(mag.set);
+    	dialog.close();
     }
 
     

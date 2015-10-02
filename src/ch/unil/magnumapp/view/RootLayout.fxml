@@ -14,9 +14,9 @@
                <HBox.margin>
                   <Insets bottom="10.0" left="10.0" right="5.0" />
                </HBox.margin></VBox>
-            <VBox fx:id="rightSide" HBox.hgrow="NEVER">
+            <VBox fx:id="rightSide" maxHeight="1.7976931348623157E308" spacing="10.0" HBox.hgrow="NEVER">
                <HBox.margin>
-                  <Insets bottom="10.0" left="5.0" right="10.0" />
+                  <Insets bottom="5.0" left="5.0" right="10.0" />
                </HBox.margin></VBox>
          </children>
          <BorderPane.margin>

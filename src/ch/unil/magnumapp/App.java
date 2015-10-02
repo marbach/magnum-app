@@ -31,10 +31,13 @@ import java.util.prefs.BackingStoreException;
 import ch.unil.magnumapp.model.*;
 import ch.unil.magnumapp.view.*;
 import edu.mit.magnum.Magnum;
+import edu.mit.magnum.MagnumSettings;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -65,9 +68,13 @@ public class App extends Application {
     /** "Settings" controller */
     private PreferencesDialogController preferencesController;
     /** "Other networks" controller */
-    private NetworkCollectionController otherNetworksController;
+    private NetworkCollectionController networksController;
     /** "Connectivity enrichment" controller */
     private EnrichmentController enrichmentController;
+    /** "Console" controller */
+    private ConsoleController consoleController;
+    /** "Credits" controller */
+    private CreditsController creditsController;
     
 
 	// ============================================================================
@@ -79,7 +86,8 @@ public class App extends Application {
 		try {
 			// The logger
 			log = new AppLogger();
-			File logFile = new File(System.getProperty("user.dir"), ".magnum-app.log.txt");
+			log.keepLogCopy();
+			File logFile = new File(System.getProperty("user.home"), ".magnum-app.log.txt");
 			log.createLogFile(logFile);
 			// Say hello
 			log.println(AppSettings.magnumAppVersion);
@@ -135,6 +143,8 @@ public class App extends Application {
         showNetworkCollection();
         // Panes on the right side
         showConnetivityEnrichmentPane();
+        showConsolePane();
+        showCreditsPane();
         
         // Load saved/default settings
         loadPreferences();
@@ -148,7 +158,7 @@ public class App extends Application {
     	
     	try {
     		preferencesController.loadPreferences();
-    		otherNetworksController.loadPreferences();
+    		networksController.loadPreferences();
     		enrichmentController.loadPreferences();
     	} catch (Exception e) {
     		// Corrupted preferences, clear them
@@ -171,10 +181,19 @@ public class App extends Application {
     public void savePreferences() {
     	
     	preferencesController.savePreferences();
-    	otherNetworksController.savePreferences();
+    	networksController.savePreferences();
     	enrichmentController.savePreferences();
     }
     
+    
+	// ----------------------------------------------------------------------------
+	
+    /** Apply settings from the given magnum settings instance */
+    public void applySettings(MagnumSettings set) {
+    	
+    	enrichmentController.applySettings(set);
+    }
+
 
 	// ============================================================================
 	// PRIVATE METHODS
@@ -199,13 +218,11 @@ public class App extends Application {
 
     	// Initialize network collection, needs to be done before loading controller
 		networkCollection = new NetworkCollection();
-
     	// Initialize user networks pane
-    	otherNetworksController = (NetworkCollectionController) ViewController.loadFxml("view/NetworkCollection.fxml");
-    	//otherNetworksController.setNetworkCollection(networkCollection);
+    	networksController = (NetworkCollectionController) ViewController.loadFxml("view/NetworkCollection.fxml");
     	
     	// Add to root layout
-    	Node child = otherNetworksController.getRoot();
+    	Node child = networksController.getRoot();
     	VBox.setVgrow(child, Priority.ALWAYS);
     	rootLayoutController.getLeftSide().getChildren().add(child);  
     }
@@ -223,6 +240,40 @@ public class App extends Application {
     }
 
     
+	// ----------------------------------------------------------------------------
+
+    /** "Console" pane */
+    private void showConsolePane() {
+
+    	consoleController = (ConsoleController) ViewController.loadFxml("view/Console.fxml");
+    	// Add to root layout
+    	TitledPane pane = (TitledPane) consoleController.getRoot();
+    	pane.setExpanded(false);
+    	rootLayoutController.getRightSide().getChildren().add(pane);
+    	VBox.setVgrow(pane, Priority.ALWAYS);
+
+    	// Link to logger
+    	log.setConsole(consoleController.getConsoleTextArea());
+    	// Copy previous output to console
+    	consoleController.getConsoleTextArea().setText(log.getLogCopy());
+    	log.disableLogCopy();
+    }
+    
+    
+	// ----------------------------------------------------------------------------
+
+    /** "Credits" pane */
+    private void showCreditsPane() {
+
+    	creditsController = (CreditsController) ViewController.loadFxml("view/Credits.fxml");
+    	// Add to root layout
+    	HBox credits = (HBox) creditsController.getRoot();
+    	rootLayoutController.getRightSide().getChildren().add(credits);
+    	VBox.setVgrow(credits, Priority.NEVER);
+    }
+
+
+    
 	// ============================================================================
 	// SETTERS AND GETTERS
 
@@ -233,6 +284,6 @@ public class App extends Application {
 
     public PreferencesDialogController getPreferencesController() { return preferencesController; }
 	public EnrichmentController getEnrichmentController() {	return enrichmentController; }
-	public NetworkCollectionController getOtherNetworksController() { return otherNetworksController; }
+	public NetworkCollectionController getOtherNetworksController() { return networksController; }
     
 }

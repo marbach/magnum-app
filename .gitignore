@@ -6,5 +6,7 @@
 build/*
 !build/build-dmg.xml
 
+resources/
+
 bin/
 lib/

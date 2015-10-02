@@ -382,10 +382,10 @@ public class NetworkCollectionController extends ViewController {
     			if (item.getValue().notesProperty().get() == null) {
     				if (item.isLeaf()) {
     					Alert alert = new Alert(AlertType.WARNING);
-    					//alert.setWidth(1000); does not seem to work
+    					alert.getDialogPane().setPrefWidth(500);
     					alert.setTitle("Warning");
-    					alert.setHeaderText("Network collection directory not set!");
-    					alert.setContentText("Use the 'Browse' button to locate the 'Network collection' directory.\n\n" + 
+    					alert.setHeaderText("Network compendium directory not set!");
+    					alert.setContentText("Use the \"Browse\" button to locate the \"Network_compendium\" directory.\n\n" + 
     							"If you haven't done so already, download it:\n" +
     							"- click the 'Download' link or\n" +
     							"- visit regulatorycircuits.org");
