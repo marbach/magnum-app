@@ -20,13 +20,17 @@
             </Hyperlink>
             <Label styleClass="credits-text" text="Contact">
                <VBox.margin>
-                  <Insets />
+                  <Insets top="-2.0" />
                </VBox.margin></Label>
             <Hyperlink styleClass="credits-link" text="regulatorycircuits.org/contact/">
                <VBox.margin>
                   <Insets top="-5.0" />
                </VBox.margin>
             </Hyperlink>
+            <Label styleClass="credits-text" text="Copyright (c) 2015 Daniel Marbach">
+               <VBox.margin>
+                  <Insets top="-2.0" />
+               </VBox.margin></Label>
          </children></VBox>
       <ImageView fitHeight="54.0" fitWidth="154.0" pickOnBounds="true" preserveRatio="true">
          <image>

@@ -56,7 +56,7 @@ public class RootLayoutController extends ViewController {
     /** Help button handle */
     @FXML
     private void handleHelpButton() {
-    	
+    	SimpleInfoController.show("view/Help.fxml", "Help", "Getting help");
     }
 	    
     
@@ -74,7 +74,7 @@ public class RootLayoutController extends ViewController {
     /** About button handle */
     @FXML
     private void handleAboutButton() {
-    	
+    	SimpleInfoController.show("view/About.fxml", "About", "Magnum v1.0");
     }
 
 	

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="420.0" stylesheets="@MagnumAppStyle.css" vgap="5.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.unil.magnumapp.view.SimpleInfoController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="20.0" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints vgrow="NEVER" />
+      <RowConstraints vgrow="NEVER" />
+      <RowConstraints vgrow="NEVER" />
+      <RowConstraints vgrow="NEVER" />
+      <RowConstraints vgrow="NEVER" />
+      <RowConstraints vgrow="NEVER" />
+      <RowConstraints vgrow="NEVER" />
+      <RowConstraints vgrow="NEVER" />
+      <RowConstraints vgrow="NEVER" />
+      <RowConstraints vgrow="NEVER" />
+      <RowConstraints vgrow="NEVER" />
+      <RowConstraints vgrow="NEVER" />
+      <RowConstraints vgrow="NEVER" />
+      <RowConstraints vgrow="NEVER" />
+      <RowConstraints vgrow="NEVER" />
+      <RowConstraints vgrow="NEVER" />
+      <RowConstraints vgrow="NEVER" />
+   </rowConstraints>
+   <children>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="1. Tooltips" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="2. The paper" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="3. User guide" GridPane.columnSpan="2147483647" GridPane.rowIndex="5" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="•" GridPane.halignment="RIGHT" GridPane.rowIndex="7" GridPane.valignment="TOP" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="The user guide describes all options and includes step-by-step tutorials for both the app and the command-line tool." wrappingWidth="400.0" GridPane.rowIndex="6">
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+      </Text>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="4. GitHub project" GridPane.rowIndex="8" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="See the wiki and FAQ on GitHub, or dive in the source code..." wrappingWidth="400.0" GridPane.rowIndex="9">
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+      </Text>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="•" GridPane.halignment="RIGHT" GridPane.rowIndex="10" GridPane.valignment="TOP" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="6. Contact us" GridPane.rowIndex="13" />
+      <Hyperlink onAction="#handleGitHubWikiLink" text="GitHub wiki" GridPane.columnIndex="1" GridPane.rowIndex="10">
+         <GridPane.margin>
+            <Insets top="-3.0" />
+         </GridPane.margin>
+      </Hyperlink>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="We're looking forward to hearing from you!" GridPane.rowIndex="14">
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+      </Text>
+      <Hyperlink onAction="#handleDanielEmailLink" text="daniel.marbach@gmail.com" GridPane.columnIndex="1" GridPane.rowIndex="15">
+         <GridPane.margin>
+            <Insets top="-3.0" />
+         </GridPane.margin>
+      </Hyperlink>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="•" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="TOP" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Hover with your mose over elements of the interface to see tooltips with basic information." wrappingWidth="375.0" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets bottom="5.0" />
+         </GridPane.margin>
+      </Text>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="The methods and options implemented in this app are all described in detail in our paper. In the user guide, we assume that you have read the paper including the Methods section ;)" wrappingWidth="400.0" GridPane.rowIndex="3" />
+      <Hyperlink onAction="#handleHelpLink" text="regulatorycircuits.org/help/" GridPane.columnIndex="1" GridPane.rowIndex="7">
+         <GridPane.margin>
+            <Insets top="-3.0" />
+         </GridPane.margin>
+      </Hyperlink>
+      <Hyperlink onAction="#handleMarbachEtAlLink" text="Marbach et al. Submitted (preprint available upon request)" GridPane.columnIndex="1" GridPane.rowIndex="4">
+         <GridPane.margin>
+            <Insets top="-3.0" />
+         </GridPane.margin>
+      </Hyperlink>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="bold-text" text="5. Report an issue" GridPane.rowIndex="11" />
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="•" GridPane.halignment="RIGHT" GridPane.rowIndex="12" GridPane.valignment="TOP" />
+      <Hyperlink onAction="#handleGitHubIssuesLink" text="GitHub issues tracker" GridPane.columnIndex="1" GridPane.rowIndex="12">
+         <GridPane.margin>
+            <Insets top="-3.0" />
+         </GridPane.margin>
+      </Hyperlink>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="•" GridPane.halignment="RIGHT" GridPane.rowIndex="15" GridPane.valignment="TOP" />
+   </children>
+</GridPane>

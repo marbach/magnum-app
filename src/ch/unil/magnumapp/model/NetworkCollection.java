@@ -183,7 +183,7 @@ public class NetworkCollection {
 			// Create a new group for this cluster
 			String clusterId = entry.getKey();
 			String clusterName = entry.getValue();
-			NetworkGroup group = new NetworkGroup(clusterName, ".");
+			NetworkGroup group = new NetworkGroup(clusterName, null);
 			fantom5Individual.add(group);
 			
 			// Add the networks of this cluster

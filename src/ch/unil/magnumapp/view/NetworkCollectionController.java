@@ -265,26 +265,9 @@ public class NetworkCollectionController extends ViewController {
     @FXML
     private void handleNetworkDirDownloadLink() {
 
-    	// Disable the main window
-    	app.getRootLayout().setDisable(true);
-
-    	// Create the thread controller / dialog
-    	DownloadNetworksController controller = (DownloadNetworksController) ViewController.loadFxml("view/DownloadNetworks.fxml");
-
-		// The alert
-    	Alert alert = new Alert(AlertType.INFORMATION);
-    	alert.setTitle("Download networks");
-    	// Header text
-    	alert.setHeaderText("Installing the network compendium");
-    	
-    	// The content
-    	alert.getDialogPane().setContent(controller.getDownloadNetworksVBox());
-
-    	// Show the dialog
-    	alert.showAndWait();
-    	
-		// Enable the main window
-    	app.getRootLayout().setDisable(false);
+    	SimpleInfoController.show("view/DownloadNetworks.fxml", 
+    			"Download networks", 
+    			"Installing the network compendium");
     }
 
     	
@@ -400,7 +383,7 @@ public class NetworkCollectionController extends ViewController {
     				// Directory was set but the file / directory was not found
     			} else {
     				Alert alert = new Alert(AlertType.WARNING);
-    				//alert.setWidth(1000); does not seem to work
+    				alert.getDialogPane().setPrefWidth(600);
     				alert.setTitle("Warning");
 
     				// Get info on the file / dir
@@ -411,10 +394,11 @@ public class NetworkCollectionController extends ViewController {
 
     				// Set text
     				alert.setHeaderText(fileOrDir + " not found!");
-    				alert.setContentText(fileOrDir + " not found in the selected 'Network collection' directory:\n" + 
+    				alert.setContentText(fileOrDir + " not found in the \"Network_compendium\" directory:\n" + 
     						file.getAbsolutePath() + "\n\n" +
-    						"Verify that the 'Network collection' directory was selected. " +
-    						"If the problem persists, download it again by clicking the link.");
+    						"- Click the \"Download\" link for instructions how to install the networks\n" +
+    						"- Note that the 394 individual networks need to be downloaded separately\n" +
+    						"- Verify that the \"Network_compendium\" directory was selected");
 
     				// Show the dialog
     				alert.showAndWait();

@@ -139,9 +139,15 @@ public class NetworkModel {
 	/** Initializes the file given the directory and filename */
 	public void initFile(File directory) {
 
+		if (filename.get() == null) {
+			setFile(directory);
+			return;
+		}
+		
 		File file = null;
 		if (directory != null)
-			file = directory.toPath().resolve(filename.get()).toFile();
+			file = new File(directory, filename.get());
+			//file = directory.toPath().resolve(filename.get()).toFile();
 		setFile(file);
 	}
 	

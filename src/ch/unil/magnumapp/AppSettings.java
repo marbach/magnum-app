@@ -32,17 +32,48 @@ package ch.unil.magnumapp;
 final public class AppSettings {
 
 	// ============================================================================
-	// STATIC
+	// GENERAL
 
 	/** MagnumApp version */
 	final static public String magnumAppVersion = "Magnum v1.0";
+	
+	/** Website */
+	final static public String regulatoryCircuitsLink = "http://regulatorycircuits.org";
+	/** Paper */
+	final static public String marbachEtAlLink = "";
+	/** Daniel Marbach email */
+	final static public String danielContactLink = "mailto:daniel.marbach@gmail.com";
+	
+	// ============================================================================
+	// HELP DIALOG
+	
+	/** User guide */
+	final static public String helpLink = "http://regulatorycircuits.org/help/";
+	/** GitHub wiki */
+	final static public String gitHubWikiLink = "";
+	/** GitHub issues */
+	final static public String gitHubIssuesLink = "";
+	
+	// ============================================================================
+	// ABOUT DIALOG
 
+	/** Daniel Marbach link */
+	final static public String danielLink = "http://danielmarbach.com";
+	/** Sven Bergmann link */
+	final static public String svenLink = "http://www.unil.ch/dgm/en/home/menuinst/research-groups/sven-bergmann.html";
+	/** MIT license */
+	final static public String mitLicenseLink = "https://github.com/marbach/magnum-app/wiki/License";
+
+	// ============================================================================
+	// NETWORK DOWNLOAD DIALOG
+	
 	/** Partial network compendium */
 	final static public String networkCompendiumLink = "http://www2.unil.ch/cbg/regulatorycircuits/Network_compendium.zip";
 	/** Full network compendium */
 	final static public String individualNetworksLink = "http://www2.unil.ch/cbg/regulatorycircuits/FANTOM5_individual_networks.zip";
-	/** regulatorycircuits.org */
-	final static public String regulatoryCircuitsLink = "http://regulatorycircuits.org";
+
+	// ============================================================================
+	// ENRICHEMENT PANEL
 
 	/** Download gene scores */
 	final static public String geneScoresLink = "http://regulatorycircuits.org/data/GWAS%20gene%20scores%20v1.zip";

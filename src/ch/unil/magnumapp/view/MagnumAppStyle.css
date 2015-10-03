@@ -31,3 +31,7 @@
 	-fx-font-size: 11;
 	-fx-text-fill: #52bbe7;
 }
+
+.bold-text {
+	-fx-font-weight: bold;
+}
