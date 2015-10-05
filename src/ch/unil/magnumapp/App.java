@@ -36,6 +36,7 @@ import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -135,6 +136,11 @@ public class App extends Application {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle(AppSettings.magnumAppVersion);
 
+        // Set icons
+        primaryStage.getIcons().add(new Image(App.class.getResourceAsStream("resources/icons/magnumIcon16.png"))); 
+        primaryStage.getIcons().add(new Image(App.class.getResourceAsStream("resources/icons/magnumIcon32.png"))); 
+        primaryStage.getIcons().add(new Image(App.class.getResourceAsStream("resources/icons/magnumIcon64.png"))); 
+        
         // Load preferences controller -- needs to be done first because of rememberSettings
     	preferencesController = (PreferencesDialogController) ViewController.loadFxml("view/PreferencesDialog.fxml");
         // The root layout

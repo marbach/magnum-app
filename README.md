@@ -1,4 +1,4 @@
-**Magnum** is a java app for GWAS pathway and network analysis. This is the GitHub repository for the **app**, there is a [separate repository](https://github.com/marbach/magnum) for the command-line tool. 
+**Magnum** is a java app for GWAS pathway and network analysis. This is the GitHub repository for the **app**, there is a [separate repository](https://github.com/marbach/magnum) for the **command-line tool**. 
 
 **Website**
 * [regulatorycircuits.org](http://regulatorycircuits.org)
@@ -17,15 +17,10 @@
 
 Magnum is under active development, more features are currently being added.
 
-**Help**
-* [Help](http://regulatorycircuits.org/help/)
-* [FAQ](https://github.com/marbach/magnum-app/wiki/FAQ)
-* [Contact](http://regulatorycircuits.org/contact/)
-
 **License**
 * [MIT license (free, open-source)](https://github.com/marbach/magnum-app/wiki/License)
 
-**Author**
+**Project lead**
 * [Daniel Marbach](http://danielmarbach.com)
 
 **Advisor**

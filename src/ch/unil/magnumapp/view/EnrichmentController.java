@@ -463,7 +463,7 @@ public class EnrichmentController extends ViewController {
 
     /** PASCAL download link */
     @FXML
-    private void downloadRScriptsLink() {
+    private void handleDownloadRScriptsLink() {
     	openWebpage(AppSettings.downloadRScriptsLink);
     }
 

@@ -13,16 +13,16 @@
       <VBox fx:id="creditsVBox" HBox.hgrow="NEVER">
          <children>
             <Label styleClass="credits-text" text="Reference" />
-            <Hyperlink styleClass="credits-link" text="Marbach et al., submitted.">
+            <Hyperlink onAction="#handleMarbachEtAlLink" styleClass="credits-link" text="Marbach et al., submitted.">
                <VBox.margin>
                   <Insets top="-5.0" />
                </VBox.margin>
             </Hyperlink>
-            <Label styleClass="credits-text" text="Contact">
+            <Label styleClass="credits-text" text="Website">
                <VBox.margin>
                   <Insets top="-2.0" />
                </VBox.margin></Label>
-            <Hyperlink styleClass="credits-link" text="regulatorycircuits.org/contact/">
+            <Hyperlink onAction="#handleRegulatoryCircuitsLink" styleClass="credits-link" text="regulatorycircuits.org">
                <VBox.margin>
                   <Insets top="-5.0" />
                </VBox.margin>

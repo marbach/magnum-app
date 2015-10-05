@@ -108,8 +108,8 @@
 		<mkdir dir="package/windows" />
 		<copy todir="package/windows">
 		    <fileset dir="..">
-		        <include name="Magnum.ico" />
-		        <include name="Magnum-setup-icon.bmp" />
+		        <include name="magnum-logo.ico" />
+		        <include name="Magnum-setup-icon.bmp" /> <!-- TBD!!! -->
 		    </fileset>
 		</copy>
 
@@ -117,7 +117,7 @@
 		<mkdir dir="package/macosx" />
 		<copy todir="package/macosx">
 		    <fileset dir="..">
-		        <include name="Magnum.icns" />
+		        <include name="magnum-logo.icns" />
 		    </fileset>
 		</copy>        
 

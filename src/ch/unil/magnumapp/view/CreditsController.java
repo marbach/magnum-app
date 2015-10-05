@@ -25,6 +25,7 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp.view;
 
+import ch.unil.magnumapp.AppSettings;
 import javafx.fxml.FXML;
 import javafx.scene.layout.VBox;
 
@@ -44,8 +45,19 @@ public class CreditsController extends ViewController {
 	// PUBLIC METHODS
 	
 	// ============================================================================
-	// PRIVATE
+	// HANDLES
+	
+	@FXML
+	private void handleMarbachEtAlLink() {
+		openWebpage(AppSettings.marbachEtAlLink);
+	}
 
+	@FXML
+	private void handleRegulatoryCircuitsLink() {
+		openWebpage(AppSettings.regulatoryCircuitsLink);
+	}
+	
+	
 	// ============================================================================
 	// SETTERS AND GETTERS
 

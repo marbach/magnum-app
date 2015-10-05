@@ -135,12 +135,12 @@
                   <HBox alignment="CENTER_LEFT" GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
                      <children>
                         <Label text="Other plots:" />
-                        <Hyperlink fx:id="downloadRScriptsLink" text="Download R-scripts" />
+                        <Hyperlink fx:id="downloadRScriptsLink" onAction="#handleDownloadRScriptsLink" text="Download R-scripts" />
                      </children>
                   </HBox>
                   <CheckBox fx:id="bonferroniCheckBox" mnemonicParsing="false" selected="true" text="Bonferroni correction" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Button fx:id="pvalFileBrowseButton" mnemonicParsing="false" onAction="#handlePvalFileBrowseButton" text="Browse ..." GridPane.columnIndex="2" />
-                  <Hyperlink fx:id="exampleFileLink" text="Example file" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <Hyperlink fx:id="exampleFileLink" onAction="#handleExampleFileLink" text="Example file" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                </children>
             </GridPane>
          </children>

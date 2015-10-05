@@ -40,7 +40,7 @@ final public class AppSettings {
 	/** Website */
 	final static public String regulatoryCircuitsLink = "http://regulatorycircuits.org";
 	/** Paper */
-	final static public String marbachEtAlLink = "";
+	final static public String marbachEtAlLink = "http://regulatorycircuits.org/papers.html";
 	/** Daniel Marbach email */
 	final static public String danielContactLink = "mailto:daniel.marbach@gmail.com";
 	
@@ -48,11 +48,11 @@ final public class AppSettings {
 	// HELP DIALOG
 	
 	/** User guide */
-	final static public String helpLink = "http://regulatorycircuits.org/help/";
+	final static public String helpLink = "http://regulatorycircuits.org/help.html";
 	/** GitHub wiki */
-	final static public String gitHubWikiLink = "";
+	final static public String gitHubWikiLink = "https://github.com/marbach/magnum-app/wiki";
 	/** GitHub issues */
-	final static public String gitHubIssuesLink = "";
+	final static public String gitHubIssuesLink = "https://github.com/issues";
 	
 	// ============================================================================
 	// ABOUT DIALOG
@@ -76,12 +76,12 @@ final public class AppSettings {
 	// ENRICHEMENT PANEL
 
 	/** Download gene scores */
-	final static public String geneScoresLink = "http://regulatorycircuits.org/data/GWAS%20gene%20scores%20v1.zip";
+	final static public String geneScoresLink = "http://regulatorycircuits.org/data/GWAS_gene_scores_v1.zip";
 	/** Download PASCAL */
 	final static public String pascalLink = "http://www2.unil.ch/cbg/index.php?title=Pascal";
 	/** Example p-value file */
-	final static public String examplePvalFileLink = "";
+	final static public String examplePvalFileLink = "http://regulatorycircuits.org/data/psychiatric_cross_disorder.pvals.txt";
 	/** Download R-scripts */
-	final static public String downloadRScriptsLink = "";
+	final static public String downloadRScriptsLink = "http://regulatorycircuits.org/data/Magnum-1.0_command-line.zip";
 	
 }
