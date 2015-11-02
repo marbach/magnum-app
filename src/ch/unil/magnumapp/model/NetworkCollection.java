@@ -49,6 +49,9 @@ public class NetworkCollection {
     /** My networks */
     private NetworkGroup myNetworks;
 
+    /** Example network */
+    private NetworkModel exampleNet;
+    
     /** 32 high-level networks */
     private NetworkGroup fantom5HighLevel;
     /** 394 individual networks */
@@ -71,6 +74,7 @@ public class NetworkCollection {
 	/** Constructor */
 	public NetworkCollection() {
 		
+		initExampleNet();
 		initRegulatoryCircuits();
 		initPpiNetworks();
 		initCoexpressionGtex();
@@ -91,7 +95,7 @@ public class NetworkCollection {
 	
     // ----------------------------------------------------------------------------
 
-	/** Get a tree representation of the network collection for the view */
+	/**  */
 	public boolean selectionDisabled(String name) {
 		return selectionDisabled.contains(name);
 	}
@@ -136,6 +140,16 @@ public class NetworkCollection {
 		}
 		reader.close();
 		return map;
+	}
+
+	
+    // ----------------------------------------------------------------------------
+
+	/** Example network */
+	private void initExampleNet() {
+
+		exampleNet = new NetworkModel("Example network: smooth muscle cells - umbilical vein", 
+				"ch/unil/magnumapp/resources/fantom5_networks/smooth_muscle_cells_-_umbilical_vein.txt.gz", true, true, true);
 	}
 
 	
@@ -256,7 +270,7 @@ public class NetworkCollection {
 		selectionDisabled.add(name);
 
 		// My networks
-		//networkTree.getChildren().add(myNetworks.getTreeViewRoot());
+		networkTree.getChildren().add(new TreeItem<>(exampleNet));
 
 		// Regulatory networks
 		name = "Tissue-specific regulatory networks (FANTOM5)";

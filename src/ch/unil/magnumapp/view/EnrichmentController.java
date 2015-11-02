@@ -88,6 +88,11 @@ public class EnrichmentController extends ViewController {
 	/** Flag to disable the warning for multiple cores */
 	private boolean disableNumCoresWarning = false;
 	
+	/** The text used for the example gene score file */
+	private final String exampleGeneScoreText = "Example: advanced macular degeneration, neovascular";
+	/** The text used for the example pval file */
+	private final String examplePvalText = "Example: psychiatric, cross-disorder (Fig. 6a, Marbach et al.)";
+	
 
 	// ============================================================================
 	// FXML
@@ -103,6 +108,8 @@ public class EnrichmentController extends ViewController {
     private CheckBox usePrecomputedKernelsCheckBox;
     @FXML
     private Hyperlink geneScoreDownloadLink;
+    @FXML
+    private Hyperlink geneScoreExampleLink;
     @FXML
     private Hyperlink pascalDownloadLink;
     
@@ -189,11 +196,32 @@ public class EnrichmentController extends ViewController {
     	});
     	
     	// Bindings
-        Bindings.bindBidirectional(geneScoreTextField.textProperty(), geneScoreFileProperty, new FileStringConverter());
         Bindings.bindBidirectional(outputDirTextField.textProperty(), outputDirProperty, new FileStringConverter());
         Bindings.bindBidirectional(numPermutationsTextField.textProperty(), numPermutationsProperty, new NumberStringConverter("###"));
         //numPermutationsTextField.textProperty().bindBidirectional(numPermutationsProperty, new NumberStringConverter());
-        Bindings.bindBidirectional(pvalFileTextField.textProperty(), pvalFileProperty, new FileStringConverter());
+
+        //Bindings.bindBidirectional(geneScoreTextField.textProperty(), geneScoreFileProperty, new FileStringConverter(true));
+        geneScoreFileProperty.addListener((observable, oldValue, newValue) -> {
+        	File file = (File) newValue;
+    		if (file == null)
+    			geneScoreTextField.setText(exampleGeneScoreText);
+    		else
+    			geneScoreTextField.setText(file.getName());
+        });
+        		
+        //Bindings.bindBidirectional(pvalFileTextField.textProperty(), pvalFileProperty, new FileStringConverter());
+        pvalFileProperty.addListener((observable, oldValue, newValue) -> {
+        	File file = (File) newValue;
+    		if (file == null)
+    			pvalFileTextField.setText(examplePvalText);
+    		else
+    			pvalFileTextField.setText(file.getName());
+        });
+        
+        // Example texts
+        if (geneScoreFileProperty.get() == null)
+        	geneScoreTextField.setText(exampleGeneScoreText);
+        pvalFileTextField.setText(examplePvalText);
         
         // Tooltips
         initTooltips();
@@ -205,7 +233,7 @@ public class EnrichmentController extends ViewController {
     /** Initialize with settings from AppSettings */
     @Override
     public void loadPreferences() {
-   	
+   	    	
         geneScoreFileProperty.set(getFilePreference("geneScoreFile"));
         outputDirProperty.set(getFilePreference("outputDir"));
         
@@ -216,6 +244,9 @@ public class EnrichmentController extends ViewController {
         bonferroniCheckBox.setSelected(prefs.getBoolean("bonferroni", true));
         numPermutationsProperty.set(prefs.getInt("numPermutations", 10000));
         
+        // Initialize stuff that's not saved
+    	pvalFileProperty.set(null);
+
         Platform.runLater(() -> {
         	disableNumCoresWarning = true;
             numCoresChoiceBox.getSelectionModel().select(prefs.getInt("numCores", 0));
@@ -337,7 +368,13 @@ public class EnrichmentController extends ViewController {
     	openWebpage(AppSettings.pascalLink);
     }
 
+    /** Example gene scores link */
+    @FXML
+    private void handleExampleGeneScoresLink() {  	
+        geneScoreFileProperty.set(null);
+    }
 
+    
     // ----------------------------------------------------------------------------
 
     /** Output directory browse button */
@@ -390,6 +427,19 @@ public class EnrichmentController extends ViewController {
     	// Disable the main window
     	app.getRootLayout().setDisable(true);
 
+		// Export example gene scores
+    	boolean exportGeneScores = geneScoreFileProperty.get() == null;
+		if (exportGeneScores) {
+			// Create the example_data directory
+			File exampleDir = new File(outputDirProperty.get(), "example_data");
+			exampleDir.mkdirs();
+			App.log.println("Exporting example gene scores to: " + exampleDir.getPath());
+
+			// Copy gene scores from jar to example_data
+			geneScoreFileProperty.set(
+					AppSettings.exportResource("ch/unil/magnumapp/resources/fantom5_networks/macular_degeneration_neovascular.txt", exampleDir));			
+		}
+		
     	// Create the thread controller / dialog
     	JobController jobManager = (JobController) ViewController.loadFxml("view/ThreadStatus.fxml");
     	jobManager.setOutputDir(outputDirProperty.get()); // Has to be done before creating the jobs
@@ -413,6 +463,8 @@ public class EnrichmentController extends ViewController {
 			scoreWriter.close();
 			pvalFileProperty.set(scoreWriter.getFile());
 		}
+		if (exportGeneScores)
+			geneScoreFileProperty.set(null);
     	app.getRootLayout().setDisable(false);
     	plotButton.setDisable(false);
     	System.gc();
@@ -455,11 +507,15 @@ public class EnrichmentController extends ViewController {
 
     // ----------------------------------------------------------------------------
 
-    /** Gene score download link */
+    /** Plot example results */
     @FXML
-    private void handleExampleFileLink() {  	
-    	openWebpage(AppSettings.examplePvalFileLink);
+    private void handleExamplePvalsLink() {  	
+    	// Null now sets the example promt text and will load the resource from the jar
+        pvalFileProperty.set(null);
     }
+
+    
+    // ----------------------------------------------------------------------------
 
     /** PASCAL download link */
     @FXML
@@ -477,8 +533,8 @@ public class EnrichmentController extends ViewController {
     	String errors = "";
     	if (selectedNetworks.isEmpty())
     		errors += "- No networks selected\n";
-    	if (geneScoreFileProperty.get() == null)
-    		errors += "- No GWAS gene score file selected\n";
+    	//if (geneScoreFileProperty.get() == null)
+    		//errors += "- No GWAS gene score file selected\n";
     	if (outputDirProperty.get() == null)
     		errors += "- No output directory selected\n";
     	
@@ -488,7 +544,7 @@ public class EnrichmentController extends ViewController {
     		alert.setHeaderText("Not all required options are set!");
     		alert.setContentText("Errors:\n" + errors); 
     		alert.showAndWait();
-			App.log.closeLogFile();
+			//App.log.closeLogFile(); // Why the ... would we do that here?
     		return false;
     	} else
     		return true;
@@ -596,6 +652,9 @@ public class EnrichmentController extends ViewController {
     	geneScoreDownloadLink.setTooltip(new Tooltip(
     			"Download a collection of GWAS gene scores\n"
     			+ "(37 traits used by Marbach et al.)"));
+    	geneScoreExampleLink.setTooltip(new Tooltip(
+    			"Use included example GWAS\n" +
+    			"(see tutorial for explanations)"));
 
     	pascalDownloadLink.setTooltip(new Tooltip(
     			"Download the PASCAL tool to compute gene scores\n"
@@ -659,13 +718,13 @@ public class EnrichmentController extends ViewController {
     	
     	plotButton.setTooltip(new Tooltip(
     			"Generate enrichment score plot\n" +
-    			"(Fig. 6 in Marbach et al.)"));
+    			"(similar to Fig. 6, Marbach et al.)"));
     	
     	downloadRScriptsLink.setTooltip(new Tooltip(
     			"Download R-scripts\n" +
     			"to plot results"));
     	exampleFileLink.setTooltip(new Tooltip(
-    			"Download results for the psychiatric, cross-\n" +
+    			"Plot results for the psychiatric, cross-\n" +
     			"disorder study (Fig. 6a, Marbach et al.)"));
     }
 

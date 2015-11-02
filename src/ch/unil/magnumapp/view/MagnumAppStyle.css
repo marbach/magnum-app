@@ -35,3 +35,13 @@
 .bold-text {
 	-fx-font-weight: bold;
 }
+
+.hyperlink:visited {
+    -fx-text-fill: -fx-focus-color;
+    -fx-underline: false;
+}
+
+.hyperlink:hover {
+    -fx-underline: true;
+}
+

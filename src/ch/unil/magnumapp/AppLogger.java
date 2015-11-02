@@ -81,7 +81,8 @@ public class AppLogger extends MagnumLogger {
 	
 	/** Close the log file */
 	public void closeLogFile() {
-		logFile.close();;
+		logFile.close();
+		logFile = null;
 	}
 
 	

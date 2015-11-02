@@ -140,7 +140,7 @@ public class PreferencesDialogController extends ViewController {
     	
     	// Load settings
     	Magnum mag = new Magnum(App.log);
-    	mag.set.loadSettings(file.getAbsolutePath(), false);
+    	mag.set.loadSettings(file.getAbsolutePath());
     	// Apply settings
     	App.app.applySettings(mag.set);
     	dialog.close();

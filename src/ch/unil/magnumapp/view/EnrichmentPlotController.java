@@ -26,6 +26,7 @@ THE SOFTWARE.
 package ch.unil.magnumapp.view;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -70,7 +71,13 @@ public class EnrichmentPlotController {
 		
     	// Read the p-value file
     	App.log.println("Reading p-value file ...");
-    	FileParser reader = new FileParser(App.log, pvalFile);
+    	FileParser reader;
+    	if (pvalFile != null)
+    		reader = new FileParser(App.log, pvalFile);
+    	else {
+    		InputStream in = App.class.getClassLoader().getResourceAsStream("ch/unil/magnumapp/resources/fantom5_networks/psychiatric_cross_disorder.pvals.txt");
+    		reader = new FileParser(in);
+    	}
     	
     	// The header
     	String[] header = reader.readLine();

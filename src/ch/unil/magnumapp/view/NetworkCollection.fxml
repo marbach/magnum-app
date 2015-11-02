@@ -37,7 +37,7 @@
                            </image>
                         </ImageView>
                      </graphic></TreeTableColumn>
-                  <TreeTableColumn fx:id="notesColumn" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" sortable="false" text="Warnings" />
+                  <TreeTableColumn fx:id="notesColumn" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" sortable="false" text="Notes" />
                </columns>
                <columnResizePolicy>
                   <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

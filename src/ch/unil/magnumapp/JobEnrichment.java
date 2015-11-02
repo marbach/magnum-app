@@ -69,12 +69,27 @@ public class JobEnrichment extends JobMagnum {
 	@Override
 	protected void runJob() {
 		
+		// Export example network
+		if (network.getName().startsWith("Example")) {
+			// Create the example_data directory
+			File exampleDir = new File(outputDir, "example_data");
+			exampleDir.mkdirs();
+			myMag.log.println("Exporting example network to: " + exampleDir.getPath());
+			
+			// Copy network from jar to example_data
+			File exportedNetwork = AppSettings.exportResource(network.filenameProperty().get(), exampleDir);
+			// Copy the network model and set the new file
+			network = new NetworkModel(network);
+			network.nameProperty().set(network.getName().replace("Example network: ", ""));
+			network.setFile(exportedNetwork);
+		}
+		
     	// Write settings file
     	writeSettingsFile(myMag.log);
     	
     	// Run magnum
     	myMag.log.println("\nStarting job...\n");
-		myMag.set.loadSettings(settingsFile.getAbsolutePath(), false);
+		myMag.set.loadSettings(settingsFile.getAbsolutePath());
 		myMag.run();
 		
 		// Get result
@@ -125,7 +140,7 @@ public class JobEnrichment extends JobMagnum {
     			+ "# Defines if self loops should be removed from the network [--noself]\n"
     			+ "removeSelfLoops = " + network.getRemoveSelf() + "\n"
     			+ "# The GWAS gene score file [--scores <file>]\n"
-    			+ "geneScoreFile = " + controller.getGeneScoreFile().getAbsolutePath() + "\n"
+    			+ "geneScoreFile = " + controller.getGeneScoreFile().getAbsolutePath() + "\n" 
     			+ "# Output directory to save files (empty = home directory; '.' = working directory) [--outdir]\n"
     			+ "outputDirectory = " + outputDir.getAbsolutePath() + "\n"
     			+ "\n"
@@ -165,7 +180,6 @@ public class JobEnrichment extends JobMagnum {
 	
 	// ============================================================================
 	// PRIVATE METHODS
-
 
 	// ============================================================================
 	// SETTERS AND GETTERS

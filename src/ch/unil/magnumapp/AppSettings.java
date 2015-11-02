@@ -25,6 +25,11 @@ THE SOFTWARE.
  */
 package ch.unil.magnumapp;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Class for settings
@@ -58,9 +63,9 @@ final public class AppSettings {
 	// ABOUT DIALOG
 
 	/** Daniel Marbach link */
-	final static public String danielLink = "http://danielmarbach.com";
+	final static public String danielLink = "http://www2.unil.ch/cbg/index.php?title=User:Daniel";
 	/** Sven Bergmann link */
-	final static public String svenLink = "http://www.unil.ch/dgm/en/home/menuinst/research-groups/sven-bergmann.html";
+	final static public String svenLink = "http://www2.unil.ch/cbg/index.php?title=User:Sven";
 	/** MIT license */
 	final static public String mitLicenseLink = "https://github.com/marbach/magnum-app/wiki/License";
 
@@ -84,4 +89,26 @@ final public class AppSettings {
 	/** Download R-scripts */
 	final static public String downloadRScriptsLink = "http://regulatorycircuits.org/data/Magnum-1.0_command-line.zip";
 	
+	
+	// ============================================================================
+	// PUBLIC METHODS
+	
+    /** Copy a file from the jar to the file system */
+    public static File exportResource(String resource, File targetDir) {
+    	
+		String fileName = new File(resource).getName();
+		InputStream inStream = App.class.getClassLoader().getResourceAsStream(resource);
+		Path dest = new File(targetDir, fileName).toPath();
+		
+		try {
+			if (!dest.toFile().exists())
+				Files.copy(inStream, dest);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		return dest.toFile();
+    }
+
+    
+
 }

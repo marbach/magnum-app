@@ -30,9 +30,7 @@ import java.io.File;
 import ch.unil.magnumapp.App;
 import edu.mit.magnum.net.Network;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -52,7 +50,6 @@ public class NetworkModel {
 	/** Flag showing if file exists */
 	private boolean fileExists;
 	/** Flag indicates that this is not a network, but a directory in the network collection tree */
-	@SuppressWarnings("unused")
 	private boolean isGroup;
 
 	/** Notes */
@@ -65,12 +62,12 @@ public class NetworkModel {
 	/** Remove self */
 	private BooleanProperty removeSelf;
 
-	/** Number of regulators */
-	private IntegerProperty numRegulators;
-	/** Number of nodes */
-	private IntegerProperty numNodes;
-	/** Number of edges */
-	private IntegerProperty numEdges;
+//	/** Number of regulators */
+//	private IntegerProperty numRegulators;
+//	/** Number of nodes */
+//	private IntegerProperty numNodes;
+//	/** Number of edges */
+//	private IntegerProperty numEdges;
 
 	
 	// ============================================================================
@@ -79,6 +76,19 @@ public class NetworkModel {
 	/** Constructor with given network */
 	public NetworkModel(Network network) {
 		initialize(network);
+	}
+
+	
+	/** Copy constructor */
+	public NetworkModel(NetworkModel other) {
+		this(other.name.get(), other.filename.get(), other.isDirected.get(), other.isWeighted.get(), other.removeSelf.get());
+		file = other.file;
+		fileExists = other.fileExists;
+		isGroup = other.isGroup;
+		notes = new SimpleStringProperty(other.notes.get());
+//		numRegulators = new SimpleIntegerProperty(other.numRegulators.get());
+//		numNodes = new SimpleIntegerProperty(other.numNodes.get());
+//		numEdges = new SimpleIntegerProperty(other.numEdges.get());
 	}
 
 	
@@ -127,9 +137,9 @@ public class NetworkModel {
 		isWeighted = new SimpleBooleanProperty(network.getIsWeighted());
 		isDirected = new SimpleBooleanProperty(network.getIsDirected());
 		
-		numRegulators = new SimpleIntegerProperty(network.getNumRegulators());
-		numNodes = new SimpleIntegerProperty(network.getNumNodes());
-		numEdges = new SimpleIntegerProperty(network.getNumEdges());
+//		numRegulators = new SimpleIntegerProperty(network.getNumRegulators());
+//		numNodes = new SimpleIntegerProperty(network.getNumNodes());
+//		numEdges = new SimpleIntegerProperty(network.getNumEdges());
 		notes = new SimpleStringProperty();
 	}
 
@@ -147,7 +157,6 @@ public class NetworkModel {
 		File file = null;
 		if (directory != null)
 			file = new File(directory, filename.get());
-			//file = directory.toPath().resolve(filename.get()).toFile();
 		setFile(file);
 	}
 	
@@ -157,9 +166,17 @@ public class NetworkModel {
 	/** Set file, initialize fileExists and notes with error message */
 	public void setFile(File file) {
 		
+		// The example network is a resource, file is null but we set exists true
+		if (name.get().startsWith("Example")) {
+			this.file = new File(filename.get());
+			fileExists = true;
+			notes.set("Click me!");
+			return;
+		}
+		
 		this.file = file;
 		fileExists = (file != null && file.exists());
-				
+		
 		// Use notes property to display warning if file does not exist
 		if (file != null && !file.exists())
 			notes.set("Not installed");
@@ -182,9 +199,9 @@ public class NetworkModel {
 	public StringProperty filenameProperty() { return filename; }
 	public StringProperty nameProperty() { return name; }	
 	public StringProperty notesProperty() { return notes; }
-	public IntegerProperty numRegulatorsProperty() { return numRegulators; }
-	public IntegerProperty numNodesProperty() { return numNodes; }
-	public IntegerProperty numEdgesProperty() { return numEdges; }
+//	public IntegerProperty numRegulatorsProperty() { return numRegulators; }
+//	public IntegerProperty numNodesProperty() { return numNodes; }
+//	public IntegerProperty numEdgesProperty() { return numEdges; }
 	public BooleanProperty isWeightedProperty() { return isWeighted; }
 	public BooleanProperty isDirectedProperty() { return isDirected; }
 

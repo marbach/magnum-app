@@ -97,6 +97,7 @@ abstract public class JobMagnum extends Thread {
 		} catch (Exception e) {
 			if (!jobManager.getInterrupted()) {
 				// Print stack trace
+				myLog.setConsole(null);
 				myLog.printStackTrace(e);
 				myLog.closeLogFile();
 				myMag = null;

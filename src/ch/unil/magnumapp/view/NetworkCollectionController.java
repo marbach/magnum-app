@@ -149,9 +149,10 @@ public class NetworkCollectionController extends ViewController {
         networksTable.setShowRoot(false);
         
         // Enable selection of multiple networks 
-        networksTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+    	TreeTableViewSelectionModel<NetworkModel> selectionModel = networksTable.getSelectionModel();
+    	selectionModel.setSelectionMode(SelectionMode.MULTIPLE);
         // Add selection change listener
-        networksTable.getSelectionModel().getSelectedItems().addListener(
+    	selectionModel.getSelectedItems().addListener(
         		(ListChangeListener.Change<? extends TreeItem<NetworkModel>> c) -> {
         			handleSelectionChange();
         		});

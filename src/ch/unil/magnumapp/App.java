@@ -137,9 +137,7 @@ public class App extends Application {
         this.primaryStage.setTitle(AppSettings.magnumAppVersion);
 
         // Set icons
-        primaryStage.getIcons().add(new Image(App.class.getResourceAsStream("resources/icons/magnumIcon16.png"))); 
-        primaryStage.getIcons().add(new Image(App.class.getResourceAsStream("resources/icons/magnumIcon32.png"))); 
-        primaryStage.getIcons().add(new Image(App.class.getResourceAsStream("resources/icons/magnumIcon64.png"))); 
+        //primaryStage.getIcons().add(new Image(App.class.getResourceAsStream("resources/icons/magnum-logo-small.png"))); 
         
         // Load preferences controller -- needs to be done first because of rememberSettings
     	preferencesController = (PreferencesDialogController) ViewController.loadFxml("view/PreferencesDialog.fxml");
@@ -254,7 +252,7 @@ public class App extends Application {
     	consoleController = (ConsoleController) ViewController.loadFxml("view/Console.fxml");
     	// Add to root layout
     	TitledPane pane = (TitledPane) consoleController.getRoot();
-    	pane.setExpanded(false);
+    	pane.setExpanded(true);
     	rootLayoutController.getRightSide().getChildren().add(pane);
     	VBox.setVgrow(pane, Priority.ALWAYS);
 
